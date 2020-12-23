@@ -7,9 +7,10 @@ abstract class Store<State extends Object, Error extends Object> {
   late Triple<State, Error> _lastTriple;
   final _history = <Triple<State, Error>>[];
   int _historyIndex = 0;
+  late final int _historyLimit;
 
   State get state => _triple.state;
-  bool get isLoading => _triple.isLoading;
+  bool get loading => _triple.loading;
   Error? get error => _triple.error;
 
   final _stateController = StreamController<State>.broadcast(sync: true);
@@ -21,7 +22,9 @@ abstract class Store<State extends Object, Error extends Object> {
   Stream<Error> selectError() =>
       _errorController.stream.where((event) => event != null).cast<Error>();
 
-  Store(State initialState) {
+  Store(State initialState, {int historyLimit = 256}) {
+    assert(historyLimit > 1, 'historySize not can be < 2');
+    _historyLimit = historyLimit;
     _triple = Triple<State, Error>(state: initialState);
     _lastTriple = _triple;
   }
@@ -33,12 +36,11 @@ abstract class Store<State extends Object, Error extends Object> {
     _stateController.add(_triple.state);
   }
 
-  void setLoading(bool newisLoading) {
+  void setLoading(bool newloading) {
     _addHistory(_lastTriple);
-    _triple =
-        _triple.copyWith(isLoading: newisLoading, event: TripleEvent.loading);
+    _triple = _triple.copyWith(loading: newloading, event: TripleEvent.loading);
     _lastTriple = _triple;
-    _loadingController.add(_triple.isLoading);
+    _loadingController.add(_triple.loading);
   }
 
   void setError(Error newError) {
@@ -51,13 +53,16 @@ abstract class Store<State extends Object, Error extends Object> {
   void _addHistory(Triple<State, Error> observableCache) {
     if (_historyIndex == _history.length) {
       _history.add(observableCache);
-      _historyIndex = _history.length;
     } else {
       final newList = _history.take(_historyIndex).toList()
         ..add(observableCache);
       _history.clear();
       _history.addAll(newList);
     }
+    if (_history.length > _historyLimit) {
+      _history.removeAt(0);
+    }
+    _historyIndex = _history.length;
   }
 
   void undo({TripleEvent? when}) {
@@ -106,7 +111,7 @@ abstract class Store<State extends Object, Error extends Object> {
     } else if (_triple.event == TripleEvent.error) {
       _errorController.add(_triple.error);
     } else if (_triple.event == TripleEvent.loading) {
-      _loadingController.add(_triple.isLoading);
+      _loadingController.add(_triple.loading);
     }
   }
 
@@ -152,26 +157,26 @@ abstract class Store<State extends Object, Error extends Object> {
 class Triple<State extends Object, Error extends Object> {
   final State state;
   final Error? error;
-  final bool isLoading;
+  final bool loading;
   final TripleEvent event;
 
   Triple({
     required this.state,
     this.error,
-    this.isLoading = false,
+    this.loading = false,
     this.event = TripleEvent.state,
   });
 
   Triple<State, Error> copyWith(
       {State? state,
       Error? error,
-      bool? isLoading,
+      bool? loading,
       int? index,
       TripleEvent? event}) {
     return Triple<State, Error>(
       state: state ?? this.state,
       error: error ?? this.error,
-      isLoading: isLoading ?? this.isLoading,
+      loading: loading ?? this.loading,
       event: event ?? this.event,
     );
   }
