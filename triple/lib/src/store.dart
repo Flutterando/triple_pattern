@@ -60,15 +60,35 @@ abstract class Store<State extends Object, Error extends Object> {
     }
   }
 
-  void undo() {
-    if (_history.isNotEmpty) {
+  void undo({TripleEvent? when}) {
+    if (when != null && _historyIndex > 1) {
+      for (var candidate in _history.reversed) {
+        if (candidate.event == when) {
+          _historyIndex = _history.indexOf(candidate) + 1;
+          _triple = candidate;
+          _propage(_triple);
+          break;
+        }
+      }
+    } else if (_history.isNotEmpty && when == null) {
       _historyIndex--;
       _triple = _history[_historyIndex];
       _propage(_triple);
     }
   }
 
-  void redo() {
+  void redo({TripleEvent? when}) {
+    if (when != null) {
+      for (var candidate in _history.sublist(_historyIndex - 1)) {
+        if (candidate.event == when) {
+          _historyIndex = _history.indexOf(candidate) + 1;
+          _triple = candidate;
+          _propage(_triple);
+          return;
+        }
+      }
+    }
+
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
       _triple = _history[_historyIndex];

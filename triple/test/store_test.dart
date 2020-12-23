@@ -22,7 +22,7 @@ void main() {
   });
 
   test('Counter test', () async {
-    expect(counter.selectState(), emitsInOrder([1, 2, 3]));
+    expect(counter.selectState(), emitsInOrder([1, 2, 3, 3]));
     expect(counter.selectError(),
         emitsInOrder([isA<Exception>(), isA<Exception>(), isA<Exception>()]));
     expect(
@@ -55,8 +55,12 @@ void main() {
     counter.redo(); // redo to Exception
     counter.redo(); // redo to false
     print('---------------');
-    await Future.delayed(Duration(milliseconds: 1000));
+    await Future.delayed(Duration(milliseconds: 500));
     counter.undo(); // return to Exception
+    counter.undo(when: TripleEvent.state); // return to 3
+    await Future.delayed(Duration(milliseconds: 500));
+    counter.redo(); // redo to true
+    counter.redo(when: TripleEvent.loading); // redo to false
   });
 }
 
