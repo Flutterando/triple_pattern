@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "flutter_triple"
+		},
+		{
+			"path": "mobx_triple"
 		}
 	],
 	"settings": {}
