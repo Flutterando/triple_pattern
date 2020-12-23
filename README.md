@@ -1,4 +1,4 @@
-# Segmented State Pattern
+# Triple - Segmented State Pattern
 
 Quando falamos de estado com fluxo único acabamos resolvendo problemas na arquitetura de forma precoce, pois teremos apenas um fluxo de dado para cada estado. 
 Além da manutenabilidade e fácilidade arquitetural de aproveitamento também temos a possibilidade de incrementar esse fluxo com outros padrões como o Observer, que dá reatividade ao componente ao ser modificado e o Memento, que possibilita o rollback ou redo desse estado.
