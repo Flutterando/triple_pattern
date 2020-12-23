@@ -3,12 +3,14 @@ import 'dart:async';
 typedef Disposer = Future<void> Function();
 
 abstract class Store<State extends Object, Error extends Object> {
-  late _ObservableCache<State, Error> _observableCache;
-  final _history = <_ObservableCache<State, Error>>[];
+  late Triple<State, Error> _triple;
+  late Triple<State, Error> _lastTriple;
+  final _history = <Triple<State, Error>>[];
+  int _historyIndex = 0;
 
-  State get state => _observableCache.state;
-  bool get isLoading => _observableCache.isLoading;
-  Error? get error => _observableCache.error;
+  State get state => _triple.state;
+  bool get isLoading => _triple.isLoading;
+  Error? get error => _triple.error;
 
   final _stateController = StreamController<State>.broadcast(sync: true);
   final _loadingController = StreamController<bool>.broadcast(sync: true);
@@ -20,66 +22,71 @@ abstract class Store<State extends Object, Error extends Object> {
       _errorController.stream.where((event) => event != null).cast<Error>();
 
   Store(State initialState) {
-    _observableCache = _ObservableCache<State, Error>(state: initialState);
-    _history.add(_observableCache);
+    _triple = Triple<State, Error>(state: initialState);
+    _lastTriple = _triple;
   }
 
   void setState(State newState) {
-    final index = _observableCache.index;
-    _observableCache = _observableCache.copyWith(
-        state: newState, event: _ObsevableCacheEvent.state, index: index + 1);
-    _stateController.add(_observableCache.state);
-    _addHistory(index, _observableCache);
+    _addHistory(_lastTriple);
+    _triple = _triple.copyWith(state: newState, event: TripleEvent.state);
+    _lastTriple = _triple;
+    _stateController.add(_triple.state);
   }
 
   void setLoading(bool newisLoading) {
-    final index = _observableCache.index;
-    _observableCache = _observableCache.copyWith(
-        isLoading: newisLoading,
-        event: _ObsevableCacheEvent.loading,
-        index: index + 1);
-    _loadingController.add(_observableCache.isLoading);
-    _addHistory(index, _observableCache);
+    _addHistory(_lastTriple);
+    _triple =
+        _triple.copyWith(isLoading: newisLoading, event: TripleEvent.loading);
+    _lastTriple = _triple;
+    _loadingController.add(_triple.isLoading);
   }
 
   void setError(Error newError) {
-    final index = _observableCache.index;
-    _observableCache = _observableCache.copyWith(
-        error: newError, event: _ObsevableCacheEvent.error, index: index + 1);
-    _errorController.add(_observableCache.error);
-    _addHistory(index, _observableCache);
+    _addHistory(_lastTriple);
+    _triple = _triple.copyWith(error: newError, event: TripleEvent.error);
+    _lastTriple = _triple;
+    _errorController.add(_triple.error);
   }
 
-  void _addHistory(
-      int afterIndex, _ObservableCache<State, Error> newObservableCache) {
-    final newList = _history.take(afterIndex + 1).toList()
-      ..add(newObservableCache);
-    _history.clear();
-    _history.addAll(newList);
+  void _addHistory(Triple<State, Error> observableCache) {
+    if (_historyIndex == _history.length) {
+      _history.add(observableCache);
+      _historyIndex = _history.length;
+    } else {
+      final newList = _history.take(_historyIndex).toList()
+        ..add(observableCache);
+      _history.clear();
+      _history.addAll(newList);
+    }
   }
 
   void undo() {
-    if (_history.length > 1) {
-      _observableCache = _history[_observableCache.index - 2];
-      _propage(_observableCache);
+    if (_history.isNotEmpty) {
+      _historyIndex--;
+      _triple = _history[_historyIndex];
+      _propage(_triple);
     }
   }
 
   void redo() {
-    final index = _observableCache.index;
-    if (index < _history.length) {
-      _observableCache = _history[index];
-      _propage(_observableCache);
+    if (_historyIndex + 1 < _history.length) {
+      _historyIndex++;
+      _triple = _history[_historyIndex];
+      _propage(_triple);
+    } else if (_triple != _lastTriple) {
+      _historyIndex++;
+      _triple = _lastTriple;
+      _propage(_triple);
     }
   }
 
-  void _propage(_ObservableCache<State, Error> _observableCache) {
-    if (_observableCache.event == _ObsevableCacheEvent.state) {
-      _stateController.add(_observableCache.state);
-    } else if (_observableCache.event == _ObsevableCacheEvent.error) {
-      _errorController.add(_observableCache.error);
-    } else if (_observableCache.event == _ObsevableCacheEvent.loading) {
-      _loadingController.add(_observableCache.isLoading);
+  void _propage(Triple<State, Error> _triple) {
+    if (_triple.event == TripleEvent.state) {
+      _stateController.add(_triple.state);
+    } else if (_triple.event == TripleEvent.error) {
+      _errorController.add(_triple.error);
+    } else if (_triple.event == TripleEvent.loading) {
+      _loadingController.add(_triple.isLoading);
     }
   }
 
@@ -122,34 +129,32 @@ abstract class Store<State extends Object, Error extends Object> {
   }
 }
 
-class _ObservableCache<State extends Object, Error extends Object> {
+class Triple<State extends Object, Error extends Object> {
   final State state;
   final Error? error;
   final bool isLoading;
-  final int index;
-  final _ObsevableCacheEvent event;
+  final TripleEvent event;
 
-  const _ObservableCache(
-      {required this.state,
-      this.error,
-      this.isLoading = false,
-      this.event = _ObsevableCacheEvent.state,
-      this.index = 1});
+  Triple({
+    required this.state,
+    this.error,
+    this.isLoading = false,
+    this.event = TripleEvent.state,
+  });
 
-  _ObservableCache<State, Error> copyWith(
+  Triple<State, Error> copyWith(
       {State? state,
       Error? error,
       bool? isLoading,
       int? index,
-      _ObsevableCacheEvent? event}) {
-    return _ObservableCache<State, Error>(
+      TripleEvent? event}) {
+    return Triple<State, Error>(
       state: state ?? this.state,
       error: error ?? this.error,
       isLoading: isLoading ?? this.isLoading,
       event: event ?? this.event,
-      index: index ?? this.index,
     );
   }
 }
 
-enum _ObsevableCacheEvent { state, loading, error }
+enum TripleEvent { state, loading, error }

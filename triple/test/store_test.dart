@@ -24,10 +24,12 @@ void main() {
   test('Counter test', () async {
     expect(counter.selectState(), emitsInOrder([1, 2, 3]));
     expect(counter.selectError(),
-        emitsInOrder([isA<Exception>(), isA<Exception>()]));
+        emitsInOrder([isA<Exception>(), isA<Exception>(), isA<Exception>()]));
     expect(
         counter.selectLoading(),
         emitsInOrder([
+          true,
+          false,
           true,
           false,
           true,
@@ -44,11 +46,17 @@ void main() {
     await counter.increment(); //dispach true, Exception and false
     print('---------------');
     await Future.delayed(Duration(milliseconds: 1000));
-    counter.undo(); // return to Exception
     counter.undo(); // return to loading true
+    counter.undo(); // return to Exception
     counter.undo(); // return to loading false
+    print('---------------');
     await Future.delayed(Duration(milliseconds: 500));
-    counter.redo(); // redo Exception
+    counter.redo(); // redo to true
+    counter.redo(); // redo to Exception
+    counter.redo(); // redo to false
+    print('---------------');
+    await Future.delayed(Duration(milliseconds: 1000));
+    counter.undo(); // return to Exception
   });
 }
 
