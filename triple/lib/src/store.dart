@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'models/triple_model.dart';
+
 typedef Disposer = Future<void> Function();
 
 abstract class Store<State extends Object, Error extends Object> {
@@ -13,15 +15,6 @@ abstract class Store<State extends Object, Error extends Object> {
   bool get loading => _triple.loading;
   Error? get error => _triple.error;
 
-  final _stateController = StreamController<State>.broadcast(sync: true);
-  final _loadingController = StreamController<bool>.broadcast(sync: true);
-  final _errorController = StreamController<Error?>.broadcast(sync: true);
-
-  Stream<State> selectState() => _stateController.stream;
-  Stream<bool> selectLoading() => _loadingController.stream;
-  Stream<Error> selectError() =>
-      _errorController.stream.where((event) => event != null).cast<Error>();
-
   Store(State initialState, {int historyLimit = 256}) {
     assert(historyLimit > 1, 'historySize not can be < 2');
     _historyLimit = historyLimit;
@@ -33,21 +26,18 @@ abstract class Store<State extends Object, Error extends Object> {
     _addHistory(_lastTriple);
     _triple = _triple.copyWith(state: newState, event: TripleEvent.state);
     _lastTriple = _triple;
-    _stateController.add(_triple.state);
   }
 
   void setLoading(bool newloading) {
     _addHistory(_lastTriple);
     _triple = _triple.copyWith(loading: newloading, event: TripleEvent.loading);
     _lastTriple = _triple;
-    _loadingController.add(_triple.loading);
   }
 
   void setError(Error newError) {
     _addHistory(_lastTriple);
     _triple = _triple.copyWith(error: newError, event: TripleEvent.error);
     _lastTriple = _triple;
-    _errorController.add(_triple.error);
   }
 
   void _addHistory(Triple<State, Error> observableCache) {
@@ -71,14 +61,14 @@ abstract class Store<State extends Object, Error extends Object> {
         if (candidate.event == when) {
           _historyIndex = _history.indexOf(candidate) + 1;
           _triple = candidate;
-          _propage(_triple);
+          propage(_triple);
           break;
         }
       }
     } else if (_history.isNotEmpty && when == null) {
       _historyIndex--;
       _triple = _history[_historyIndex];
-      _propage(_triple);
+      propage(_triple);
     }
   }
 
@@ -88,7 +78,7 @@ abstract class Store<State extends Object, Error extends Object> {
         if (candidate.event == when) {
           _historyIndex = _history.indexOf(candidate) + 1;
           _triple = candidate;
-          _propage(_triple);
+          propage(_triple);
           return;
         }
       }
@@ -97,89 +87,21 @@ abstract class Store<State extends Object, Error extends Object> {
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
       _triple = _history[_historyIndex];
-      _propage(_triple);
+      propage(_triple);
     } else if (_triple != _lastTriple) {
       _historyIndex++;
       _triple = _lastTriple;
-      _propage(_triple);
+      propage(_triple);
     }
   }
 
-  void _propage(Triple<State, Error> _triple) {
-    if (_triple.event == TripleEvent.state) {
-      _stateController.add(_triple.state);
-    } else if (_triple.event == TripleEvent.error) {
-      _errorController.add(_triple.error);
-    } else if (_triple.event == TripleEvent.loading) {
-      _loadingController.add(_triple.loading);
-    }
-  }
+  void propage(Triple<State, Error> _triple);
 
-  Future destroy() async {
-    await _stateController.close();
-    await _loadingController.close();
-    await _errorController.close();
-  }
+  Future destroy();
 
   Disposer observer({
     void Function()? onState,
     void Function()? onLoading,
     void Function()? onError,
-  }) {
-    final subs = <StreamSubscription>[];
-
-    if (onState != null) {
-      subs.add(selectState().listen((event) {
-        onState();
-      }));
-    }
-
-    if (onLoading != null) {
-      subs.add(selectLoading().listen((event) {
-        onLoading();
-      }));
-    }
-
-    if (onError != null) {
-      subs.add(selectError().listen((event) {
-        onError();
-      }));
-    }
-
-    return () async {
-      for (var sub in subs) {
-        await sub.cancel();
-      }
-    };
-  }
-}
-
-class Triple<State extends Object, Error extends Object> {
-  final State state;
-  final Error? error;
-  final bool loading;
-  final TripleEvent event;
-
-  Triple({
-    required this.state,
-    this.error,
-    this.loading = false,
-    this.event = TripleEvent.state,
   });
-
-  Triple<State, Error> copyWith(
-      {State? state,
-      Error? error,
-      bool? loading,
-      int? index,
-      TripleEvent? event}) {
-    return Triple<State, Error>(
-      state: state ?? this.state,
-      error: error ?? this.error,
-      loading: loading ?? this.loading,
-      event: event ?? this.event,
-    );
-  }
 }
-
-enum TripleEvent { state, loading, error }

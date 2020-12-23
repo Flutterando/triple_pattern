@@ -1,3 +1,4 @@
+import 'package:triple/src/models/triple_model.dart';
 import 'package:triple/triple.dart';
 import 'package:test/test.dart';
 
@@ -12,7 +13,7 @@ void main() {
     }, onError: () {
       print('Error: ${counter.error}');
     }, onLoading: () {
-      print(counter.isLoading);
+      print(counter.loading);
     });
   });
 
@@ -64,7 +65,7 @@ void main() {
   });
 }
 
-class Counter extends Store<int, Exception> {
+class Counter extends StreamStore<int, Exception> {
   Counter() : super(0);
 
   Future<void> increment() async {
