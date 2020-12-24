@@ -264,9 +264,9 @@ Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
 
 Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) para o MobX e também em uma baseada em Streams. Mais detalhes na documentação das próprias abstrações.
 
-- triple
-- flutter_triple
-- mobx_triple
+- triple (Store and StreamStore)
+- flutter_triple (NotifierStore, ScopedBuilder)
+- mobx_triple (MobXStore)
 
 
 ## Features and bugs
