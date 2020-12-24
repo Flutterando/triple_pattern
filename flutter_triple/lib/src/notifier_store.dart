@@ -26,24 +26,6 @@ abstract class NotifierStore<State extends Object, Error extends Object>
   }
 
   @override
-  void setState(State newState) {
-    super.setState(newState);
-    _stateNotifier.value = newState;
-  }
-
-  @override
-  void setError(Error newError) {
-    super.setError(newError);
-    _errorNotifier.value = newError;
-  }
-
-  @override
-  void setLoading(bool newloading) {
-    super.setLoading(newloading);
-    _loadingNotifier.value = newloading;
-  }
-
-  @override
   Disposer observer(
       {void Function()? onState,
       void Function()? onLoading,

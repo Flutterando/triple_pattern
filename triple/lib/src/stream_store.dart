@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../triple.dart';
+import 'package:meta/meta.dart';
 
 abstract class StreamStore<State extends Object, Error extends Object>
     extends Store<State, Error> {
@@ -16,6 +17,7 @@ abstract class StreamStore<State extends Object, Error extends Object>
   StreamStore(State initialState, {int historyLimit = 256})
       : super(initialState, historyLimit: historyLimit);
 
+  @protected
   @override
   void propagate(Triple<State, Error> _triple) {
     if (_triple.event == TripleEvent.state) {
@@ -25,24 +27,6 @@ abstract class StreamStore<State extends Object, Error extends Object>
     } else if (_triple.event == TripleEvent.loading) {
       _loadingController.add(_triple.loading);
     }
-  }
-
-  @override
-  void setState(State newState) {
-    super.setState(newState);
-    _stateController.add(newState);
-  }
-
-  @override
-  void setLoading(bool newloading) {
-    super.setLoading(newloading);
-    _loadingController.add(newloading);
-  }
-
-  @override
-  void setError(Error newError) {
-    super.setError(newError);
-    _errorController.add(newError);
   }
 
   @override

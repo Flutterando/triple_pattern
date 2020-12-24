@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'models/triple_model.dart';
+import 'package:meta/meta.dart';
 
 typedef Disposer = Future<void> Function();
 
@@ -22,24 +23,28 @@ abstract class Store<State extends Object, Error extends Object> {
     _lastTriple = triple;
   }
 
+  @visibleForOverriding
   void propagate(Triple<State, Error> triple);
 
   void setState(State newState) {
     _addHistory(_lastTriple);
     triple = triple.copyWith(state: newState, event: TripleEvent.state);
     _lastTriple = triple;
+    propagate(triple);
   }
 
   void setLoading(bool newloading) {
     _addHistory(_lastTriple);
     triple = triple.copyWith(loading: newloading, event: TripleEvent.loading);
     _lastTriple = triple;
+    propagate(triple);
   }
 
   void setError(Error newError) {
     _addHistory(_lastTriple);
     triple = triple.copyWith(error: newError, event: TripleEvent.error);
     _lastTriple = triple;
+    propagate(triple);
   }
 
   void _addHistory(Triple<State, Error> observableCache) {
