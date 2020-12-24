@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'models/triple_model.dart';
 import 'package:meta/meta.dart';
+import 'dart:math' as math;
 
 typedef Disposer = Future<void> Function();
 
@@ -34,16 +35,12 @@ abstract class Store<State extends Object, Error extends Object> {
   }
 
   void setLoading(bool newloading) {
-    _addHistory(_lastTriple);
     triple = triple.copyWith(loading: newloading, event: TripleEvent.loading);
-    _lastTriple = triple;
     propagate(triple);
   }
 
   void setError(Error newError) {
-    _addHistory(_lastTriple);
     triple = triple.copyWith(error: newError, event: TripleEvent.error);
-    _lastTriple = triple;
     propagate(triple);
   }
 
@@ -51,8 +48,7 @@ abstract class Store<State extends Object, Error extends Object> {
     if (_historyIndex == _history.length) {
       _history.add(observableCache);
     } else {
-      final newList = _history.take(_historyIndex).toList()
-        ..add(observableCache);
+      final newList = _history.take(_historyIndex + 1).toList();
       _history.clear();
       _history.addAll(newList);
     }
@@ -62,40 +58,22 @@ abstract class Store<State extends Object, Error extends Object> {
     _historyIndex = _history.length;
   }
 
-  void undo({TripleEvent? when}) {
-    if (when != null && _historyIndex > 1) {
-      for (var candidate in _history.reversed) {
-        if (candidate.event == when) {
-          _historyIndex = _history.indexOf(candidate) + 1;
-          triple = candidate;
-          propagate(triple);
-          break;
-        }
-      }
-    } else if (_history.isNotEmpty && when == null) {
-      _historyIndex--;
+  void undo() {
+    if (_history.isNotEmpty && _historyIndex > 0) {
+      _historyIndex = _historyIndex > _history.length
+          ? math.max(_history.length - 1, 0)
+          : _historyIndex - 1;
       triple = _history[_historyIndex];
       propagate(triple);
     }
   }
 
-  void redo({TripleEvent? when}) {
-    if (when != null) {
-      for (var candidate in _history.sublist(_historyIndex - 1)) {
-        if (candidate.event == when) {
-          _historyIndex = _history.indexOf(candidate) + 1;
-          triple = candidate;
-          propagate(triple);
-          return;
-        }
-      }
-    }
-
+  void redo() {
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
       triple = _history[_historyIndex];
       propagate(triple);
-    } else if (triple != _lastTriple) {
+    } else if (triple.state != _lastTriple.state) {
       _historyIndex++;
       triple = _lastTriple;
       propagate(triple);

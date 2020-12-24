@@ -3,18 +3,20 @@ import 'package:triple/triple.dart';
 
 class ScopedBuilder<TState extends Object, TError extends Object>
     extends StatefulWidget {
-  final Widget Function(BuildContext context, TState state) onState;
+  final Widget Function(BuildContext context, TState state)? onState;
   final Widget Function(BuildContext context, TError? error)? onError;
-  final Widget Function(BuildContext context)? onLoading;
+  final Widget Function(BuildContext context, bool isLoading)? onLoading;
   final Store<TState, TError> store;
 
   const ScopedBuilder(
       {Key? key,
-      required this.onState,
+      this.onState,
       this.onError,
       this.onLoading,
       required this.store})
-      : super(key: key);
+      : assert(onState != null || onError != null || onLoading != null,
+            'Define at least one listener (onState, onError or onLoading)'),
+        super(key: key);
 
   @override
   _ScopedBuilderState<TState, TError> createState() =>
@@ -23,8 +25,8 @@ class ScopedBuilder<TState extends Object, TError extends Object>
 
 class _ScopedBuilderState<TState extends Object, TError extends Object>
     extends State<ScopedBuilder<TState, TError>> {
-  bool isLoading = false;
-  bool isError = false;
+  Widget? child;
+
   Disposer? disposer;
 
   @override
@@ -35,21 +37,26 @@ class _ScopedBuilderState<TState extends Object, TError extends Object>
     }
     disposer = widget.store.observer(
       onState: () {
-        setState(() {
-          isError = false;
-        });
+        if (widget.onState != null) {
+          setState(() {
+            child = widget.onState!(context, widget.store.state);
+          });
+        }
       },
       onError: () {
-        if (widget.onError != null)
+        if (widget.onError != null) {
           setState(() {
-            isError = true;
+            child = widget.onError!(context, widget.store.error);
           });
+        }
       },
       onLoading: () {
-        if (widget.onLoading != null)
+        if (widget.onLoading != null &&
+            (widget.onState == null ? true : widget.store.loading)) {
           setState(() {
-            isLoading = widget.store.loading;
+            child = widget.onLoading!(context, widget.store.loading);
           });
+        }
       },
     );
   }
@@ -62,14 +69,15 @@ class _ScopedBuilderState<TState extends Object, TError extends Object>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        isError || widget.onError == null
-            ? widget.onState(context, widget.store.state)
-            : widget.onError!.call(context, widget.store.error),
-        if (widget.onLoading != null && isLoading)
-          widget.onLoading!.call(context),
-      ],
-    );
+    if (child == null) {
+      if (widget.onState != null) {
+        child = widget.onState!(context, widget.store.state);
+      } else if (widget.onError != null) {
+        child = widget.onError!(context, widget.store.error);
+      } else if (widget.onLoading != null) {
+        child = widget.onLoading!(context, widget.store.loading);
+      }
+    }
+    return child!;
   }
 }
