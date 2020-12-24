@@ -5,39 +5,41 @@ import 'models/triple_model.dart';
 typedef Disposer = Future<void> Function();
 
 abstract class Store<State extends Object, Error extends Object> {
-  late Triple<State, Error> _triple;
+  late Triple<State, Error> triple;
   late Triple<State, Error> _lastTriple;
   final _history = <Triple<State, Error>>[];
   int _historyIndex = 0;
   late final int _historyLimit;
 
-  State get state => _triple.state;
-  bool get loading => _triple.loading;
-  Error? get error => _triple.error;
+  State get state => triple.state;
+  bool get loading => triple.loading;
+  Error? get error => triple.error;
 
   Store(State initialState, {int historyLimit = 256}) {
     assert(historyLimit > 1, 'historySize not can be < 2');
     _historyLimit = historyLimit;
-    _triple = Triple<State, Error>(state: initialState);
-    _lastTriple = _triple;
+    triple = Triple<State, Error>(state: initialState);
+    _lastTriple = triple;
   }
+
+  void propagate(Triple<State, Error> triple);
 
   void setState(State newState) {
     _addHistory(_lastTriple);
-    _triple = _triple.copyWith(state: newState, event: TripleEvent.state);
-    _lastTriple = _triple;
+    triple = triple.copyWith(state: newState, event: TripleEvent.state);
+    _lastTriple = triple;
   }
 
   void setLoading(bool newloading) {
     _addHistory(_lastTriple);
-    _triple = _triple.copyWith(loading: newloading, event: TripleEvent.loading);
-    _lastTriple = _triple;
+    triple = triple.copyWith(loading: newloading, event: TripleEvent.loading);
+    _lastTriple = triple;
   }
 
   void setError(Error newError) {
     _addHistory(_lastTriple);
-    _triple = _triple.copyWith(error: newError, event: TripleEvent.error);
-    _lastTriple = _triple;
+    triple = triple.copyWith(error: newError, event: TripleEvent.error);
+    _lastTriple = triple;
   }
 
   void _addHistory(Triple<State, Error> observableCache) {
@@ -60,15 +62,15 @@ abstract class Store<State extends Object, Error extends Object> {
       for (var candidate in _history.reversed) {
         if (candidate.event == when) {
           _historyIndex = _history.indexOf(candidate) + 1;
-          _triple = candidate;
-          propage(_triple);
+          triple = candidate;
+          propagate(triple);
           break;
         }
       }
     } else if (_history.isNotEmpty && when == null) {
       _historyIndex--;
-      _triple = _history[_historyIndex];
-      propage(_triple);
+      triple = _history[_historyIndex];
+      propagate(triple);
     }
   }
 
@@ -77,8 +79,8 @@ abstract class Store<State extends Object, Error extends Object> {
       for (var candidate in _history.sublist(_historyIndex - 1)) {
         if (candidate.event == when) {
           _historyIndex = _history.indexOf(candidate) + 1;
-          _triple = candidate;
-          propage(_triple);
+          triple = candidate;
+          propagate(triple);
           return;
         }
       }
@@ -86,16 +88,14 @@ abstract class Store<State extends Object, Error extends Object> {
 
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
-      _triple = _history[_historyIndex];
-      propage(_triple);
-    } else if (_triple != _lastTriple) {
+      triple = _history[_historyIndex];
+      propagate(triple);
+    } else if (triple != _lastTriple) {
       _historyIndex++;
-      _triple = _lastTriple;
-      propage(_triple);
+      triple = _lastTriple;
+      propagate(triple);
     }
   }
-
-  void propage(Triple<State, Error> _triple);
 
   Future destroy();
 

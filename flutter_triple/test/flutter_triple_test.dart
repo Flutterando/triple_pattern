@@ -1,13 +1,39 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:flutter_triple/src/notifier_store.dart';
 
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
-    expect(() => calculator.addOne(null), throwsNoSuchMethodError);
+  late Counter counter;
+
+  setUpAll(() {
+    counter = Counter();
+    counter.observer(
+      onState: () => print("State ${counter.state}"),
+      onLoading: () => print(counter.loading),
+    );
   });
+
+  test('increment count', () async {
+    await counter.increment();
+    print('-------');
+    await counter.increment();
+    print('-------');
+    await Future.delayed(Duration(milliseconds: 1000));
+    counter.undo(); // it is state == 2, listener not being notified
+    counter.undo(); // true
+    await Future.delayed(Duration(milliseconds: 1000));
+    // print('-------');
+  });
+}
+
+class Counter extends NotifierStore<int, Exception> {
+  Counter() : super(0);
+
+  Future<void> increment() async {
+    setLoading(true);
+    await Future.delayed(Duration(milliseconds: 1000));
+    setState(state + 1);
+    setLoading(false);
+  }
 }

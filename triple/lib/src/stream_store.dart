@@ -17,6 +17,17 @@ abstract class StreamStore<State extends Object, Error extends Object>
       : super(initialState, historyLimit: historyLimit);
 
   @override
+  void propagate(Triple<State, Error> _triple) {
+    if (_triple.event == TripleEvent.state) {
+      _stateController.add(_triple.state);
+    } else if (_triple.event == TripleEvent.error) {
+      _errorController.add(_triple.error);
+    } else if (_triple.event == TripleEvent.loading) {
+      _loadingController.add(_triple.loading);
+    }
+  }
+
+  @override
   void setState(State newState) {
     super.setState(newState);
     _stateController.add(newState);
@@ -32,17 +43,6 @@ abstract class StreamStore<State extends Object, Error extends Object>
   void setError(Error newError) {
     super.setError(newError);
     _errorController.add(newError);
-  }
-
-  @override
-  void propage(Triple<State, Error> _triple) {
-    if (_triple.event == TripleEvent.state) {
-      _stateController.add(_triple.state);
-    } else if (_triple.event == TripleEvent.error) {
-      _errorController.add(_triple.error);
-    } else if (_triple.event == TripleEvent.loading) {
-      _loadingController.add(_triple.loading);
-    }
   }
 
   @override
