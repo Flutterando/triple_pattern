@@ -7,6 +7,10 @@ Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para 
 
 Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo, o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
 
+## Store
+
+Um objeto denominado **Store** tem por responsabilidade armazenar a Lógica para o estado de um componente.
+
 ## State, Error, Loading
 .
 ![schema](schema.png)
@@ -281,13 +285,13 @@ abstract class ProductBase extends MobXStore<ProductData, Exception> with Store 
 
 Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
 
-## Extension
+## Extension (Dart)
 
 Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) para o MobX e também em uma baseada em Streams. Mais detalhes na documentação das próprias abstrações.
 
-- triple (Store and StreamStore)
-- flutter_triple (NotifierStore, ScopedBuilder)
-- mobx_triple (MobXStore)
+- [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
+- [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
+- [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
 
 
 ## Features and bugs
