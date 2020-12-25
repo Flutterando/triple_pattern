@@ -2,4 +2,4 @@
 
 ## Flutter Examples
 
-- counter
+- [square_counter](./square_counter/README.md)
