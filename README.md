@@ -163,9 +163,19 @@ bool get loading => triple.loading;
 final List<Triple<ProductData, Exception>> _history = [];
 
 @action
-void setState(({ProductData? state, Exception? error, bool? loading}){
+void setState((ProductData state){
   _history.add(_triple);
-  _triple = _triple.copyWith(state: state, error: error, loading: true);
+  _triple = _triple.copyWith(state: state);
+}
+
+@action
+void setError((Exception error){
+  _triple = _triple.copyWith(error: error);
+}
+
+@action
+void setLoading((bool loading){
+  _triple = _triple.copyWith(loading: loading);
 }
 
 @action
@@ -197,12 +207,12 @@ Assim chegamos a um padrão que pode ser usado para gerênciar estados e sub-est
 O padrão de Estado Segmentado (Ou Triple) pode ser abstraído para tornar a sua reutilização mais forte. Vamos usar mais uma vez o MobX como exemplo, mas poderemos utilizar em qualquer tipo de reatividade por propriedade.
 
 ```dart
-abstract class TripleStore<State, Error> on Store {
+abstract class MobXStore<State, Error> {
 
   @observable 
   late Triple<State, Error> _triple;
 
-  TripleStore(State initialState){
+  MobXStore(State initialState){
      _triple = Triple<State, Error>(state: initialState);
   }
 
@@ -217,9 +227,19 @@ abstract class TripleStore<State, Error> on Store {
   final List<Triple<State, Error>> _history = [];
 
   @action
-  void setState(({State? state, Error? error, bool? loading}){
+  void setState(State state){
     _history.add(_triple);
-    _triple = _triple.copyWith(state: state, error: error, loading: true);
+    _triple = _triple.copyWith(state: state);
+  }
+
+  @action
+  void setError(Error error){
+    _triple = _triple.copyWith(error: error);
+  }
+
+  @action
+  void setLoading(bool loading){
+    _triple = _triple.copyWith(loading: loading);
   }
 
   @action
@@ -234,25 +254,26 @@ abstract class TripleStore<State, Error> on Store {
 }
 ```
 
-agora basta implementar o **TripleStore** em qualquer Store do MobX que deseja utilizar.
+agora basta implementar o **MobXStore** em qualquer Store do MobX que deseja utilizar.
 
 ```dart
 class Product = ProductBase with _$Product;
 
-abstract class ProductBase extends TripleStore<ProductData, Exception> with Store {
+abstract class ProductBase extends MobXStore<ProductData, Exception> with Store {
 
   ProductBase(): super(ProductData.empty());
 
   @action
   Future<void> fetchProducts() async {
-    triple = setState(loading: true);
+    setLoading(true);
     try{
       final state = await repository.getProducts(); // return ProductData
-      triple = setState(loading: false, state: state);
+      setState(state);
     } catch(e){
       final error = Exception('Error');
-      triple = setState(loading: false, error: error);
+      setError(error);
     }
+    setLoading(true);
   }
 }
 
