@@ -1,11 +1,11 @@
 # Triple - Segmented State Pattern
 
 Quando falamos de estado com fluxo único acabamos resolvendo problemas na arquitetura de forma precoce, pois teremos apenas um fluxo de dado para cada estado. 
-Além da manutenabilidade e fácilidade arquitetural de aproveitamento também temos a possibilidade de incrementar esse fluxo com outros padrões como o Observer, que dá reatividade ao componente ao ser modificado e o Memento, que possibilita o rollback ou redo desse estado.
+Além da manutenabilidade e facilidade arquitetural de aproveitamento também temos a possibilidade de incrementar esse fluxo com outros padrões como o Observer, que dá reatividade ao componente ao ser modificado e o Memento, que possibilita o rollback ou redo desse estado.
 
-Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para um estado possibilitando todas as transformações nesse fluxo. Isso (apesar de complicado para alguns), consolida-se muito bem na arquitetura de um projeto, até mesmo os limites dessa prática são benéficos por não permitir que o desenvolvedor recorra a outras soluções fora da arquitetura e do padrão para sua featura.
+Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para um estado possibilitando todas as transformações nesse fluxo. Isso (apesar de complicado para alguns), consolida-se muito bem na arquitetura de um projeto, até mesmo os limites dessa prática são benéficos por não permitir que o desenvolvedor recorra a outras soluções fora da arquitetura e do padrão para sua feature.
 
-Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
+Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo, o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
 
 ## State, Error, Loading
 .
@@ -34,7 +34,7 @@ try{
 }
 
 ```
-Como estamos falando de um fluxo único usamos o POLIMORFIRMOS da Orientação a Objetos para dividir essas 3 responsabilidades(Valor do Estado, Loading ou Error).
+Como estamos falando de um fluxo único usamos o POLIMORFISMO da Orientação a Objetos para dividir essas 3 responsabilidades(Valor do Estado, Loading ou Error).
 ```dart
 abstract class MyState {}
 
@@ -79,13 +79,13 @@ Future<void> fetchProducts() async {
 
 Resumindo, temos então 3 fluxos, o state que tem o valor do estado, o error que guarda as exceptions e o bool loading que informa quando a ação de carregamento está em vigor.
 Poder escutar essas 3 ações de forma separada ajuda a transforma-las e a combina-las em outras ações enriquecendo a sua Store(Classe com a lógica responsável por gerenciar o estado do seu componente).
-Como o movimento do estado sempre está em torno do trio State, Error e Loading vale a pena essa bifurcação para a padrnização.
+Como o movimento do estado sempre está em torno do trio State, Error e Loading vale a pena essa bifurcação para a padronização.
 
 ## Observando os Fluxos
 
 Tendo 3 Fluxos separados poderemos ter 3 listeners diferentes, por exemplo, escutamos o error para lança-lo em forma de "SnackBar" e quando houver Loadings lançamos um Dialog, mas se precisarmos adicionar a esse estado um padrão como o "memento" teremos que colocar as 3 propriedades em um objeto genérico.
 
-Para fechar o padrão dos 3 Fluxos podemos criar um objeto genérico, suas propriedades podem reativas bem como o próprio objeto em sí. Vejamos um exemplo com o MobX.
+Para fechar o padrão dos 3 Fluxos podemos criar um objeto genérico, as suas propriedades podem reativas bem como o próprio objeto em sí. Vejamos um exemplo com o MobX.
 
 ```dart
 
@@ -143,7 +143,7 @@ bool get loading => triple.loading;
 ...
 ```
 
-Com o um objeto reunindo o estado e suas ações podemos implementar outros design patterns ou apenas fazer transformações no objeto ou separadamente em suas propriedades.
+Com o objeto reunindo o estado e as suas ações, podemos implementar outros design patterns ou apenas fazer transformações no objeto ou separadamente nas suas propriedades.
 Vamos ver um pequeno exemplo de implementação do Design Pattern Memento que tornará possível o estado dar rollback, isso é, retornar aos estados anteriores como uma máquina do tempo.
 
 ```dart
@@ -191,10 +191,10 @@ Future<void> fetchProducts() async {
 }
 ```
 
-Implementamos algo bem complexo mas é muito fácil entender o que está acontecendo apenas lendo o código.
+Implementamos algo bem complexo, mas é muito fácil entender o que está acontecendo apenas lendo o código.
 Assim chegamos a um padrão que pode ser usado para gerênciar estados e sub-estados usando reatividade individualmente por propriedade.
 
-O padrão de Estado Segmentado (Ou Triple) pode ser abstraido para tornar sua reutilização mais forte. Vamos usar mais uma vez o MobX como exemplo, mas poderemos utilizar em qualquer tipo de reatividade por propriedade.
+O padrão de Estado Segmentado (Ou Triple) pode ser abstraído para tornar a sua reutilização mais forte. Vamos usar mais uma vez o MobX como exemplo, mas poderemos utilizar em qualquer tipo de reatividade por propriedade.
 
 ```dart
 abstract class TripleStore<State, Error> on Store {
@@ -273,4 +273,4 @@ Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padron
 
 O Padrão de Estado Segmentado está em constante crescimento. 
 Deixe-nos saber o que está achando de tudo isso.
-Se está de acordo deixe uma Star nesse reposítorio representando que está assinando e concordando com o padrão proposto.
+Se está de acordo deixe um Star nesse reposítorio representando que está assinando e concordando com o padrão proposto.
