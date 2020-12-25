@@ -12,11 +12,13 @@ abstract class StreamStore<State extends Object, Error extends Object>
       .where((triple) => triple.event == TripleEvent.state)
       .map((triple) => triple.state);
 
+  ///Select the reativide Error segment
   late final Stream<Error> selectError = _tripleController.stream
       .where((triple) => triple.event == TripleEvent.error)
       .where((triple) => triple.error != null)
       .map((triple) => triple.error!);
 
+  ///Select the reativide Loading segment
   late final Stream<bool> selectLoading = _tripleController.stream
       .where((triple) => triple.event == TripleEvent.loading)
       .map((triple) => triple.loading);

@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:triple/src/selectors.dart';
 import 'package:triple/triple.dart';
 
 void main() {
@@ -40,7 +41,8 @@ void main() {
 }
 
 class TestImplements<State extends Object, Error extends Object>
-    extends Store<State, Error> {
+    extends Store<State, Error>
+    implements Selectors<Stream<State>, Stream<Error>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
   late Triple<State, Error> propagated = triple;
@@ -61,6 +63,15 @@ class TestImplements<State extends Object, Error extends Object>
   void propagate(Triple<State, Error> triple) {
     propagated = triple;
   }
+
+  @override
+  Stream<Error> get selectError => throw UnimplementedError();
+
+  @override
+  Stream<bool> get selectLoading => throw UnimplementedError();
+
+  @override
+  Stream<State> get selectState => throw UnimplementedError();
 }
 
 class MyException implements Exception {

@@ -164,6 +164,37 @@ class StreamStore<State extends Object, Error extends Object> extends Store<Stat
 ### PASSO 7 (OPCIONAL): Defina Seletores
 
 Pode ser interessande ter seletores de quada segmento do estado de forma reativa. Isso é um State, Error e loading reativo.
+Se dejesa ter essa possibilidade no Store implemente a interface **Selectors**:
+
+```dart
+class StreamStore<State extends Object, Error extends Object> extends Store<State, Error>
+implements Selectors<Stream<State>, Stream<Error>, Stream<bool>>
+ {
+
+  //main stream
+  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+
+  @override
+  late final Stream<State> selectState = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.state)
+      .map((triple) => triple.state);
+
+  @override
+  late final Stream<Error> selectError = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.error)
+      .where((triple) => triple.error != null)
+      .map((triple) => triple.error!);
+
+  @override
+  late final Stream<bool> selectLoading = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.loading)
+      .map((triple) => triple.loading);
+
+  StreamStore(State state) : super(state);
+
+  ...
+```
+
 
 ## Considerações sobre o Padrão Memento
 
