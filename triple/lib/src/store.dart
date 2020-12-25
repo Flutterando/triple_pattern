@@ -83,8 +83,8 @@ abstract class Store<State extends Object, Error extends Object> {
   Future destroy();
 
   Disposer observer({
-    void Function()? onState,
-    void Function()? onLoading,
-    void Function()? onError,
+    void Function(State state)? onState,
+    void Function(bool loading)? onLoading,
+    void Function(Error error)? onError,
   });
 }

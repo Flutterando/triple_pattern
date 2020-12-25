@@ -1,6 +1,6 @@
-import 'package:triple/src/models/triple_model.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 import 'package:triple/triple.dart';
-import 'package:test/test.dart';
 
 void main() {
   late Counter counter;
@@ -23,10 +23,10 @@ void main() {
   });
 
   test('Counter test', () async {
-    expect(counter.selectState(), emitsInOrder([1, 2, 3, 2, 1, 2]));
-    expect(counter.selectError(), emitsInOrder([isA<Exception>()]));
+    expect(counter.selectState, emitsInOrder([1, 2, 3, 2, 1, 2]));
+    expect(counter.selectError, emitsInOrder([isA<Exception>()]));
     expect(
-        counter.selectLoading(),
+        counter.selectLoading,
         emitsInOrder([
           true,
           false,

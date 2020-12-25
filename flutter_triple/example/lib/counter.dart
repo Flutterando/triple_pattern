@@ -1,4 +1,4 @@
-import 'package:triple/triple.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
 class Counter extends StreamStore<int, Exception> {
   Counter() : super(0);
