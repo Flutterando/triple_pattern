@@ -7,6 +7,10 @@ Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para 
 
 Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo, o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
 
+## Store
+
+Um objeto denominado **Store** tem por responsabilidade armazenar a Lógica para o estado de um componente.
+
 ## State, Error, Loading
 .
 ![schema](schema.png)
@@ -163,9 +167,19 @@ bool get loading => triple.loading;
 final List<Triple<ProductData, Exception>> _history = [];
 
 @action
-void setState(({ProductData? state, Exception? error, bool? loading}){
+void setState((ProductData state){
   _history.add(_triple);
-  _triple = _triple.copyWith(state: state, error: error, loading: true);
+  _triple = _triple.copyWith(state: state);
+}
+
+@action
+void setError((Exception error){
+  _triple = _triple.copyWith(error: error);
+}
+
+@action
+void setLoading((bool loading){
+  _triple = _triple.copyWith(loading: loading);
 }
 
 @action
@@ -197,12 +211,12 @@ Assim chegamos a um padrão que pode ser usado para gerênciar estados e sub-est
 O padrão de Estado Segmentado (Ou Triple) pode ser abstraído para tornar a sua reutilização mais forte. Vamos usar mais uma vez o MobX como exemplo, mas poderemos utilizar em qualquer tipo de reatividade por propriedade.
 
 ```dart
-abstract class TripleStore<State, Error> on Store {
+abstract class MobXStore<State, Error> {
 
   @observable 
   late Triple<State, Error> _triple;
 
-  TripleStore(State initialState){
+  MobXStore(State initialState){
      _triple = Triple<State, Error>(state: initialState);
   }
 
@@ -217,9 +231,19 @@ abstract class TripleStore<State, Error> on Store {
   final List<Triple<State, Error>> _history = [];
 
   @action
-  void setState(({State? state, Error? error, bool? loading}){
+  void setState(State state){
     _history.add(_triple);
-    _triple = _triple.copyWith(state: state, error: error, loading: true);
+    _triple = _triple.copyWith(state: state);
+  }
+
+  @action
+  void setError(Error error){
+    _triple = _triple.copyWith(error: error);
+  }
+
+  @action
+  void setLoading(bool loading){
+    _triple = _triple.copyWith(loading: loading);
   }
 
   @action
@@ -234,25 +258,26 @@ abstract class TripleStore<State, Error> on Store {
 }
 ```
 
-agora basta implementar o **TripleStore** em qualquer Store do MobX que deseja utilizar.
+agora basta implementar o **MobXStore** em qualquer Store do MobX que deseja utilizar.
 
 ```dart
 class Product = ProductBase with _$Product;
 
-abstract class ProductBase extends TripleStore<ProductData, Exception> with Store {
+abstract class ProductBase extends MobXStore<ProductData, Exception> with Store {
 
   ProductBase(): super(ProductData.empty());
 
   @action
   Future<void> fetchProducts() async {
-    triple = setState(loading: true);
+    setLoading(true);
     try{
       final state = await repository.getProducts(); // return ProductData
-      triple = setState(loading: false, state: state);
+      setState(state);
     } catch(e){
       final error = Exception('Error');
-      triple = setState(loading: false, error: error);
+      setError(error);
     }
+    setLoading(true);
   }
 }
 
@@ -260,13 +285,13 @@ abstract class ProductBase extends TripleStore<ProductData, Exception> with Stor
 
 Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
 
-## Extension
+## Extension (Dart)
 
 Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) para o MobX e também em uma baseada em Streams. Mais detalhes na documentação das próprias abstrações.
 
-- triple (Store and StreamStore)
-- flutter_triple (NotifierStore, ScopedBuilder)
-- mobx_triple (MobXStore)
+- [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
+- [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
+- [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
 
 
 ## Features and bugs

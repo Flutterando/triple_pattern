@@ -36,24 +36,24 @@ abstract class MobXStore<State extends Object, Error extends Object>
 
   @override
   Disposer observer(
-      {void Function()? onState,
-      void Function()? onLoading,
-      void Function()? onError}) {
+      {void Function(State state)? onState,
+      void Function(bool loading)? onLoading,
+      void Function(Error error)? onError}) {
     final disposers = <void Function()>[];
 
     if (onState != null) {
       disposers.add(_stateObservable.observe((_) {
-        onState();
+        onState(triple.state);
       }));
     }
     if (onLoading != null) {
       disposers.add(_loadingObservable.observe((_) {
-        onLoading();
+        onLoading(triple.loading);
       }));
     }
     if (onError != null) {
       disposers.add(_errorObservable.observe((_) {
-        onError();
+        onError(triple.error!);
       }));
     }
 

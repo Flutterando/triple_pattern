@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-class ScopedBuilder<TState extends Object, TError extends Object>
-    extends StatefulWidget {
+class ScopedBuilder<TState extends Object, TError extends Object,
+    TStore extends Store<TState, TError>> extends StatefulWidget {
   final Widget Function(BuildContext context, TState state)? onState;
   final Widget Function(BuildContext context, TError? error)? onError;
   final Widget Function(BuildContext context, bool isLoading)? onLoading;
-  final Store<TState, TError> store;
+  final TStore store;
 
   const ScopedBuilder(
       {Key? key,
@@ -19,12 +19,13 @@ class ScopedBuilder<TState extends Object, TError extends Object>
         super(key: key);
 
   @override
-  _ScopedBuilderState<TState, TError> createState() =>
-      _ScopedBuilderState<TState, TError>();
+  _ScopedBuilderState<TState, TError, TStore> createState() =>
+      _ScopedBuilderState<TState, TError, TStore>();
 }
 
-class _ScopedBuilderState<TState extends Object, TError extends Object>
-    extends State<ScopedBuilder<TState, TError>> {
+class _ScopedBuilderState<TState extends Object, TError extends Object,
+        TStore extends Store<TState, TError>>
+    extends State<ScopedBuilder<TState, TError, TStore>> {
   Widget? child;
 
   Disposer? disposer;
@@ -36,21 +37,21 @@ class _ScopedBuilderState<TState extends Object, TError extends Object>
       disposer!.call();
     }
     disposer = widget.store.observer(
-      onState: () {
+      onState: (state) {
         if (widget.onState != null) {
           setState(() {
             child = widget.onState!(context, widget.store.state);
           });
         }
       },
-      onError: () {
+      onError: (error) {
         if (widget.onError != null) {
           setState(() {
             child = widget.onError!(context, widget.store.error);
           });
         }
       },
-      onLoading: () {
+      onLoading: (loading) {
         if (widget.onLoading != null &&
             (widget.onState == null ? true : widget.store.loading)) {
           setState(() {
