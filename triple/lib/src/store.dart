@@ -45,7 +45,7 @@ abstract class Store<State extends Object, Error extends Object> {
     final candidate =
         triple.copyWith(state: newState, event: TripleEvent.state);
     if (candidate != triple && candidate.state != triple.state) {
-      _addHistory(triple);
+      _addHistory(_lastTripleState);
       triple = candidate;
       _lastTripleState = triple;
       propagate(triple);
