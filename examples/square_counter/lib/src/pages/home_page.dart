@@ -7,8 +7,6 @@ import '../components/square_widget.dart';
 import '../stores/home_store.dart';
 import '../stores/square_store.dart';
 
-
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,6 +15,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final store = HomeStore();
   late StreamSubscription _sub;
+
+  late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.black38,
+      child: CircularProgressIndicator(),
+    );
+  });
 
   @override
   void initState() {
@@ -29,6 +35,14 @@ class _HomePageState extends State<HomePage> {
           content: Text(error.message),
         ),
       );
+    });
+
+    store.selectLoading.listen((laoding) {
+      if (laoding) {
+        Overlay.of(context)?.insert(loadingOverlay);
+      } else {
+        loadingOverlay.remove();
+      }
     });
   }
 
@@ -59,9 +73,10 @@ class _HomePageState extends State<HomePage> {
       body: ScopedBuilder<List<SquareStore>, Exception, HomeStore>(
         store: store,
         onState: (_, squares) {
-
-          if(squares.isEmpty){
-            return Center(child: Text('Adicione um Square'),);
+          if (squares.isEmpty) {
+            return Center(
+              child: Text('Adicione um Square'),
+            );
           }
 
           return Padding(

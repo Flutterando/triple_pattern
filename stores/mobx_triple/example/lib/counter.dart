@@ -1,7 +1,10 @@
+import 'package:mobx_triple/mobx_triple.dart';
 import 'package:triple/triple.dart';
 
-class Counter extends StreamStore<int, Exception> {
-  Counter() : super(0);
+class Counter {
+  final value = MobXStore<int, Exception>.create(0);
 
-  increment() {}
+  increment() {
+    value.setState(value.state + 1);
+  }
 }

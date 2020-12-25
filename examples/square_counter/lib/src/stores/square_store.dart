@@ -17,7 +17,5 @@ class SquareStore extends StreamStore<int, SquareError> {
     }
   }
 
-  reset() {
-    setState(0);
-  }
+  reset() => setState(0);
 }

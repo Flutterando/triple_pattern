@@ -10,6 +10,18 @@ abstract class Store<State extends Object, Error extends Object> {
   late Triple<State, Error> triple;
   late Triple<State, Error> _lastTripleState;
   final _history = <Triple<State, Error>>[];
+
+  /// Total size of history state caches;
+  int get historyLength => _history.length;
+
+  ///Return [true] if you can undo
+  bool canUndo() => _history.isNotEmpty && _historyIndex > 0;
+
+  ///Return [true] if you can redo
+  bool canRedo() =>
+      (_historyIndex + 1) < _history.length ||
+      triple.state != _lastTripleState.state;
+
   int _historyIndex = 0;
   late final int _historyLimit;
 
@@ -88,7 +100,7 @@ abstract class Store<State extends Object, Error extends Object> {
 
   ///Undo the last state value.
   void undo() {
-    if (_history.isNotEmpty && _historyIndex > 0) {
+    if (canUndo()) {
       _historyIndex = _historyIndex > _history.length
           ? math.max(_history.length - 1, 0)
           : _historyIndex - 1;

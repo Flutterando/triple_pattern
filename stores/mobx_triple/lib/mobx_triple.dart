@@ -5,33 +5,47 @@ import 'package:mobx/mobx.dart' hide Store;
 import 'package:triple/triple.dart';
 
 abstract class MobXStore<State extends Object, Error extends Object>
-    extends Store<State, Error> {
-  late final _stateObservable = Observable<State>(triple.state);
-  final _errorObservable = Observable<Error?>(null);
-  final _loadingObservable = Observable<bool>(false);
+    extends Store<State, Error>
+    implements
+        Selectors<Observable<State>, Observable<Error?>, Observable<bool>> {
+  @override
+  late final selectState = Observable<State>(triple.state);
 
   @override
-  State get state => _stateObservable.value;
+  final selectError = Observable<Error?>(null);
 
   @override
-  Error? get error => _errorObservable.value;
+  final selectLoading = Observable<bool>(false);
 
   @override
-  bool get loading => _loadingObservable.value;
+  State get state => selectState.value;
+
+  @override
+  Error? get error => selectError.value;
+
+  @override
+  bool get loading => selectLoading.value;
+
+  late final _propagateAction = Action(() {
+    if (triple.event == TripleEvent.state) {
+      selectState.value = triple.state;
+    } else if (triple.event == TripleEvent.error) {
+      selectError.value = triple.error;
+    } else if (triple.event == TripleEvent.loading) {
+      selectLoading.value = triple.loading;
+    }
+  });
 
   MobXStore(State initialState, {int historyLimit = 256})
       : super(initialState, historyLimit: historyLimit);
 
+  factory MobXStore.create(State intialValue, {int historyLimit = 256}) =>
+      _MobXStoreImp<State, Error>(intialValue, historyLimit: historyLimit);
+
   @protected
   @override
   void propagate(Triple<State, Error> triple) {
-    if (triple.event == TripleEvent.state) {
-      _stateObservable.value = triple.state;
-    } else if (triple.event == TripleEvent.error) {
-      _errorObservable.value = triple.error;
-    } else if (triple.event == TripleEvent.loading) {
-      _loadingObservable.value = triple.loading;
-    }
+    _propagateAction();
   }
 
   @override
@@ -42,17 +56,17 @@ abstract class MobXStore<State extends Object, Error extends Object>
     final disposers = <void Function()>[];
 
     if (onState != null) {
-      disposers.add(_stateObservable.observe((_) {
+      disposers.add(selectState.observe((_) {
         onState(triple.state);
       }));
     }
     if (onLoading != null) {
-      disposers.add(_loadingObservable.observe((_) {
+      disposers.add(selectLoading.observe((_) {
         onLoading(triple.loading);
       }));
     }
     if (onError != null) {
-      disposers.add(_errorObservable.observe((_) {
+      disposers.add(selectError.observe((_) {
         onError(triple.error!);
       }));
     }
@@ -66,4 +80,10 @@ abstract class MobXStore<State extends Object, Error extends Object>
 
   @override
   Future destroy() async {}
+}
+
+class _MobXStoreImp<State extends Object, Error extends Object>
+    extends MobXStore<State, Error> {
+  _MobXStoreImp(State initialState, {int historyLimit = 256})
+      : super(initialState, historyLimit: historyLimit);
 }
