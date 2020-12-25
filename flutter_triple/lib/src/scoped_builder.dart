@@ -37,21 +37,21 @@ class _ScopedBuilderState<TState extends Object, TError extends Object,
       disposer!.call();
     }
     disposer = widget.store.observer(
-      onState: () {
+      onState: (state) {
         if (widget.onState != null) {
           setState(() {
             child = widget.onState!(context, widget.store.state);
           });
         }
       },
-      onError: () {
+      onError: (error) {
         if (widget.onError != null) {
           setState(() {
             child = widget.onError!(context, widget.store.error);
           });
         }
       },
-      onLoading: () {
+      onLoading: (loading) {
         if (widget.onLoading != null &&
             (widget.onState == null ? true : widget.store.loading)) {
           setState(() {

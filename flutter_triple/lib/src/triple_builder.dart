@@ -27,7 +27,7 @@ class _TripleBuilderState<TState extends Object, TError extends Object,
 
   Disposer? disposer;
 
-  void _listener() {
+  void _listener(dynamic value) {
     final isSelected = widget.selector?.call(widget.store.triple) ?? true;
     if (isSelected) {
       setState(() {

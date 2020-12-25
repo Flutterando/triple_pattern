@@ -8,11 +8,11 @@ void main() {
 
   setUpAll(() {
     counter = Counter();
-    disposer = counter.observer(onState: () {
+    disposer = counter.observer(onState: (state) {
       print(counter.state);
-    }, onError: () {
+    }, onError: (error) {
       print('Error: ${counter.error}');
-    }, onLoading: () {
+    }, onLoading: (loading) {
       print(counter.loading);
     });
   });

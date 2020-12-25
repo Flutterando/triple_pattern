@@ -9,8 +9,8 @@ void main() {
   setUpAll(() {
     counter = Counter();
     counter.observer(
-      onState: () => print("State ${counter.state}"),
-      onLoading: () => print(counter.loading),
+      onState: (state) => print("State ${counter.state}"),
+      onLoading: (loading) => print(counter.loading),
     );
   });
 

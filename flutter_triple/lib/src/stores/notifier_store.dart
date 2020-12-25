@@ -29,16 +29,16 @@ abstract class NotifierStore<State extends Object, Error extends Object>
 
   @override
   Disposer observer(
-      {void Function()? onState,
-      void Function()? onLoading,
-      void Function()? onError}) {
+      {void Function(State state)? onState,
+      void Function(bool loading)? onLoading,
+      void Function(Error error)? onError}) {
     final _sub = _tripleController.listen((triple, handle) {
       if (triple.event == TripleEvent.state) {
-        onState?.call();
+        onState?.call(triple.state);
       } else if (triple.event == TripleEvent.error) {
-        onError?.call();
+        onError?.call(triple.error!);
       } else if (triple.event == TripleEvent.loading) {
-        onLoading?.call();
+        onLoading?.call(triple.loading);
       }
     });
 
