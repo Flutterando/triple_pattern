@@ -1,6 +1,6 @@
 name: flutter_triple
-description: Segmented State Pattern for Flutter Apps
-version: 0.0.6
+description: Implementation of the Segmented State Pattern (SSP) nicknamed Triple.
+version: 0.0.7
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:
