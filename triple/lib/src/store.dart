@@ -13,10 +13,19 @@ abstract class Store<State extends Object, Error extends Object> {
   int _historyIndex = 0;
   late final int _historyLimit;
 
+  ///Get the [state] value;
   State get state => triple.state;
+
+  ///Get [loading] value;
   bool get loading => triple.loading;
+
+  ///Get [error] value;
   Error? get error => triple.error;
 
+  ///[initialState] Start this store with a value defalt.
+  ///
+  ///[historyLimit] History's State cache.
+  ///This property defines the maximum size of the state value that can be stored. Used when invoking the [undo()] and [rendo()] methods.
   Store(State initialState, {int historyLimit = 256}) {
     assert(historyLimit > 1, 'historySize not can be < 2');
     _historyLimit = historyLimit;
@@ -27,6 +36,9 @@ abstract class Store<State extends Object, Error extends Object> {
   @visibleForOverriding
   void propagate(Triple<State, Error> triple);
 
+  ///Change the State value.
+  ///
+  ///This also stores the state value to be retrieved using the [undo()] method
   void setState(State newState) {
     _addHistory(_lastTriple);
     triple = triple.copyWith(state: newState, event: TripleEvent.state);
@@ -34,11 +46,13 @@ abstract class Store<State extends Object, Error extends Object> {
     propagate(triple);
   }
 
+  ///Change the loading value.
   void setLoading(bool newloading) {
     triple = triple.copyWith(loading: newloading, event: TripleEvent.loading);
     propagate(triple);
   }
 
+  ///Change the error value.
   void setError(Error newError) {
     triple = triple.copyWith(error: newError, event: TripleEvent.error);
     propagate(triple);
@@ -58,6 +72,7 @@ abstract class Store<State extends Object, Error extends Object> {
     _historyIndex = _history.length;
   }
 
+  ///Undo the last state value.
   void undo() {
     if (_history.isNotEmpty && _historyIndex > 0) {
       _historyIndex = _historyIndex > _history.length
@@ -68,6 +83,7 @@ abstract class Store<State extends Object, Error extends Object> {
     }
   }
 
+  ///redo the last state value.
   void redo() {
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
@@ -80,7 +96,21 @@ abstract class Store<State extends Object, Error extends Object> {
     }
   }
 
+  ///Discard the store
   Future destroy();
+
+  ///Observer the Segmented State.
+  ///
+  ///EXAMPLE:
+  ///```dart
+  ///Disposer disposer = counter.observer(
+  ///   onState: (state) => print(state),
+  ///   onLoading: (loading) => print(loading),
+  ///   onError: (error) => print(error),
+  ///);
+  ///
+  ///dispose();
+  ///```
 
   Disposer observer({
     void Function(State state)? onState,

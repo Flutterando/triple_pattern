@@ -24,6 +24,22 @@ class Triple<State extends Object, Error extends Object> {
       event: event ?? this.event,
     );
   }
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is Triple<State, Error> &&
+        o.state == state &&
+        o.error == error &&
+        o.loading == loading &&
+        o.event == event;
+  }
+
+  @override
+  int get hashCode {
+    return state.hashCode ^ error.hashCode ^ loading.hashCode ^ event.hashCode;
+  }
 }
 
 enum TripleEvent { state, loading, error }
