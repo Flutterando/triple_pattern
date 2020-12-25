@@ -3,7 +3,10 @@ import 'package:triple/triple.dart';
 import 'package:functional_listener/functional_listener.dart';
 
 abstract class NotifierStore<State extends Object, Error extends Object>
-    extends Store<State, Error> {
+    extends Store<State, Error>
+    implements
+        Selectors<ValueListenable<State>, ValueListenable<Error>,
+            ValueListenable<bool>> {
   late final _tripleController = ValueNotifier<Triple<State, Error>>(triple);
 
   late final ValueListenable<State> selectState = _tripleController

@@ -155,7 +155,7 @@ packages:
       path: "../../triple"
       relative: true
     source: path
-    version: "0.0.7"
+    version: "0.0.9"
   typed_data:
     dependency: transitive
     description:

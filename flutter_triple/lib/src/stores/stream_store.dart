@@ -4,21 +4,23 @@ import 'package:flutter/foundation.dart';
 import 'package:triple/triple.dart';
 
 abstract class StreamStore<State extends Object, Error extends Object>
-    extends Store<State, Error> {
+    extends Store<State, Error>
+    implements Selectors<Stream<State>, Stream<Error>, Stream<bool>> {
   final _tripleController =
       StreamController<Triple<State, Error>>.broadcast(sync: true);
 
+  @override
   late final Stream<State> selectState = _tripleController.stream
       .where((triple) => triple.event == TripleEvent.state)
       .map((triple) => triple.state);
 
-  ///Select the reativide Error segment
+  @override
   late final Stream<Error> selectError = _tripleController.stream
       .where((triple) => triple.event == TripleEvent.error)
       .where((triple) => triple.error != null)
       .map((triple) => triple.error!);
 
-  ///Select the reativide Loading segment
+  @override
   late final Stream<bool> selectLoading = _tripleController.stream
       .where((triple) => triple.event == TripleEvent.loading)
       .map((triple) => triple.loading);
