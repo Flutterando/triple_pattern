@@ -1,19 +1,23 @@
 name: flutter_triple
 description: Segmented State Pattern for Flutter Apps
-version: 0.0.1
+version: 0.0.3
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
+  triple: ">=0.0.4 <1.0.0"
   flutter:
     sdk: flutter
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+# dependency_overrides:
+#   triple: 
+#     path: ../triple
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
