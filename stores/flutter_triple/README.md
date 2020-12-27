@@ -149,10 +149,78 @@ Stream<bool> myLoading$ = counter.selectLoading;
 
 //NotifierStore
 ValueListenable<int> myState$ = counter.selectState;
-ValueListenable<Exception> myError$ = counter.selectError;
+ValueListenable<Exception?> myError$ = counter.selectError;
 ValueListenable<bool> myLoading$ = counter.selectLoading;
 
 ```
+
+## Gerênciando o Estado com ValueNotifier
+
+[ValueNotifier](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) é uma implementação de [ChangeNotifier](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html) e está presente em todo o ecosistema do Flutter, desde ScrollController ao TabController.
+
+Usar a API do *ChangeNotifier* significa reaproveitar tudo o que já existe no Flutter, por isso é normal considerá o seu uso.
+
+O ValueNotifier usado nessa Store é extendido pela library [rx_notifier](https://pub.dev/packages/rx_notifier) que trás a possibilidade de aplicar a **functional reactive programming (TFRP)**, escutando as mudanças de seus valores de forma transparente como faz o [MobX](https://pub.dev/packages/mobx) por exemplo.
+
+Um Store baseado em **ValueNotifier** é chamado de **NotifierStore**:
+
+```dart
+class Counter extends StreamStore<int, Exception> {
+
+    Counter() : super(0);
+
+    Future<void> increment() async {
+        setLoading(true);
+
+        await Future.delayer(Duration(seconds: 1));
+
+        int value = state + 1;
+        if(value < 5) {
+            setState(value);
+        } else {
+            setError(Exception('Error: state not can be > 4'))
+        }
+        setLoading(false);
+    }
+}
+```
+
+Nossos selectors (selectState, selectError e selectBool) agora serão **ValueListenable** que podem ser escutados separadamente usando **.addListener()** ou na Árvore de Widget com o **AnimatedBuilder** ambos do próprio Flutter:
+
+```dart
+
+store.selectError.addListener(() => print(store.state));
+
+...
+
+Widget builder(BuildContext context){
+    return AnimatedBuilder(
+        animation: store.selectState,
+        builder: (_, __, ___) => Text(store.state);
+    );
+}
+
+```
+
+Ou escutar as reações de forma transparente usando o **rxObserver** ou na árvore widget com o **RxBuilder**:
+
+```dart
+
+rxObserver(() => print(store.state));
+
+...
+
+Widget builder(BuildContext context){
+    return RxBuilder(
+        builder: (_) => Text(store.state);
+    );
+}
+
+```
+
+Para mais informações sobre a extensão leia a documentação do [rx_notifier](https://pub.dev/packages/rx_notifier)
+
+> **IMPORTANT**: Obviamente você pode continuar a usar os listeners do **Triple** (**observer**, **ScopedBuilder** e **TripleBuilder**);
 
 ## Dúvidas e Problemas
 
