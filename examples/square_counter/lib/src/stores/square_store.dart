@@ -3,7 +3,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 
 import 'home_store.dart';
 
-class SquareStore extends StreamStore<int, SquareError> {
+class SquareStore extends NotifierStore<int, SquareError> {
   final HomeStore homeStore;
   final int index;
 

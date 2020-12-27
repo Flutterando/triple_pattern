@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.0.0"
+    version: "12.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.39.17"
+    version: "0.40.6"
   archive:
     dependency: transitive
     description:
@@ -91,7 +91,7 @@ packages:
       name: coverage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.1"
+    version: "0.14.2"
   crypto:
     dependency: transitive
     description:
@@ -99,13 +99,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.16.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -155,19 +148,12 @@ packages:
       name: flutter_triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.10"
+    version: "0.0.12"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
-  functional_listener:
-    dependency: transitive
-    description:
-      name: functional_listener
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0-nullsafety.1"
   glob:
     dependency: transitive
     description:
@@ -175,13 +161,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.14.0+4"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -249,7 +228,7 @@ packages:
       name: node_interop
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   node_io:
     dependency: transitive
     description:
@@ -306,6 +285,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.4"
+  rx_notifier:
+    dependency: transitive
+    description:
+      name: rx_notifier
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -387,7 +373,7 @@ packages:
       name: triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.10"
+    version: "0.0.11+1"
   typed_data:
     dependency: transitive
     description:
@@ -408,7 +394,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.0"
+    version: "5.5.0"
   watcher:
     dependency: transitive
     description:
@@ -439,4 +425,3 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"

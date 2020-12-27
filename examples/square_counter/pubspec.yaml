@@ -22,7 +22,7 @@ environment:
 
 dependencies:
   equatable: ^2.0.0-nullsafety.0
-  flutter_triple: ^0.0.10
+  flutter_triple: ^0.0.12
   mobx_triple:
   flutter:
     sdk: flutter

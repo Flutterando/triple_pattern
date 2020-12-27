@@ -20,11 +20,10 @@ class SquareWidget extends StatelessWidget {
             width: 100,
             height: 100,
             alignment: Alignment.center,
-            child: ScopedBuilder(
-              store: square,
-              onState: (_, state) {
+            child: RxBuilder(
+              builder: (_) {
                 return Text(
-                  "$state",
+                  "${square.state}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

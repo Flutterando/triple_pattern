@@ -28,7 +28,6 @@ class HomeStore extends StreamStore<List<SquareStore>, SquareError> {
   void removeSquare() async {
     if (state.isNotEmpty) {
       final newList = List<SquareStore>.from(state);
-      await newList.last.destroy();
       newList.removeLast();
       setState(newList);
     }
