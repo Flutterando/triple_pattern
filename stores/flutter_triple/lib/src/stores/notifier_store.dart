@@ -1,33 +1,44 @@
 import 'package:flutter/foundation.dart';
+import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
-import 'package:functional_listener/functional_listener.dart';
 
 abstract class NotifierStore<State extends Object, Error extends Object>
     extends Store<State, Error>
     implements
-        Selectors<ValueListenable<State>, ValueListenable<Error>,
+        Selectors<ValueListenable<State>, ValueListenable<Error?>,
             ValueListenable<bool>> {
-  late final _tripleController = ValueNotifier<Triple<State, Error>>(triple);
+  late final _selectState = RxNotifier<State>(triple.state);
+  late final _selectError = RxNotifier<Error?>(triple.error);
+  late final _selectLoading = RxNotifier<bool>(triple.loading);
 
-  late final ValueListenable<State> selectState = _tripleController
-      .where((triple) => triple.event == TripleEvent.state)
-      .map((triple) => triple.state);
+  @override
+  ValueListenable<State> get selectState => _selectState;
+  @override
+  ValueListenable<Error?> get selectError => _selectError;
+  @override
+  ValueListenable<bool> get selectLoading => _selectLoading;
 
-  late final ValueListenable<Error> selectError = _tripleController
-      .where((triple) => triple.event == TripleEvent.error)
-      .where((triple) => triple.error != null)
-      .map((triple) => triple.error!);
+  @override
+  State get state => selectState.value;
 
-  late final ValueListenable<bool> selectLoading = _tripleController
-      .where((triple) => triple.event == TripleEvent.loading)
-      .map((triple) => triple.loading);
+  @override
+  Error? get error => selectError.value;
+
+  @override
+  bool get loading => selectLoading.value;
 
   NotifierStore(State initialState, {int historyLimit = 256})
       : super(initialState, historyLimit: historyLimit);
 
   @override
   void propagate(Triple<State, Error> triple) {
-    _tripleController.value = triple;
+    if (triple.event == TripleEvent.state) {
+      _selectState.value = triple.state;
+    } else if (triple.event == TripleEvent.error) {
+      _selectError.value = triple.error;
+    } else if (triple.event == TripleEvent.loading) {
+      _selectLoading.value = triple.loading;
+    }
   }
 
   @override
@@ -35,23 +46,37 @@ abstract class NotifierStore<State extends Object, Error extends Object>
       {void Function(State state)? onState,
       void Function(bool loading)? onLoading,
       void Function(Error error)? onError}) {
-    final _sub = _tripleController.listen((triple, handle) {
-      if (triple.event == TripleEvent.state) {
-        onState?.call(triple.state);
-      } else if (triple.event == TripleEvent.error) {
-        onError?.call(triple.error!);
-      } else if (triple.event == TripleEvent.loading) {
-        onLoading?.call(triple.loading);
-      }
-    });
+    final funcState = () => onState?.call(state);
+    final funcLoading = () => onLoading?.call(loading);
+    final funcError = () => error != null ? onError?.call(error!) : null;
+
+    if (onState != null) {
+      selectState.addListener(funcState);
+    }
+    if (onError != null) {
+      selectLoading.addListener(funcError);
+    }
+    if (onLoading != null) {
+      selectError.addListener(funcLoading);
+    }
 
     return () async {
-      _sub.cancel();
+      if (onState != null) {
+        selectState.removeListener(funcState);
+      }
+      if (onError != null) {
+        selectLoading.removeListener(funcError);
+      }
+      if (onLoading != null) {
+        selectError.removeListener(funcLoading);
+      }
     };
   }
 
   @override
   Future destroy() async {
-    _tripleController.dispose();
+    _selectState.dispose();
+    _selectLoading.dispose();
+    _selectError.dispose();
   }
 }

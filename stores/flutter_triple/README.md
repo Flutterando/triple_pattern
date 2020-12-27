@@ -32,13 +32,13 @@ class Counter extends StreamStore {}
 Você também pode colocar tipos no valor do estado e no objeto de exception que iremos trabalhar nesse Store:
 
 ```dart
-class Counter<int, Exception> extends StreamStore<int, Exception> {}
+class Counter extends StreamStore<int, Exception> {}
 ```
 
 Finalizamos atribuindo um valor inicial para o estado desse Store invocando o construtor da classe pai (super):
 
 ```dart
-class Counter<int, Exception> extends StreamStore<int, Exception> {
+class Counter extends StreamStore<int, Exception> {
 
     Counter() : super(0);
 }
@@ -47,7 +47,7 @@ class Counter<int, Exception> extends StreamStore<int, Exception> {
 Temos disponível na Store 3 métodos para mudar os segmentos **(setState, setError e setLoading)**. Vamos começar incrementando o estado:
 
 ```dart
-class Counter<int, Exception> extends StreamStore<int, Exception> {
+class Counter extends StreamStore<int, Exception> {
 
     Counter() : super(0);
 
@@ -61,7 +61,7 @@ Esse código já é o suficiente para fazer o contador funcionar.
 Vamos adicionar um pouco de código assincrono para apresentar os métodos **setError** e **setLoading**
 
 ```dart
-class Counter<int, Exception> extends StreamStore<int, Exception> {
+class Counter extends StreamStore<int, Exception> {
 
     Counter() : super(0);
 
