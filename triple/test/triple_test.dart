@@ -1,4 +1,6 @@
+import 'package:meta/meta.dart';
 import 'package:test/test.dart';
+import 'package:triple/src/models/memento_mixin.dart';
 import 'package:triple/src/selectors.dart';
 import 'package:triple/triple.dart';
 
@@ -38,10 +40,20 @@ void main() {
     store.setState(0);
     expect(store.propagated.hashCode, triple.hashCode);
   });
+
+  test('check implementation. disctinct setState with memento', () {
+    store.setError(const MyException('error'));
+    store.setState(0);
+    store.setState(1);
+    store.setState(2);
+    store.undo();
+    expect(store.state, 1);
+  });
 }
 
 class TestImplements<State extends Object, Error extends Object>
     extends Store<State, Error>
+    with MementoMixin
     implements Selectors<Stream<State>, Stream<Error>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
@@ -59,8 +71,10 @@ class TestImplements<State extends Object, Error extends Object>
     return () async {};
   }
 
+  @protected
   @override
-  void propagate(Triple<State, Error> triple) {
+  void propagate() {
+    super.propagate();
     propagated = triple;
   }
 

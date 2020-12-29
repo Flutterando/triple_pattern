@@ -196,9 +196,16 @@ implements Selectors<Stream<State>, Stream<Error>, Stream<bool>>
 ```
 
 
-## Considerações sobre o Padrão Memento
+## Usando o Padrão Memento com o MementoMixin
 
-Uma Store já contem por padrão a possibilidade de rollback de estado. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
+Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
+
+```dart
+
+class Counter extends StreamStore<int, Exception> with MementoMixin {}
+
+```
+
 
 ## Exemplos
 

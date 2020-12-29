@@ -165,7 +165,7 @@ O ValueNotifier usado nessa Store é extendido pela library [rx_notifier](https:
 Um Store baseado em **ValueNotifier** é chamado de **NotifierStore**:
 
 ```dart
-class Counter extends StreamStore<int, Exception> {
+class Counter extends NotifierStore<int, Exception> {
 
     Counter() : super(0);
 
@@ -221,6 +221,16 @@ Widget builder(BuildContext context){
 Para mais informações sobre a extensão leia a documentação do [rx_notifier](https://pub.dev/packages/rx_notifier)
 
 > **IMPORTANT**: Obviamente você pode continuar a usar os listeners do **Triple** (**observer**, **ScopedBuilder** e **TripleBuilder**);
+
+## Usando o Padrão Memento com o MementoMixin
+
+Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
+
+```dart
+
+class Counter extends StreamStore<int, Exception> with MementoMixin {}
+
+```
 
 ## Dúvidas e Problemas
 
