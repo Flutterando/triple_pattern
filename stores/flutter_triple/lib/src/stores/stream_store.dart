@@ -25,12 +25,11 @@ abstract class StreamStore<State extends Object, Error extends Object>
       .where((triple) => triple.event == TripleEvent.loading)
       .map((triple) => triple.loading);
 
-  StreamStore(State initialState, {int historyLimit = 256})
-      : super(initialState, historyLimit: historyLimit);
+  StreamStore(State initialState) : super(initialState);
 
   @protected
   @override
-  void propagate(Triple<State, Error> _triple) {
+  void propagate(Triple<State, Error> triple) {
     _tripleController.add(triple);
   }
 
@@ -46,6 +45,7 @@ abstract class StreamStore<State extends Object, Error extends Object>
     void Function(Error error)? onError,
   }) {
     final _sub = _tripleController.stream.listen((triple) {
+      print(triple.event);
       if (triple.event == TripleEvent.state) {
         onState?.call(triple.state);
       } else if (triple.event == TripleEvent.error) {

@@ -38,13 +38,19 @@ void main() {
           false,
         ]));
     await counter.increment(); //dispach true, 1 and false
+    await Future.delayed(Duration(milliseconds: 300));
     await counter.increment(); //dispach true, 2 and false
+    await Future.delayed(Duration(milliseconds: 300));
     await counter.increment(); //dispach true, 3 and false
+    await Future.delayed(Duration(milliseconds: 300));
     await counter.increment(); //dispach true, Exception and false
+    await Future.delayed(Duration(milliseconds: 300));
     print('---------------');
     await Future.delayed(Duration(milliseconds: 1000));
     counter.undo(); // return to 2
+    await Future.delayed(Duration(milliseconds: 300));
     counter.undo(); // return to 1
+    await Future.delayed(Duration(milliseconds: 300));
 
     print('---------------');
     await Future.delayed(Duration(milliseconds: 500));
@@ -52,7 +58,7 @@ void main() {
   });
 }
 
-class Counter extends StreamStore<int, Exception> {
+class Counter extends StreamStore<int, Exception> with MementoMixin {
   Counter() : super(0);
 
   Future<void> increment() async {

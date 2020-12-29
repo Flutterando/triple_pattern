@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
-import 'package:triple/src/models/memento_mixin.dart';
+import 'package:triple/src/memento_mixin.dart';
 import 'package:triple/src/selectors.dart';
 import 'package:triple/triple.dart';
 
@@ -73,8 +73,7 @@ class TestImplements<State extends Object, Error extends Object>
 
   @protected
   @override
-  void propagate() {
-    super.propagate();
+  void propagate(Triple<State, Error> triple) {
     propagated = triple;
   }
 

@@ -27,8 +27,7 @@ abstract class NotifierStore<State extends Object, Error extends Object>
   @override
   bool get loading => selectLoading.value;
 
-  NotifierStore(State initialState, {int historyLimit = 256})
-      : super(initialState, historyLimit: historyLimit);
+  NotifierStore(State initialState) : super(initialState);
 
   @override
   void propagate(Triple<State, Error> triple) {

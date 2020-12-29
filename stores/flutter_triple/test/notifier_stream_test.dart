@@ -27,7 +27,7 @@ void main() {
   });
 }
 
-class Counter extends NotifierStore<int, Exception> {
+class Counter extends NotifierStore<int, Exception> with MementoMixin {
   Counter() : super(0);
 
   Future<void> increment() async {

@@ -1,12 +1,9 @@
-import 'package:meta/meta.dart';
-
-import '../store.dart';
-import 'triple_model.dart';
+import 'store.dart';
+import 'models/triple_model.dart';
 import 'dart:math' as math;
 
 mixin MementoMixin<State extends Object, Error extends Object>
     on Store<State, Error> {
-  late Triple<State, Error> _lastTripleState = triple;
   final _history = <Triple<State, Error>>[];
   final int _historyLimit = 32;
   int _historyIndex = 0;
@@ -20,7 +17,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
   ///Return [true] if you can redo
   bool canRedo() =>
       (_historyIndex + 1) < _history.length ||
-      triple.state != _lastTripleState.state;
+      triple.state != lastTripleState.state;
 
   void _addHistory(Triple<State, Error> observableCache) {
     if (_historyIndex == _history.length) {
@@ -36,14 +33,11 @@ mixin MementoMixin<State extends Object, Error extends Object>
     _historyIndex = _history.length;
   }
 
-  @mustCallSuper
   @override
-  void propagate() {
-    if (triple.event == TripleEvent.state) {
-      _addHistory(_lastTripleState);
-      _lastTripleState = triple;
-    }
-    _lastTripleState = triple;
+  void setState(newState) {
+    _addHistory(lastTripleState);
+    super.setState(newState);
+    lastTripleState = triple;
   }
 
   ///Undo the last state value.
@@ -52,8 +46,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
       _historyIndex = _historyIndex > _history.length
           ? math.max(_history.length - 1, 0)
           : _historyIndex - 1;
-      triple = _history[_historyIndex];
-      super.propagate();
+      propagate(_history[_historyIndex]);
     }
   }
 
@@ -61,12 +54,10 @@ mixin MementoMixin<State extends Object, Error extends Object>
   void redo() {
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
-      triple = _history[_historyIndex];
-      propagate();
-    } else if (triple.state != _lastTripleState.state) {
+      propagate(_history[_historyIndex]);
+    } else if (triple.state != lastTripleState.state) {
       _historyIndex++;
-      triple = _lastTripleState;
-      propagate();
+      propagate(_history[_historyIndex]);
     }
   }
 }

@@ -6,56 +6,61 @@ import 'package:meta/meta.dart';
 typedef Disposer = Future<void> Function();
 
 abstract class Store<State extends Object, Error extends Object> {
-  late Triple<State, Error> triple;
+  late Triple<State, Error> _triple;
+  late Triple<State, Error> lastTripleState;
+
+  ///Get the complete triple value;
+  Triple<State, Error> get triple => _triple;
 
   ///Get the [state] value;
-  State get state => triple.state;
+  State get state => _triple.state;
 
   ///Get [loading] value;
-  bool get loading => triple.loading;
+  bool get loading => _triple.loading;
 
   ///Get [error] value;
-  Error? get error => triple.error;
+  Error? get error => _triple.error;
 
   ///[initialState] Start this store with a value defalt.
   Store(State initialState) {
-    triple = Triple<State, Error>(state: initialState);
+    _triple = Triple<State, Error>(state: initialState);
+    lastTripleState = _triple;
   }
 
   ///IMPORTANT!!!
   ///THIS METHOD TO BE VISIBLE FOR OVERRIDING ONLY!!!
   @visibleForOverriding
-  void propagate() {}
+  void propagate(Triple<State, Error> triple);
 
   ///Change the State value.
   ///
   ///This also stores the state value to be retrieved using the [undo()] method
   void setState(State newState) {
     final candidate =
-        triple.copyWith(state: newState, event: TripleEvent.state);
-    if (candidate != triple && candidate.state != triple.state) {
-      triple = candidate;
-      propagate();
+        _triple.copyWith(state: newState, event: TripleEvent.state);
+    if (candidate != _triple && candidate.state != _triple.state) {
+      _triple = candidate;
+      propagate(_triple);
     }
   }
 
   ///Change the loading value.
   void setLoading(bool newloading) {
     final candidate =
-        triple.copyWith(loading: newloading, event: TripleEvent.loading);
-    if (candidate != triple && candidate.loading != triple.loading) {
-      triple = candidate;
-      propagate();
+        _triple.copyWith(loading: newloading, event: TripleEvent.loading);
+    if (candidate != _triple && candidate.loading != _triple.loading) {
+      _triple = candidate;
+      propagate(_triple);
     }
   }
 
   ///Change the error value.
   void setError(Error newError) {
     final candidate =
-        triple.copyWith(error: newError, event: TripleEvent.error);
-    if (candidate != triple && candidate.error != triple.error) {
-      triple = candidate;
-      propagate();
+        _triple.copyWith(error: newError, event: TripleEvent.error);
+    if (candidate != _triple && candidate.error != _triple.error) {
+      _triple = candidate;
+      propagate(_triple);
     }
   }
 
