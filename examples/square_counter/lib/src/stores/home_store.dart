@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:square_counter/src/errors/errors.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 import 'square_store.dart';
 
-class HomeStore extends StreamStore<List<SquareStore>, SquareError> {
+class HomeStore extends NotifierStore<List<SquareStore>, SquareError>
+    with MementoMixin {
   HomeStore() : super([]);
 
   void initializeSquare(List<SquareStore> squares) {

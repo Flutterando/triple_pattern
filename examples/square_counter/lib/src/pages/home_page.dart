@@ -28,21 +28,19 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _sub = store.selectError.listen((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(error.message),
-        ),
-      );
-    });
-
-    store.selectLoading.listen((laoding) {
-      if (laoding) {
+    store.observer(onLoading: (loading) {
+      if (store.loading) {
         Overlay.of(context)?.insert(loadingOverlay);
       } else {
         loadingOverlay.remove();
       }
+    }, onError: (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(store.error?.message ?? ''),
+        ),
+      );
     });
   }
 

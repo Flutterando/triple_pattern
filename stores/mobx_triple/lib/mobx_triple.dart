@@ -3,6 +3,7 @@ library mobx_triple;
 import 'package:meta/meta.dart';
 import 'package:mobx/mobx.dart' hide Store;
 import 'package:triple/triple.dart';
+export 'package:triple/triple.dart';
 
 abstract class MobXStore<State extends Object, Error extends Object>
     extends Store<State, Error>
@@ -36,11 +37,7 @@ abstract class MobXStore<State extends Object, Error extends Object>
     }
   });
 
-  MobXStore(State initialState, {int historyLimit = 256})
-      : super(initialState, historyLimit: historyLimit);
-
-  factory MobXStore.create(State intialValue, {int historyLimit = 256}) =>
-      _MobXStoreImp<State, Error>(intialValue, historyLimit: historyLimit);
+  MobXStore(State initialState) : super(initialState);
 
   @protected
   @override
@@ -80,10 +77,4 @@ abstract class MobXStore<State extends Object, Error extends Object>
 
   @override
   Future destroy() async {}
-}
-
-class _MobXStoreImp<State extends Object, Error extends Object>
-    extends MobXStore<State, Error> {
-  _MobXStoreImp(State initialState, {int historyLimit = 256})
-      : super(initialState, historyLimit: historyLimit);
 }
