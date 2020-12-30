@@ -30,12 +30,14 @@ abstract class Store<State extends Object, Error extends Object> {
   ///IMPORTANT!!!
   ///THIS METHOD TO BE VISIBLE FOR OVERRIDING ONLY!!!
   @visibleForOverriding
-  void propagate(Triple<State, Error> triple);
+  void propagate(Triple<State, Error> triple) {
+    _triple = triple;
+  }
 
   ///Change the State value.
   ///
-  ///This also stores the state value to be retrieved using the [undo()] method
-  void setState(State newState) {
+  ///This also stores the state value to be retrieved using the [undo()] method when using MementoMixin
+  void update(State newState) {
     final candidate =
         _triple.copyWith(state: newState, event: TripleEvent.state);
     if (candidate != _triple && candidate.state != _triple.state) {

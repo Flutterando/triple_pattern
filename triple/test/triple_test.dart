@@ -12,7 +12,7 @@ void main() {
   });
 
   test('check implementation. setState', () {
-    store.setState(1);
+    store.update(1);
     expect(store.propagated, Triple<int, MyException>(state: 1));
   });
 
@@ -37,15 +37,15 @@ void main() {
   test('check implementation. disctinct setState', () {
     store.setError(const MyException('error'));
     final triple = store.propagated;
-    store.setState(0);
+    store.update(0);
     expect(store.propagated.hashCode, triple.hashCode);
   });
 
   test('check implementation. disctinct setState with memento', () {
     store.setError(const MyException('error'));
-    store.setState(0);
-    store.setState(1);
-    store.setState(2);
+    store.update(0);
+    store.update(1);
+    store.update(2);
     store.undo();
     expect(store.state, 1);
   });
@@ -74,6 +74,7 @@ class TestImplements<State extends Object, Error extends Object>
   @protected
   @override
   void propagate(Triple<State, Error> triple) {
+    super.propagate(triple);
     propagated = triple;
   }
 

@@ -34,9 +34,9 @@ mixin MementoMixin<State extends Object, Error extends Object>
   }
 
   @override
-  void setState(newState) {
+  void update(newState) {
     _addHistory(lastTripleState);
-    super.setState(newState);
+    super.update(newState);
     lastTripleState = triple;
   }
 
