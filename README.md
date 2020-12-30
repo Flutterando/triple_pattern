@@ -7,13 +7,10 @@ Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para 
 
 Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo, o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
 
-## Store
 
-Um objeto denominado **Store** tem por responsabilidade armazenar a Lógica para o estado de um componente.
-
-## State, Error, Loading
+## Padrão de Fluxo único (BLoC e Flux/Redux)
 .
-![schema](schema.png)
+![schema](bloc.png)
 
 Quando trabalhamos com estado de Fluxo único, ou seja, quando a reatividade está no objeto e não nas suas propriedades, podemos ter mais controle sobre os dados que tramitam antes de chegar a um ouvinte.
 Por exemplo, se sua lógica gerencia um estado X e quer torna-lo Y basta atribuir o valor.
@@ -38,7 +35,9 @@ try{
 }
 
 ```
-Como estamos falando de um fluxo único usamos o POLIMORFISMO da Orientação a Objetos para dividir essas 3 responsabilidades(Valor do Estado, Loading ou Error).
+
+Como estamos falando de um fluxo único usamos o **POLIMORFISMO** da Orientação a Objetos para dividir essas 3 responsabilidades(Valor do Estado, Loading ou Error).
+
 ```dart
 abstract class MyState {}
 
@@ -49,14 +48,20 @@ class Error extends MyState
 ```
 Com isso temos um Fluxo único de **MyState**, pois como os objetos X, Y, Loading e Error herdam de **MyState**.
 ```dart
-X is MyState; // it,s true!
-Y is MyState; // it,s true!
-Loading is MyState; // it,s true!
-Error is MyState; // it,s true too!
+X is MyState; // it's true!
+Y is MyState; // it's true!
+Loading is MyState; // it's true!
+Error is MyState; // it's true too!
 ```
 Muito obrigado mãe Orientação a Objetos! :)
 
-Agora como temos a possibilidade de ter reatividade por propriedade com o MobX ou ValueNotifier não precisariamos do Polimorfismo se dividimos a responsábilidade de Loading e Error para propriedades separadas. E assim temos uma bifurcação tripla tornando o Loading e Error ações pós ou pré mudança de estado.
+> **IMPORTANT:** BLoC é um acrônimo para Bussines Logic Component(Componente de Regra de Negócio).
+
+## Segmentado o estado em State, Error, Loading
+.
+![schema](schema.png)
+
+Agora como temos a possibilidade de ter reatividade por propriedade com o MobX ou ValueNotifier não precisariamos do Polimorfismo se dividimos a responsábilidade de Loading e Error para propriedades separadas dentro de uma **STORE**. E assim temos uma bifurcação tripla tornando o Loading e Error ações pós ou pré mudança de estado.
 Um exemplo usando MobX:
 ```dart
 ...
@@ -84,6 +89,8 @@ Future<void> fetchProducts() async {
 Resumindo, temos então 3 fluxos, o state que tem o valor do estado, o error que guarda as exceptions e o bool loading que informa quando a ação de carregamento está em vigor.
 Poder escutar essas 3 ações de forma separada ajuda a transforma-las e a combina-las em outras ações enriquecendo a sua Store(Classe com a lógica responsável por gerenciar o estado do seu componente).
 Como o movimento do estado sempre está em torno do trio State, Error e Loading vale a pena essa bifurcação para a padronização.
+
+> **IMPORTANT:** Um objeto denominado **Store** tem por responsabilidade armazenar a Lógica para o estado de um componente.
 
 ## Observando os Fluxos
 
@@ -287,7 +294,7 @@ Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
 
 ## Extension (Dart)
 
-Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) para o MobX e também em uma baseada em Streams. Mais detalhes na documentação das próprias abstrações.
+Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) baseados nas reatividades desenvolvidas pela comunidade e nas nativas do Flutter como o ValueNotifier e Streams. Mais detalhes na documentação das próprias abstrações.
 
 - [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
