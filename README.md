@@ -8,7 +8,7 @@ Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para 
 Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo, o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
 
 
-## Padrão de Fluxo único (BLoC e FluxRedux)
+## Padrão de Fluxo único (BLoC e Flux/Redux)
 .
 ![schema](bloc.png)
 
