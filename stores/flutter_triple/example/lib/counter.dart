@@ -6,7 +6,7 @@ class Counter extends StreamStore<int, Exception> with MementoMixin {
   Future<void> increment() async {
     setLoading(true);
     await Future.delayed(Duration(milliseconds: 1000));
-    setState(state + 1);
+    update(state + 1);
     setLoading(false);
   }
 }

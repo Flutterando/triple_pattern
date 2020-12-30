@@ -45,7 +45,6 @@ abstract class StreamStore<State extends Object, Error extends Object>
     void Function(Error error)? onError,
   }) {
     final _sub = _tripleController.stream.listen((triple) {
-      print(triple.event);
       if (triple.event == TripleEvent.state) {
         onState?.call(triple.state);
       } else if (triple.event == TripleEvent.error) {
