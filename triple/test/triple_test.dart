@@ -48,6 +48,14 @@ void main() {
     store.update(2);
     store.undo();
     expect(store.state, 1);
+    store.redo();
+    expect(store.state, 2);
+    store.undo();
+    expect(store.state, 1);
+    store.undo();
+    expect(store.state, 0);
+    store.redo();
+    expect(store.state, 1);
   });
 }
 

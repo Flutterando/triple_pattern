@@ -57,7 +57,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
       propagate(_history[_historyIndex]);
     } else if (triple.state != lastTripleState.state) {
       _historyIndex++;
-      propagate(_history[_historyIndex]);
+      propagate(lastTripleState);
     }
   }
 }
