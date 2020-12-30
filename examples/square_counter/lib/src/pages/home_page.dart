@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final store = HomeStore();
-  late StreamSubscription _sub;
+  late Disposer _disposer;
 
   late OverlayEntry loadingOverlay = OverlayEntry(builder: (_) {
     return Container(
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    store.observer(onLoading: (loading) {
+    _disposer = store.observer(onLoading: (loading) {
       if (store.loading) {
         Overlay.of(context)?.insert(loadingOverlay);
       } else {
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(store.error?.message ?? ''),
+          content: Text(store.error?.message ?? 'Erro disconhecido'),
         ),
       );
     });
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
     store.destroy();
-    _sub.cancel();
+    _disposer();
   }
 
   @override
