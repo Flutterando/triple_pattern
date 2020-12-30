@@ -1,6 +1,6 @@
 import 'package:flutter_triple/flutter_triple.dart';
 
-class Counter extends StreamStore<int, Exception> with MementoMixin {
+class Counter extends StreamStore<Exception, int> with MementoMixin {
   Counter() : super(0);
 
   Future<void> increment() async {

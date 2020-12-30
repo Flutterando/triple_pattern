@@ -32,18 +32,18 @@ Como já falamos, um objeto **Store** serve para armazenar a Lógica de Estado d
 abstract class StreamStore extends Store {}
 ```
 
-Também é prudente colocar "tipos genéricos" para o "state" e "error", faremos isso no **StreamStore** e depois reatribuiremos na **Store**.
+Também é prudente colocar "tipos genéricos" para o "error" e "state", faremos isso no **StreamStore** e depois reatribuiremos na **Store**.
 > **IMPORTANTE**: Herde os tipos genéricos de Object para impedir o uso de dynamics.
 
 e assim temos:
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {}
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {}
 ```
 
 Precisamos ainda declarar o construtor da classe pai com um valor inicial do state e assim concluimos essa etapa:
 
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   StreamStore(State state) : super(state);
 
@@ -53,13 +53,13 @@ abstract class StreamStore<State extends Object, Error extends Object> extends S
 ### PASSO 3: Inicie um objeto com a reatividade escolhida.
  
 
-Inclua de forma privada uma propriedade reativa que trabalhe com o tipo **Triple<State, Error>()**:
+Inclua de forma privada uma propriedade reativa que trabalhe com o tipo **Triple<Error, State>()**:
 
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
@@ -72,10 +72,10 @@ Sobrescreva o método **destroy** que será chamado quando a Store for descartad
 
 
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
@@ -92,16 +92,16 @@ abstract class StreamStore<State extends Object, Error extends Object> extends S
 Quando o Store decide propagar um valor do tipo **Triple**, ele o faz chamando o método **propagate()**. Sobreescreva esse método para direcionar o fluxo para o seu controle principal de reatividade.
 
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple){
+  void propagate(Triple<Error, State> triple){
     _tripleController.add(triple);
   }
 
@@ -122,16 +122,16 @@ Esse método é chamado para escutar os eventos segmentados do estado(state, err
 
 
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple){
+  void propagate(Triple<Error, State> triple){
     _tripleController.add(triple);
   }
 
@@ -165,16 +165,16 @@ abstract class StreamStore<State extends Object, Error extends Object> extends S
 
 ### PASSO 7 (OPCIONAL): Defina Seletores
 
-Pode ser interessande ter seletores de quada segmento do estado de forma reativa. Isso é um State, Error e loading reativo.
+Pode ser interessande ter seletores de quada segmento do estado de forma reativa. Isso é um Error, State e loading reativo.
 Se dejesa ter essa possibilidade no Store implemente a interface **Selectors**:
 
 ```dart
-abstract class StreamStore<State extends Object, Error extends Object> extends Store<State, Error>
-implements Selectors<Stream<State>, Stream<Error>, Stream<bool>>
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State>
+implements Selectors<Stream<Error>, Stream<State>, Stream<bool>>
  {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   @override
   late final Stream<State> selectState = _tripleController.stream

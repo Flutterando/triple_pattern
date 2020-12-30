@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ScopedBuilder<int, Exception, Counter>(
+            ScopedBuilder<Counter, Exception, int>(
                 store: counter,
                 onLoading: (_, loading) {
                   return Text(
@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         : 'Carregando...',
                   );
                 }),
-            ScopedBuilder<int, Exception, Counter>(
+            ScopedBuilder<Counter, Exception, int>(
               store: counter,
               onState: (_, state) {
                 return Text(
@@ -97,10 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: TripleBuilder<int, Exception, Counter>(
+      floatingActionButton: TripleBuilder<Counter, Exception, int>(
           store: counter,
           builder: (_, triple) => _floatingButton(
-                !triple.loading || triple.event == TripleEvent.state,
+                !triple.isLoading || triple.event == TripleEvent.state,
               )),
     );
   }

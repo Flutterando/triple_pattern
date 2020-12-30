@@ -5,32 +5,32 @@ import 'package:meta/meta.dart';
 
 typedef Disposer = Future<void> Function();
 
-abstract class Store<State extends Object, Error extends Object> {
-  late Triple<State, Error> _triple;
-  late Triple<State, Error> lastTripleState;
+abstract class Store<Error extends Object, State extends Object> {
+  late Triple<Error, State> _triple;
+  late Triple<Error, State> lastTripleState;
 
   ///Get the complete triple value;
-  Triple<State, Error> get triple => _triple;
+  Triple<Error, State> get triple => _triple;
 
   ///Get the [state] value;
   State get state => _triple.state;
 
   ///Get [loading] value;
-  bool get loading => _triple.loading;
+  bool get isLoading => _triple.isLoading;
 
   ///Get [error] value;
   Error? get error => _triple.error;
 
   ///[initialState] Start this store with a value defalt.
   Store(State initialState) {
-    _triple = Triple<State, Error>(state: initialState);
+    _triple = Triple<Error, State>(state: initialState);
     lastTripleState = _triple;
   }
 
   ///IMPORTANT!!!
   ///THIS METHOD TO BE VISIBLE FOR OVERRIDING ONLY!!!
   @visibleForOverriding
-  void propagate(Triple<State, Error> triple) {
+  void propagate(Triple<Error, State> triple) {
     _triple = triple;
   }
 
@@ -49,8 +49,8 @@ abstract class Store<State extends Object, Error extends Object> {
   ///Change the loading value.
   void setLoading(bool newloading) {
     final candidate =
-        _triple.copyWith(loading: newloading, event: TripleEvent.loading);
-    if (candidate != _triple && candidate.loading != _triple.loading) {
+        _triple.copyWith(isLoading: newloading, event: TripleEvent.loading);
+    if (candidate != _triple && candidate.isLoading != _triple.isLoading) {
       _triple = candidate;
       propagate(_triple);
     }
@@ -83,7 +83,7 @@ abstract class Store<State extends Object, Error extends Object> {
   ///```
   Disposer observer({
     void Function(State state)? onState,
-    void Function(bool loading)? onLoading,
+    void Function(bool isLoading)? onLoading,
     void Function(Error error)? onError,
   });
 }

@@ -1,6 +1,6 @@
 name: triple
 description: abstraction for the Segmented State Pattern
-version: 0.0.17
+version: 0.0.18
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:

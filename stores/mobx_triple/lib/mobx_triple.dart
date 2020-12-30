@@ -5,10 +5,10 @@ import 'package:mobx/mobx.dart' hide Store;
 import 'package:triple/triple.dart';
 export 'package:triple/triple.dart';
 
-abstract class MobXStore<State extends Object, Error extends Object>
-    extends Store<State, Error>
+abstract class MobXStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
     implements
-        Selectors<Observable<State>, Observable<Error?>, Observable<bool>> {
+        Selectors<Observable<Error?>, Observable<State>, Observable<bool>> {
   @override
   late final selectState = Observable<State>(triple.state);
 
@@ -25,7 +25,7 @@ abstract class MobXStore<State extends Object, Error extends Object>
   Error? get error => selectError.value;
 
   @override
-  bool get loading => selectLoading.value;
+  bool get isLoading => selectLoading.value;
 
   late final _propagateAction = Action(() {
     if (triple.event == TripleEvent.state) {
@@ -33,7 +33,7 @@ abstract class MobXStore<State extends Object, Error extends Object>
     } else if (triple.event == TripleEvent.error) {
       selectError.value = triple.error;
     } else if (triple.event == TripleEvent.loading) {
-      selectLoading.value = triple.loading;
+      selectLoading.value = triple.isLoading;
     }
   });
 
@@ -41,7 +41,7 @@ abstract class MobXStore<State extends Object, Error extends Object>
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple) {
+  void propagate(Triple<Error, State> triple) {
     _propagateAction();
   }
 
@@ -59,7 +59,7 @@ abstract class MobXStore<State extends Object, Error extends Object>
     }
     if (onLoading != null) {
       disposers.add(selectLoading.observe((_) {
-        onLoading(triple.loading);
+        onLoading(triple.isLoading);
       }));
     }
     if (onError != null) {

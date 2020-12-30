@@ -69,24 +69,24 @@ Um exemplo usando MobX:
 ProductData state = ProductData.empty();
 
 @observable 
-bool loading = false;
+bool isLoading = false;
 
 @observable 
 Exception? error;
 
 @action
 Future<void> fetchProducts() async {
-  loading = true;
+  isLoading = true;
   try{
     state = await repository.getProducts(); // return ProductData
   } catch(e){
     error = Exception('Error');
   }
-  loading = false;
+  isLoading = false;
 }
 ```
 
-Resumindo, temos então 3 fluxos, o state que tem o valor do estado, o error que guarda as exceptions e o bool loading que informa quando a ação de carregamento está em vigor.
+Resumindo, temos então 3 fluxos, o state que tem o valor do estado, o error que guarda as exceptions e o bool isLoading que informa quando a ação de carregamento está em vigor.
 Poder escutar essas 3 ações de forma separada ajuda a transforma-las e a combina-las em outras ações enriquecendo a sua Store(Classe com a lógica responsável por gerenciar o estado do seu componente).
 Como o movimento do estado sempre está em torno do trio State, Error e Loading vale a pena essa bifurcação para a padronização.
 
@@ -100,18 +100,18 @@ Para fechar o padrão dos 3 Fluxos podemos criar um objeto genérico, as suas pr
 
 ```dart
 
-class Triple<State, Error> {
+class Triple<Error, State> {
   final State state;
   final Error? error;
-  final bool loading;
+  final bool isLoading;
 
-  Triple({required this.state, this.error, this.loading = false});
+  Triple({required this.state, this.error, this.isLoading = false});
 
-  Triple<State, Error> copyWith({State? state, Error? error, bool? loading}){
-    return Triple<State, Error>(
+  Triple<Error, State> copyWith({State? state, Error? error, bool? isLoading}){
+    return Triple<Error, State>(
       state: state ?? this.state,
       error: error ?? this.error,
-      loading: loading ?? this.loading,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }
@@ -125,13 +125,13 @@ var triple = Triple<ProductData, Exception>(state: ProductData.empty());
 
 @action
 Future<void> fetchProducts() async {
-  triple = triple.copyWith(loading: true);
+  triple = triple.copyWith(isLoading: true);
   try{
     final state = await repository.getProducts(); // return ProductData
-    triple = triple.copyWith(loading: false, state: state);
+    triple = triple.copyWith(isLoading: false, state: state);
   } catch(e){
     final error = Exception('Error');
-    triple = triple.copyWith(loading: false, error: error);
+    triple = triple.copyWith(isLoading: false, error: error);
   }
 }
 ```
@@ -149,7 +149,7 @@ ProductData get state => triple.state;
 Exception get error => triple.error;
 
 @computed
-bool get loading => triple.loading;
+bool get isLoading => triple.isLoading;
 
 ...
 ```
@@ -168,24 +168,24 @@ ProductData get state => triple.state;
 @computed
 Exception get error => triple.error;
 @computed
-bool get loading => triple.loading;
+bool get isLoading => triple.isLoading;
 
 //save all changed states
 final List<Triple<ProductData, Exception>> _history = [];
 
 @action
-void setState((ProductData state){
+void update(ProductData state){
   _history.add(_triple);
   _triple = _triple.copyWith(state: state);
 }
 
 @action
-void setError((Exception error){
+void setError(Exception error){
   _triple = _triple.copyWith(error: error);
 }
 
 @action
-void setLoading((bool loading){
+void setLoading(bool loading){
   _triple = _triple.copyWith(loading: loading);
 }
 
@@ -201,14 +201,15 @@ void undo(){
 
 @action
 Future<void> fetchProducts() async {
-  triple = setState(loading: true);
+  triple = setLoading(true);
   try{
     final state = await repository.getProducts(); // return ProductData
-    triple = setState(loading: false, state: state);
+    triple = update(state);
   } catch(e){
     final error = Exception('Error');
-    triple = setState(loading: false, error: error);
+    triple = setError(error);
   }
+  triple = setLoading(false);
 }
 ```
 
@@ -218,13 +219,13 @@ Assim chegamos a um padrão que pode ser usado para gerênciar estados e sub-est
 O padrão de Estado Segmentado (Ou Triple) pode ser abstraído para tornar a sua reutilização mais forte. Vamos usar mais uma vez o MobX como exemplo, mas poderemos utilizar em qualquer tipo de reatividade por propriedade.
 
 ```dart
-abstract class MobXStore<State, Error> {
+abstract class MobXStore<Error, State> {
 
   @observable 
-  late Triple<State, Error> _triple;
+  late Triple<Error, State> _triple;
 
   MobXStore(State initialState){
-     _triple = Triple<State, Error>(state: initialState);
+     _triple = Triple<Error, State>(state: initialState);
   }
 
   @computed
@@ -232,13 +233,13 @@ abstract class MobXStore<State, Error> {
   @computed
   Error get error => triple.error;
   @computed
-  bool get loading => triple.loading;
+  bool get isLoading => triple.isLoading;
 
   //save all changed states
-  final List<Triple<State, Error>> _history = [];
+  final List<Triple<Error, State>> _history = [];
 
   @action
-  void setState(State state){
+  void update(State state){
     _history.add(_triple);
     _triple = _triple.copyWith(state: state);
   }
@@ -249,8 +250,8 @@ abstract class MobXStore<State, Error> {
   }
 
   @action
-  void setLoading(bool loading){
-    _triple = _triple.copyWith(loading: loading);
+  void setLoading(bool isLoading){
+    _triple = _triple.copyWith(isLoading: isLoading);
   }
 
   @action
@@ -279,7 +280,7 @@ abstract class ProductBase extends MobXStore<ProductData, Exception> with Store 
     setLoading(true);
     try{
       final state = await repository.getProducts(); // return ProductData
-      setState(state);
+      update(state);
     } catch(e){
       final error = Exception('Error');
       setError(error);

@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-class TripleBuilder<TState extends Object, TError extends Object,
-    TStore extends Store<TState, TError>> extends StatefulWidget {
-  final Widget Function(BuildContext context, Triple<TState, TError> triple)
+class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends StatefulWidget {
+  final Widget Function(BuildContext context, Triple<TError, TState> triple)
       builder;
-  final bool Function(Triple<TState, TError> triple)? selector;
+  final bool Function(Triple<TError, TState> triple)? selector;
   final TStore store;
 
   const TripleBuilder({
@@ -16,13 +16,13 @@ class TripleBuilder<TState extends Object, TError extends Object,
   }) : super(key: key);
 
   @override
-  _TripleBuilderState<TState, TError, TStore> createState() =>
-      _TripleBuilderState<TState, TError, TStore>();
+  _TripleBuilderState<TStore, TError, TState> createState() =>
+      _TripleBuilderState<TStore, TError, TState>();
 }
 
-class _TripleBuilderState<TState extends Object, TError extends Object,
-        TStore extends Store<TState, TError>>
-    extends State<TripleBuilder<TState, TError, TStore>> {
+class _TripleBuilderState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<TripleBuilder<TStore, TError, TState>> {
   Widget? child;
 
   Disposer? disposer;

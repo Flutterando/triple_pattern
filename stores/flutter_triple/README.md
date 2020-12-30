@@ -35,22 +35,22 @@ class Counter extends StreamStore {}
 Você também pode colocar tipos no valor do estado e no objeto de exception que iremos trabalhar nesse Store:
 
 ```dart
-class Counter extends StreamStore<int, Exception> {}
+class Counter extends StreamStore<Exception, int> {}
 ```
 
 Finalizamos atribuindo um valor inicial para o estado desse Store invocando o construtor da classe pai (super):
 
 ```dart
-class Counter extends StreamStore<int, Exception> {
+class Counter extends StreamStore<Exception, int> {
 
     Counter() : super(0);
 }
 ```
 
-Temos disponível na Store 3 métodos para mudar os segmentos **(setState, setError e setLoading)**. Vamos começar incrementando o estado:
+Temos disponível na Store 3 métodos para mudar os segmentos **(update, setError e setLoading)**. Vamos começar incrementando o estado:
 
 ```dart
-class Counter extends StreamStore<int, Exception> {
+class Counter extends StreamStore<Exception, int> {
 
     Counter() : super(0);
 
@@ -64,7 +64,7 @@ Esse código já é o suficiente para fazer o contador funcionar.
 Vamos adicionar um pouco de código assincrono para apresentar os métodos **setError** e **setLoading**
 
 ```dart
-class Counter extends StreamStore<int, Exception> {
+class Counter extends StreamStore<Exception, int> {
 
     Counter() : super(0);
 
@@ -168,7 +168,7 @@ O ValueNotifier usado nessa Store é extendido pela library [rx_notifier](https:
 Um Store baseado em **ValueNotifier** é chamado de **NotifierStore**:
 
 ```dart
-class Counter extends NotifierStore<int, Exception> {
+class Counter extends NotifierStore<Exception, int> {
 
     Counter() : super(0);
 
@@ -231,7 +231,7 @@ Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Iss
 
 ```dart
 
-class Counter extends StreamStore<int, Exception> with MementoMixin {}
+class Counter extends StreamStore<Exception, int> with MementoMixin {}
 
 ```
 

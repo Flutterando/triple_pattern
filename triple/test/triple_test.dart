@@ -5,7 +5,7 @@ import 'package:triple/src/selectors.dart';
 import 'package:triple/triple.dart';
 
 void main() {
-  late TestImplements<int, MyException> store;
+  late TestImplements<MyException, int> store;
 
   setUp(() {
     store = TestImplements(0);
@@ -13,22 +13,22 @@ void main() {
 
   test('check implementation. setState', () {
     store.update(1);
-    expect(store.propagated, Triple<int, MyException>(state: 1));
+    expect(store.propagated, Triple<MyException, int>(state: 1));
   });
 
   test('check implementation. setLoading', () {
     store.setLoading(true);
     expect(
         store.propagated,
-        Triple<int, MyException>(
-            state: 0, loading: true, event: TripleEvent.loading));
+        Triple<MyException, int>(
+            state: 0, isLoading: true, event: TripleEvent.loading));
   });
 
   test('check implementation. setError', () {
     store.setError(const MyException('error'));
     expect(
         store.propagated,
-        Triple<int, MyException>(
+        Triple<MyException, int>(
             state: 0,
             error: const MyException('error'),
             event: TripleEvent.error));
@@ -59,13 +59,13 @@ void main() {
   });
 }
 
-class TestImplements<State extends Object, Error extends Object>
-    extends Store<State, Error>
+class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State>
     with MementoMixin
-    implements Selectors<Stream<State>, Stream<Error>, Stream<bool>> {
+    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
-  late Triple<State, Error> propagated = triple;
+  late Triple<Error, State> propagated = triple;
 
   @override
   Future destroy() async {}
@@ -81,7 +81,7 @@ class TestImplements<State extends Object, Error extends Object>
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple) {
+  void propagate(Triple<Error, State> triple) {
     super.propagate(triple);
     propagated = triple;
   }

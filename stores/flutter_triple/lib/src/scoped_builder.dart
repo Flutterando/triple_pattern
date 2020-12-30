@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-class ScopedBuilder<TState extends Object, TError extends Object,
-    TStore extends Store<TState, TError>> extends StatefulWidget {
+class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends StatefulWidget {
   final Widget Function(BuildContext context, TState state)? onState;
   final Widget Function(BuildContext context, TError? error)? onError;
   final Widget Function(BuildContext context, bool isLoading)? onLoading;
@@ -19,13 +19,13 @@ class ScopedBuilder<TState extends Object, TError extends Object,
         super(key: key);
 
   @override
-  _ScopedBuilderState<TState, TError, TStore> createState() =>
-      _ScopedBuilderState<TState, TError, TStore>();
+  _ScopedBuilderState<TStore, TError, TState> createState() =>
+      _ScopedBuilderState<TStore, TError, TState>();
 }
 
-class _ScopedBuilderState<TState extends Object, TError extends Object,
-        TStore extends Store<TState, TError>>
-    extends State<ScopedBuilder<TState, TError, TStore>> {
+class _ScopedBuilderState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<ScopedBuilder<TStore, TError, TState>> {
   Widget? child;
 
   Disposer? disposer;
@@ -53,9 +53,9 @@ class _ScopedBuilderState<TState extends Object, TError extends Object,
       },
       onLoading: (loading) {
         if (widget.onLoading != null &&
-            (widget.onState == null ? true : widget.store.loading)) {
+            (widget.onState == null ? true : widget.store.isLoading)) {
           setState(() {
-            child = widget.onLoading!(context, widget.store.loading);
+            child = widget.onLoading!(context, widget.store.isLoading);
           });
         }
       },
@@ -76,7 +76,7 @@ class _ScopedBuilderState<TState extends Object, TError extends Object,
       } else if (widget.onError != null) {
         child = widget.onError!(context, widget.store.error);
       } else if (widget.onLoading != null) {
-        child = widget.onLoading!(context, widget.store.loading);
+        child = widget.onLoading!(context, widget.store.isLoading);
       }
     }
     return child!;

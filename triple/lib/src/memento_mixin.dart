@@ -3,8 +3,8 @@ import 'models/triple_model.dart';
 import 'dart:math' as math;
 
 mixin MementoMixin<State extends Object, Error extends Object>
-    on Store<State, Error> {
-  final _history = <Triple<State, Error>>[];
+    on Store<Error, State> {
+  final _history = <Triple<Error, State>>[];
   final int _historyLimit = 32;
   int _historyIndex = 0;
 
@@ -19,7 +19,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
       (_historyIndex + 1) < _history.length ||
       triple.state != lastTripleState.state;
 
-  void _addHistory(Triple<State, Error> observableCache) {
+  void _addHistory(Triple<Error, State> observableCache) {
     if (_historyIndex == _history.length) {
       _history.add(observableCache);
     } else {

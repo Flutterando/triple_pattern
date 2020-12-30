@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:triple/triple.dart';
 
-abstract class StreamStore<State extends Object, Error extends Object>
-    extends Store<State, Error>
-    implements Selectors<Stream<State>, Stream<Error>, Stream<bool>> {
+abstract class StreamStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
+    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   final _tripleController =
-      StreamController<Triple<State, Error>>.broadcast(sync: true);
+      StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   @override
   late final Stream<State> selectState = _tripleController.stream
@@ -23,13 +23,13 @@ abstract class StreamStore<State extends Object, Error extends Object>
   @override
   late final Stream<bool> selectLoading = _tripleController.stream
       .where((triple) => triple.event == TripleEvent.loading)
-      .map((triple) => triple.loading);
+      .map((triple) => triple.isLoading);
 
   StreamStore(State initialState) : super(initialState);
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple) {
+  void propagate(Triple<Error, State> triple) {
     _tripleController.add(triple);
   }
 
@@ -41,7 +41,7 @@ abstract class StreamStore<State extends Object, Error extends Object>
   @override
   Disposer observer({
     void Function(State error)? onState,
-    void Function(bool loading)? onLoading,
+    void Function(bool isLoading)? onLoading,
     void Function(Error error)? onError,
   }) {
     final _sub = _tripleController.stream.listen((triple) {
@@ -50,7 +50,7 @@ abstract class StreamStore<State extends Object, Error extends Object>
       } else if (triple.event == TripleEvent.error) {
         onError?.call(triple.error!);
       } else if (triple.event == TripleEvent.loading) {
-        onLoading?.call(triple.loading);
+        onLoading?.call(triple.isLoading);
       }
     });
 

@@ -10,7 +10,7 @@ void main() {
     counter = Counter();
     counter.observer(
       onState: (state) => print("State ${counter.state}"),
-      onLoading: (loading) => print(counter.loading),
+      onLoading: (loading) => print(counter.isLoading),
     );
   });
 
@@ -27,7 +27,7 @@ void main() {
   });
 }
 
-class Counter extends NotifierStore<int, Exception> with MementoMixin {
+class Counter extends NotifierStore<Exception, int> with MementoMixin {
   Counter() : super(0);
 
   Future<void> increment() async {

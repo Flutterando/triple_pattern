@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
 
-abstract class NotifierStore<State extends Object, Error extends Object>
-    extends Store<State, Error>
+abstract class NotifierStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
     implements
-        Selectors<ValueListenable<State>, ValueListenable<Error?>,
+        Selectors<ValueListenable<Error?>, ValueListenable<State>,
             ValueListenable<bool>> {
   late final _selectState = RxNotifier<State>(triple.state);
   late final _selectError = RxNotifier<Error?>(triple.error);
-  late final _selectLoading = RxNotifier<bool>(triple.loading);
+  late final _selectLoading = RxNotifier<bool>(triple.isLoading);
 
   @override
   ValueListenable<State> get selectState => _selectState;
@@ -25,18 +25,18 @@ abstract class NotifierStore<State extends Object, Error extends Object>
   Error? get error => selectError.value;
 
   @override
-  bool get loading => selectLoading.value;
+  bool get isLoading => selectLoading.value;
 
   NotifierStore(State initialState) : super(initialState);
 
   @override
-  void propagate(Triple<State, Error> triple) {
+  void propagate(Triple<Error, State> triple) {
     if (triple.event == TripleEvent.state) {
       _selectState.value = triple.state;
     } else if (triple.event == TripleEvent.error) {
       _selectError.value = triple.error;
     } else if (triple.event == TripleEvent.loading) {
-      _selectLoading.value = triple.loading;
+      _selectLoading.value = triple.isLoading;
     }
   }
 
@@ -46,7 +46,7 @@ abstract class NotifierStore<State extends Object, Error extends Object>
       void Function(bool loading)? onLoading,
       void Function(Error error)? onError}) {
     final funcState = () => onState?.call(state);
-    final funcLoading = () => onLoading?.call(loading);
+    final funcLoading = () => onLoading?.call(isLoading);
     final funcError = () => error != null ? onError?.call(error!) : null;
 
     if (onState != null) {
