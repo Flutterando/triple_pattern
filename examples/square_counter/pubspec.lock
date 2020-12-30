@@ -148,7 +148,7 @@ packages:
       name: flutter_triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.16"
+    version: "0.0.18"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
@@ -221,7 +221,7 @@ packages:
       name: mobx_triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.6"
+    version: "0.0.18"
   node_interop:
     dependency: transitive
     description:
@@ -373,7 +373,7 @@ packages:
       name: triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.16"
+    version: "0.0.18"
   typed_data:
     dependency: transitive
     description:

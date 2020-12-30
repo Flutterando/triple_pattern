@@ -28,8 +28,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _disposer = store.observer(onLoading: (loading) {
-      if (store.loading) {
+    _disposer = store.observer(onLoading: (isLoading) {
+      if (store.isLoading) {
         Overlay.of(context)?.insert(loadingOverlay);
       } else {
         loadingOverlay.remove();
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(icon: Icon(Icons.redo), onPressed: store.redo),
         ],
       ),
-      body: ScopedBuilder<List<SquareStore>, Exception, HomeStore>(
+      body: ScopedBuilder<HomeStore, Exception, List<SquareStore>>(
         store: store,
         onState: (_, squares) {
           if (squares.isEmpty) {
