@@ -11,11 +11,11 @@ class SquareStore extends NotifierStore<int, SquareError> {
 
   increment() {
     if (state < 20) {
-      setState(state + 1);
+      update(state + 1);
     } else {
       homeStore.setError(SquareError('Square $index chegou ao limite!'));
     }
   }
 
-  reset() => setState(0);
+  reset() => update(0);
 }

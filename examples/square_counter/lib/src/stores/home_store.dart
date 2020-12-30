@@ -8,7 +8,7 @@ class HomeStore extends NotifierStore<List<SquareStore>, SquareError>
   HomeStore() : super([]);
 
   void initializeSquare(List<SquareStore> squares) {
-    setState(squares);
+    update(squares);
   }
 
   addSquare() async {
@@ -18,7 +18,7 @@ class HomeStore extends NotifierStore<List<SquareStore>, SquareError>
     if (state.length < 9) {
       final newList = List<SquareStore>.from(state);
       newList.add(SquareStore(this, index: state.length + 1));
-      setState(newList);
+      update(newList);
     } else {
       setError(SquareError('Limite de squares atingido!'));
     }
@@ -29,7 +29,7 @@ class HomeStore extends NotifierStore<List<SquareStore>, SquareError>
     if (state.isNotEmpty) {
       final newList = List<SquareStore>.from(state);
       newList.removeLast();
-      setState(newList);
+      update(newList);
     }
   }
 }
