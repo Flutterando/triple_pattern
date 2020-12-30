@@ -294,7 +294,7 @@ Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
 
 ## Extension (Dart)
 
-Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) para o MobX e também em uma baseada em Streams. Mais detalhes na documentação das próprias abstrações.
+Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) baseados nas reatividades desenvolvidas pela comunidade e nas nativas do Flutter como o ValueNotifier e Streams. Mais detalhes na documentação das próprias abstrações.
 
 - [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
