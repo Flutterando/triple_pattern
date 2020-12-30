@@ -4,6 +4,6 @@ class Counter extends MobXStore<int, Exception> with MementoMixin {
   Counter() : super(0);
 
   increment() {
-    setState(state + 1);
+    update(state + 1);
   }
 }
