@@ -22,9 +22,8 @@ environment:
 
 dependencies:
   equatable: ^2.0.0-nullsafety.0
-  flutter_triple: ^0.0.18
-  mobx_triple: 0.0.18
-  rx_notifier: 0.0.5
+  flutter_triple: ^0.0.19
+  mobx_triple: 0.0.19
   flutter:
     sdk: flutter
 
