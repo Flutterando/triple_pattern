@@ -30,6 +30,7 @@ abstract class StreamStore<Error extends Object, State extends Object>
   @protected
   @override
   void propagate(Triple<Error, State> triple) {
+    super.propagate(triple);
     _tripleController.add(triple);
   }
 

@@ -26,13 +26,13 @@ dependencies:
   flutter_triple: ^0.0.18
   mobx_triple: ^0.0.18
   mobx: ^2.0.0-nullsafety.2
-  flutter_modular_test: ^1.0.0-nullsafety.1
   rxdart: ^0.26.0-nullsafety.0
   either_dart: 
     git: https://github.com/Flutterando/either_dart
   http:
     git: https://github.com/dart-lang/http
   flutter_modular: ^3.0.0-nullsafety.24
+  flutter_modular_test: ^1.0.0-nullsafety.1
   flutter:
     sdk: flutter
 

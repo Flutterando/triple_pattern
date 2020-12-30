@@ -31,6 +31,7 @@ abstract class NotifierStore<Error extends Object, State extends Object>
 
   @override
   void propagate(Triple<Error, State> triple) {
+    super.propagate(triple);
     if (triple.event == TripleEvent.state) {
       _selectState.value = triple.state;
     } else if (triple.event == TripleEvent.error) {

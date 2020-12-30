@@ -43,6 +43,7 @@ abstract class MobXStore<Error extends Object, State extends Object>
   @override
   void propagate(Triple<Error, State> triple) {
     _propagateAction();
+    super.propagate(triple);
   }
 
   @override
