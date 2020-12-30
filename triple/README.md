@@ -13,6 +13,8 @@ Seguindo o [SSP](https://github.com/Flutterando/triple_pattern), nossa Store pre
 Vamos entao ver passo-a-passo como criar um Store baseado em qualquer sistema de Reatividade existente.
 
 
+
+
 ### PASSO 1: Escolha uma forma de Reatividade.
 
 O SSP não coloca nenhum requerimento sobre o tipo de reatividade que poderá ser utilizada no padrão, então o desenvolvedor deve escolher a que mais lhe agrada para criar uma Store.

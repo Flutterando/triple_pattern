@@ -17,7 +17,10 @@ Esses segmentos são observados em um listener ou em listeners separados. També
 
 Este package tem por objetivo introduzir Stores no padrão de segmentos pré-implementadas usando a API de Streams(StreamStore) e do objeto ValueNotifier (NotifierStore).
 
-As Stores já oferecem por padrão um observador (**store.observer()**) e os métodos **store.undo()** e **store.repo()** que utilizam o design pattern **Memento** para desfazer ou refazer o valor do estado.
+As Stores já oferecem por padrão um observador (**store.observer()**) e os métodos **store.update()**(Atualizar o Estado), **store.setLoading()**(Para mudar o loading), **store.setError()**(Para mudar o Erro).
+Também conta com o mixin **MementoMixin** que utilizam o design pattern **Memento** para desfazer ou refazer o valor do estado, portanto, os métodos **store.undo()** e **store.redo()** também são adicionado a Store por esse mixin.
+
+Usando o ValueNotifier(NotifierStore), as propriedades *state*,*loading* e *error* são reativas graças a extensão [rx_notifier](https://pub.dev/packages/rx_notifier).
 
 O Package também conta com **Builder Widgets** para observar as modificações do estado na árvore de widget do Flutter.
 
