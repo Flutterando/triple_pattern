@@ -52,7 +52,7 @@ class Counter extends StreamStore<int, Exception> {
     Counter() : super(0);
 
     void increment(){
-        setState(state + 1);
+        update(state + 1);
     }
 }
 ```
@@ -72,7 +72,7 @@ class Counter extends StreamStore<int, Exception> {
 
         int value = state + 1;
         if(value < 5) {
-            setState(value);
+            update(value);
         } else {
             setError(Exception('Error: state not can be > 4'))
         }
@@ -176,7 +176,7 @@ class Counter extends NotifierStore<int, Exception> {
 
         int value = state + 1;
         if(value < 5) {
-            setState(value);
+            update(value);
         } else {
             setError(Exception('Error: state not can be > 4'))
         }

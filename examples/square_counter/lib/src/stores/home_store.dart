@@ -1,9 +1,10 @@
+import 'package:mobx_triple/mobx_triple.dart';
 import 'package:square_counter/src/errors/errors.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 import 'square_store.dart';
 
-class HomeStore extends NotifierStore<List<SquareStore>, SquareError>
+class HomeStore extends MobXStore<List<SquareStore>, SquareError>
     with MementoMixin {
   HomeStore() : super([]);
 
