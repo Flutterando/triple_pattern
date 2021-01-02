@@ -40,14 +40,14 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
       onState: (state) {
         if (widget.onState != null) {
           setState(() {
-            child = widget.onState!(context, state);
+            child = widget.onState?.call(context, state);
           });
         }
       },
       onError: (error) {
         if (widget.onError != null) {
           setState(() {
-            child = widget.onError!(context, error);
+            child = widget.onError?.call(context, error);
           });
         }
       },
@@ -55,8 +55,8 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
         if (widget.onLoading != null) {
           setState(() {
             child = isLoading
-                ? widget.onLoading!(context)
-                : widget.onState!(context, widget.store.state);
+                ? widget.onLoading?.call(context)
+                : widget.onState?.call(context, widget.store.state);
           });
         }
       },
@@ -74,7 +74,9 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
     if (child == null) {
       switch (widget.store.triple.event) {
         case (TripleEvent.loading):
-          child = widget.onLoading?.call(context);
+          child = widget.store.triple.isLoading
+              ? widget.onLoading?.call(context)
+              : widget.onState?.call(context, widget.store.state);
           break;
         case (TripleEvent.error):
           child = widget.onError?.call(context, widget.store.error);
@@ -83,9 +85,15 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
           child = widget.onState?.call(context, widget.store.state);
           break;
       }
-      if (child == null) child = widget.onLoading?.call(context);
-      if (child == null) child = widget.onError?.call(context, widget.store.error);
-      if (child == null) child = widget.onState?.call(context, widget.store.state);
+      if (child == null) {
+        child = widget.onLoading?.call(context);
+      }
+      if (child == null) {
+        child = widget.onError?.call(context, widget.store.error);
+      }
+      if (child == null) {
+        child = widget.onState?.call(context, widget.store.state);
+      }
     }
     return child!;
   }
