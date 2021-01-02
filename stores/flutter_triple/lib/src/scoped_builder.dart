@@ -74,15 +74,18 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
     if (child == null) {
       switch (widget.store.triple.event) {
         case (TripleEvent.loading):
-          child = widget.onLoading!(context);
+          child = widget.onLoading?.call(context);
           break;
         case (TripleEvent.error):
-          child = widget.onError!(context, widget.store.error);
+          child = widget.onError?.call(context, widget.store.error);
           break;
         case (TripleEvent.state):
-          child = widget.onState!(context, widget.store.state);
+          child = widget.onState?.call(context, widget.store.state);
           break;
       }
+      if (child == null) child = widget.onLoading?.call(context);
+      if (child == null) child = widget.onError?.call(context, widget.store.error);
+      if (child == null) child = widget.onState?.call(context, widget.store.state);
     }
     return child!;
   }
