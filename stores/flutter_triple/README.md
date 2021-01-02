@@ -113,7 +113,7 @@ ScopedBuilder(
     store: counter,
     onState: (context, state) => Text('$state'),
     onError: (context, error) => Text(error.toString()),
-    onLoading: (context, loading) => CircularProgressIndicator(),
+    onLoading: (context) => CircularProgressIndicator(),
 );
 ```
 
