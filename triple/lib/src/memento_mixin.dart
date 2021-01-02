@@ -35,9 +35,9 @@ mixin MementoMixin<State extends Object, Error extends Object>
 
   @override
   void update(newState) {
-    _addHistory(lastTripleState);
+    _addHistory(lastTripleState.copyWith(isLoading: false));
     super.update(newState);
-    lastTripleState = triple;
+    lastTripleState = triple.copyWith(isLoading: false);
   }
 
   ///Undo the last state value.
