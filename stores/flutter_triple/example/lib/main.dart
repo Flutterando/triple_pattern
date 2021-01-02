@@ -52,56 +52,52 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final counter = Counter();
 
-  Widget _floatingButton(bool active) {
-    return FloatingActionButton(
-      onPressed: active ? counter.increment : null,
-      tooltip: active ? 'Increment' : 'no-active',
-      backgroundColor: active ? Theme.of(context).primaryColor : Colors.grey,
-      child: Icon(Icons.add),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(onPressed: counter.undo, icon: Icon(Icons.arrow_back_ios)),
           IconButton(
-              onPressed: counter.redo, icon: Icon(Icons.arrow_forward_ios)),
+            onPressed: counter.undo,
+            icon: Icon(Icons.arrow_back_ios),
+          ),
+          IconButton(
+            onPressed: counter.redo,
+            icon: Icon(Icons.arrow_forward_ios),
+          ),
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ScopedBuilder<Counter, Exception, int>(
-                store: counter,
-                onLoading: (_, loading) {
-                  return Text(
-                    !loading
-                        ? 'You have pushed the button this many times:'
-                        : 'Carregando...',
-                  );
-                }),
-            ScopedBuilder<Counter, Exception, int>(
-              store: counter,
-              onState: (_, state) {
-                return Text(
+        child: ScopedBuilder<Counter, Exception, int>(
+          store: counter,
+          onLoading: (_) => Text('Carregando...'),
+          onState: (_, state) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('You have pushed the button this many times:'),
+                Text(
                   '$state',
                   style: Theme.of(context).textTheme.headline4,
-                );
-              },
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
       floatingActionButton: TripleBuilder<Counter, Exception, int>(
-          store: counter,
-          builder: (_, triple) => _floatingButton(
-                !triple.isLoading || triple.event == TripleEvent.state,
-              )),
+        store: counter,
+        builder: (_, triple) {
+          return FloatingActionButton(
+            onPressed: triple.isLoading ? null : counter.increment,
+            tooltip: triple.isLoading ? 'no-active' : 'Increment',
+            backgroundColor:
+                triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
+            child: Icon(Icons.add),
+          );
+        },
+      ),
     );
   }
 }
