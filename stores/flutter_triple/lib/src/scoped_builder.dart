@@ -5,7 +5,7 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
     TState extends Object> extends StatefulWidget {
   final Widget Function(BuildContext context, TState state)? onState;
   final Widget Function(BuildContext context, TError? error)? onError;
-  final Widget Function(BuildContext context, bool isLoading)? onLoading;
+  final Widget Function(BuildContext context)? onLoading;
   final TStore store;
 
   const ScopedBuilder(
@@ -40,22 +40,23 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
       onState: (state) {
         if (widget.onState != null) {
           setState(() {
-            child = widget.onState!(context, widget.store.state);
+            child = widget.onState?.call(context, state);
           });
         }
       },
       onError: (error) {
         if (widget.onError != null) {
           setState(() {
-            child = widget.onError!(context, widget.store.error);
+            child = widget.onError?.call(context, error);
           });
         }
       },
-      onLoading: (loading) {
-        if (widget.onLoading != null &&
-            (widget.onState == null ? true : widget.store.isLoading)) {
+      onLoading: (isLoading) {
+        if (widget.onLoading != null) {
           setState(() {
-            child = widget.onLoading!(context, widget.store.isLoading);
+            child = isLoading
+                ? widget.onLoading?.call(context)
+                : widget.onState?.call(context, widget.store.state);
           });
         }
       },
@@ -71,12 +72,27 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
   @override
   Widget build(BuildContext context) {
     if (child == null) {
-      if (widget.onState != null) {
-        child = widget.onState!(context, widget.store.state);
-      } else if (widget.onError != null) {
-        child = widget.onError!(context, widget.store.error);
-      } else if (widget.onLoading != null) {
-        child = widget.onLoading!(context, widget.store.isLoading);
+      switch (widget.store.triple.event) {
+        case (TripleEvent.loading):
+          child = widget.store.triple.isLoading
+              ? widget.onLoading?.call(context)
+              : widget.onState?.call(context, widget.store.state);
+          break;
+        case (TripleEvent.error):
+          child = widget.onError?.call(context, widget.store.error);
+          break;
+        case (TripleEvent.state):
+          child = widget.onState?.call(context, widget.store.state);
+          break;
+      }
+      if (child == null) {
+        child = widget.onLoading?.call(context);
+      }
+      if (child == null) {
+        child = widget.onError?.call(context, widget.store.error);
+      }
+      if (child == null) {
+        child = widget.onState?.call(context, widget.store.state);
       }
     }
     return child!;
