@@ -15,7 +15,7 @@ main() {
     when(datasource)
         .calls('searchText')
         .withArgs(positional: ['jacob']).thenAnswer((_) async => <ResultModel>[
-              ResultModel(image: '', name: '', nickname: '', url: '')
+              ResultModel(image: '', name: '', nickname: '', url: ''),
             ]);
 
     var result = await repository.getUsers("jacob");

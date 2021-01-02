@@ -89,7 +89,7 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
 
 ### PASSO 5: Sobrescreva o método de Propagação.
 
-Quando o Store decide propagar um valor do tipo **Triple**, ele o faz chamando o método **propagate()**. Sobreescreva esse método para direcionar o fluxo para o seu controle principal de reatividade.
+Quando o Store decide propagar um valor do tipo **Triple**, ele o faz chamando o método **propagate()**. Sobreescreva esse método para direcionar o fluxo para o seu controle principal de reatividade. Não se esqueça de chamar o método **super.propagate()**.
 
 ```dart
 abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
@@ -102,6 +102,7 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
   @protected
   @override
   void propagate(Triple<Error, State> triple){
+    super.propagate(triple);
     _tripleController.add(triple);
   }
 

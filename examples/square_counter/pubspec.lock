@@ -221,7 +221,7 @@ packages:
       name: mobx_triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.19"
+    version: "0.0.20"
   node_interop:
     dependency: transitive
     description:
