@@ -1,30 +1,31 @@
 # Triple - Segmented State Pattern
 
-Quando falamos de estado com fluxo único acabamos resolvendo problemas na arquitetura de forma precoce, pois teremos apenas um fluxo de dado para cada estado. 
-Além da manutenabilidade e facilidade arquitetural de aproveitamento também temos a possibilidade de incrementar esse fluxo com outros padrões como o Observer, que dá reatividade ao componente ao ser modificado e o Memento, que possibilita o rollback ou redo desse estado.
+When we talk about a single flow state, we end up solving architecture problems early, as we will have only one data flow for each state.
 
-Um belo exemplo de padrão com fluxo único é o BLoC, dando a reatividade para um estado possibilitando todas as transformações nesse fluxo. Isso (apesar de complicado para alguns), consolida-se muito bem na arquitetura de um projeto, até mesmo os limites dessa prática são benéficos por não permitir que o desenvolvedor recorra a outras soluções fora da arquitetura e do padrão para sua feature.
+In addition to the maintainability and ease of use architecture, we also have the possibility of increasing this flow with other standards such as the Observer, which gives reactivity to the component when it is modified, and Memento, which makes it possible to revert or redo this state.
 
-Existem outras formas de promover a reatividade em uma propriedade em vez do objeto inteiro, como por exemplo, o Observable do MobX e ValueNotifier do próprio Flutter, e isso nos dá uma boa liberdade. Porém perdemos alguns limites importantes para arquitetura, o que pode colocar em cheque a manutenabilidade do projeto futuramente. Por isso precisamos de um padrão para impor limites na reatividade individual de cada propriedade e com isso melhorar a manutenabilidade dos componentes responsáveis por gerenciar os estados da aplicação.
+A beautiful example of a pattern with a single flow is the BLoC, giving reactivity to a state allowing all transformations in that flow. This (although complicated for some), consolidates very well in the architecture of a project, even the limits of this practice are beneficial for not allowing the developer to resort to other solutions for the architecture and the standard for its resource.
+
+There are other ways to promote reactivity in a property instead of the entire object, such as MobX's Observable and Flutter's ValueNotifier, and that gives us a lot of choices. However, we lost some important limits for architecture, which can put in check the maintenance of the project in the future. Therefore, it needs a standard to force limits on the individual reactivity of each property and thereby improve the maintainability of the components responsible for managing the states of the application.
 
 
-## Padrão de Fluxo único (BLoC e Flux/Redux)
+## Single Flow Pattern (BLoC and Flux/Redux)
 .
 ![schema](bloc.png)
 
-Quando trabalhamos com estado de Fluxo único, ou seja, quando a reatividade está no objeto e não nas suas propriedades, podemos ter mais controle sobre os dados que tramitam antes de chegar a um ouvinte.
-Por exemplo, se sua lógica gerencia um estado X e quer torna-lo Y basta atribuir o valor.
+When we work with a single flow state, that is, when the reactivity is in the object and not in its properties, we can have more control over the data being processed before reaching a listener.
+For example, if your logic manages an X state and wants to make it Y just assign the value.
 ```dart
 MyState state = X();
 state = Y();
 ```
-Porém o fluxo pode conter elementos assíncronos e sempre é interessante informar que o estado está sendo carregado. Isso é bastante comum no desenvolvimento Mobile com API's por exemplo.
+However, the flow can contain asynchronous elements and it is always interesting to inform us that the state is being loaded. This is quite common in Mobile development with API for example.
 ```dart
 MyState state = X();
 state = Loading();
 state = await getY(); // return Y
 ```
-Também a recuperação desses dados pode falhar, e isso torna pertinente a existência de um estado de erro.
+The recovery of these data can also fail, and this makes the existence of an error state pertinent.
 ```dart
 MyState state = X();
 state = Loading();
@@ -36,7 +37,7 @@ try{
 
 ```
 
-Como estamos falando de um fluxo único usamos o **POLIMORFISMO** da Orientação a Objetos para dividir essas 3 responsabilidades(Valor do Estado, Loading ou Error).
+As we are talking about a single flow, we use ** POLYMORPHISM ** of OOP to share these 3 responsibilities (State Value, Loading, or Error).
 
 ```dart
 abstract class MyState {}
@@ -46,23 +47,23 @@ class Y extends MyState
 class Loading extends MyState
 class Error extends MyState
 ```
-Com isso temos um Fluxo único de **MyState**, pois como os objetos X, Y, Loading e Error herdam de **MyState**.
+With that, we have a unique Flow of **MyState**, because the objects X, Y, Loading, and Error inherit from **MyState**.
 ```dart
 X is MyState; // it's true!
 Y is MyState; // it's true!
 Loading is MyState; // it's true!
-Error is MyState; // it's true too!
+Error is MyState; // it's also true!
 ```
-Muito obrigado mãe Orientação a Objetos! :)
+Thanks OOP :)
 
-> **IMPORTANT:** BLoC é um acrônimo para Bussines Logic Component(Componente de Regra de Negócio).
+> **IMPORTANT:** BLoC is an acronym for Bussines Logic Component.
 
-## Segmentado o estado em State, Error, Loading
+## Targeting the state in State, Error, Loading
 .
 ![schema](schema.png)
 
-Agora como temos a possibilidade de ter reatividade por propriedade com o MobX ou ValueNotifier não precisariamos do Polimorfismo se dividimos a responsábilidade de Loading e Error para propriedades separadas dentro de uma **STORE**. E assim temos uma bifurcação tripla tornando o Loading e Error ações pós ou pré mudança de estado.
-Um exemplo usando MobX:
+Now, as we have the possibility to have reactivity by property with MobX or ValueNotifier, we would not need Polymorphism if we divide the responsibility of Loading and Error for separate properties within a **STORE**. And so we have a triple making Loading and Error actions post or pre-change of state.
+An example using MobX:
 ```dart
 ...
 @observable 
@@ -86,17 +87,16 @@ Future<void> fetchProducts() async {
 }
 ```
 
-Resumindo, temos então 3 fluxos, o state que tem o valor do estado, o error que guarda as exceptions e o bool isLoading que informa quando a ação de carregamento está em vigor.
-Poder escutar essas 3 ações de forma separada ajuda a transforma-las e a combina-las em outras ações enriquecendo a sua Store(Classe com a lógica responsável por gerenciar o estado do seu componente).
-Como o movimento do estado sempre está em torno do trio State, Error e Loading vale a pena essa bifurcação para a padronização.
+In short, we have 3 flows, the state that has the state value, the error that holds the exceptions, and the isLoading bool that informs when the loading action is in effect.
+Being able to listen to these 3 actions separately helps to transform them and combine them into other actions, supplementing your Store (Class with the logic responsible for managing the state of your component).
+As the movement of the state is always around the trio State, Error, and Loading, it is worth this for standardization.
 
-> **IMPORTANT:** Um objeto denominado **Store** tem por responsabilidade armazenar a Lógica para o estado de um componente.
+> **IMPORTANT:** An object called **Store** is responsible for storing Logic for the state of a component.
 
-## Observando os Fluxos
+## Seeing the Flows
 
-Tendo 3 Fluxos separados poderemos ter 3 listeners diferentes, por exemplo, escutamos o error para lança-lo em forma de "SnackBar" e quando houver Loadings lançamos um Dialog, mas se precisarmos adicionar a esse estado um padrão como o "memento" teremos que colocar as 3 propriedades em um objeto genérico.
-
-Para fechar o padrão dos 3 Fluxos podemos criar um objeto genérico, as suas propriedades podem reativas bem como o próprio objeto em sí. Vejamos um exemplo com o MobX.
+Having 3 separate flows we can have 3 different listeners, for example, we hear the error to launch it in the form of "SnackBar" and when there are Loadings we launch a Dialog, but if we need to add to this state a pattern like "memento" we will have to put the 3 properties in a generic object.
+To close the pattern of the 3 Flows we can create a generic object, its properties can be reactive as well as the object itself. Let's look at an example with MobX.
 
 ```dart
 
@@ -118,7 +118,7 @@ class Triple<Error, State> {
 
 ```
 
-Então poderemos usar:
+So, we can use:
 ```dart
 @observable 
 var triple = Triple<ProductData, Exception>(state: ProductData.empty());
@@ -136,26 +136,26 @@ Future<void> fetchProducts() async {
 }
 ```
 
-Agora temos um objeto que junta as 3 propriedades do estado segmentadas que também podem ser acessadas e transformadas individualmente usando o @computed do MobX que faz distinção automática e só dispara uma reação se a propriedade for realmente um novo objeto.
+We now have an object that joins the 3 segmented state properties that can also be accessed and transformed individually using MobX's @computed which automatically distinguishes and only triggers a reaction if the property is really a new object.
 
 ```dart
 @observable 
 var _triple = Triple<ProductData, Exception>(state: ProductData.empty());
 
 @computed
-ProductData get state => triple.state;
+ProductData get state => _triple.state;
 
 @computed
-Exception get error => triple.error;
+Exception get error => _triple.error;
 
 @computed
-bool get isLoading => triple.isLoading;
+bool get isLoading => _triple.isLoading;
 
 ...
 ```
 
-Com o objeto reunindo o estado e as suas ações, podemos implementar outros design patterns ou apenas fazer transformações no objeto ou separadamente nas suas propriedades.
-Vamos ver um pequeno exemplo de implementação do Design Pattern Memento que tornará possível o estado dar rollback, isso é, retornar aos estados anteriores como uma máquina do tempo.
+With the object bringing together the state and its actions, we can implement other design patterns or just make transformations on the object or separately on its properties.
+Let's see a small example of implementation of the Design Pattern Memento that will make it possible for the state to rollback, that is, return to the previous states as a time machine.
 
 ```dart
 ...
@@ -164,11 +164,11 @@ Vamos ver um pequeno exemplo de implementação do Design Pattern Memento que to
 var _triple = Triple<ProductData, Exception>(state: ProductData.empty());
 
 @computed
-ProductData get state => triple.state;
+ProductData get state => _triple.state;
 @computed
-Exception get error => triple.error;
+Exception get error => _triple.error;
 @computed
-bool get isLoading => triple.isLoading;
+bool get isLoading => _triple.isLoading;
 
 //save all changed states
 final List<Triple<ProductData, Exception>> _history = [];
@@ -201,22 +201,22 @@ void undo(){
 
 @action
 Future<void> fetchProducts() async {
-  triple = setLoading(true);
+  _triple = setLoading(true);
   try{
     final state = await repository.getProducts(); // return ProductData
-    triple = update(state);
+    _triple = update(state);
   } catch(e){
     final error = Exception('Error');
-    triple = setError(error);
+    _triple = setError(error);
   }
-  triple = setLoading(false);
+  _triple = setLoading(false);
 }
 ```
 
-Implementamos algo bem complexo, mas é muito fácil entender o que está acontecendo apenas lendo o código.
-Assim chegamos a um padrão que pode ser usado para gerênciar estados e sub-estados usando reatividade individualmente por propriedade.
+We implemented something very complex, but it is easier to understand what is happening just by reading the code.
+So we come to a standard that can be used to manage states and sub-states using reactivity individually by property.
 
-O padrão de Estado Segmentado (Ou Triple) pode ser abstraído para tornar a sua reutilização mais forte. Vamos usar mais uma vez o MobX como exemplo, mas poderemos utilizar em qualquer tipo de reatividade por propriedade.
+The Segmented State (Or Triple) pattern can be abstracted to make its reuse stronger. We will use MobX again as an example, but we can use it in any type of reactivity by property.
 
 ```dart
 abstract class MobXStore<Error, State> {
@@ -229,11 +229,11 @@ abstract class MobXStore<Error, State> {
   }
 
   @computed
-  State get state => triple.state;
+  State get state => _triple.state;
   @computed
-  Error get error => triple.error;
+  Error get error => _triple.error;
   @computed
-  bool get isLoading => triple.isLoading;
+  bool get isLoading => _triple.isLoading;
 
   //save all changed states
   final List<Triple<Error, State>> _history = [];
@@ -266,7 +266,7 @@ abstract class MobXStore<Error, State> {
 }
 ```
 
-agora basta implementar o **MobXStore** em qualquer Store do MobX que deseja utilizar.
+Now, just implement **MobXStore** in any Store of MobX.
 
 ```dart
 class Product = ProductBase with _$Product;
@@ -291,23 +291,23 @@ abstract class ProductBase extends MobXStore<ProductData, Exception> with Store 
 
 ```
 
-Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
+Once again THANK YOU MOTHER OOP.
 
 ## Extension (Dart)
 
-Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) baseados nas reatividades desenvolvidas pela comunidade e nas nativas do Flutter como o ValueNotifier e Streams. Mais detalhes na documentação das próprias abstrações.
+As we have seen, the purpose of the Segmented State Standard (Triple) is to help normalize state management logic. We are working on abstractions (packages) based on reactivities developed by the community and Flutter natives such as ValueNotifier and Streams. More details in the documentation of the abstractions themselves.
 
-- [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
-- [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
+- [triple](https://pub.dev/packages/triple) (Abstraction to Dart)
+- [flutter_triple](https://pub.dev/packages/flutter_triple) (Implements **triple** building Stores based on Stream and ValueNotifier)
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
 
-## Exemplos
+## Examples
 
-Verifique a [seção de exemplos](./examples/README.md).
+See [examples session](./examples/README.md).
 
 
 ## Features and bugs
 
-O Padrão de Estado Segmentado está em constante crescimento. 
-Deixe-nos saber o que está achando de tudo isso.
-Se está de acordo deixe um Star nesse reposítorio representando que está assinando e concordando com o padrão proposto.
+The Segmented State Standard is constantly growing.
+Let us know what you think of all this.
+If you agree, give a Star in that repository representing that you are signing and consenting to the proposed standard.
