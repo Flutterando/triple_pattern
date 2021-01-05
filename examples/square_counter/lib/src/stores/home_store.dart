@@ -4,8 +4,7 @@ import 'package:flutter_triple/flutter_triple.dart';
 
 import 'square_store.dart';
 
-class HomeStore extends MobXStore<SquareError, List<SquareStore>>
-    with MementoMixin {
+class HomeStore extends MobXStore<SquareError, List<SquareStore>> with MementoMixin {
   HomeStore() : super([]);
 
   void initializeSquare(List<SquareStore> squares) {

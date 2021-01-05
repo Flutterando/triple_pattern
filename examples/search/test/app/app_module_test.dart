@@ -20,9 +20,7 @@ main() {
   );
 
   test('deve executar usecase search_by_text', () async {
-    when(client)
-        .calls('get')
-        .thenAnswer((_) async => Response(jsonResponse, 200));
+    when(client).calls('get').thenAnswer((_) async => Response(jsonResponse, 200));
 
     var usecase = Modular.get<SearchByText>();
     var result = await usecase("jacob");
