@@ -1,44 +1,43 @@
 # flutter_triple
 
-Implementação do Segmented State Pattern (Padrão de Estado Segmentado) apelidado de Triple.
+Implementation of the Segmented State Pattern, nicknamed Triple.
 
 
-## Segmentação do Estado
+## State Segmentation
 
-O SSP segmenta o estado em 3 partes reativas, o valor do estado (state), o objeto de erro (error) e a ação de carregamento do estado (loading).
+The SSP segments the state into 3 reactive parts, the state value (state), the error object (error), and the state loading action (loading).
 
 .
 
 ![Triple](https://github.com/Flutterando/triple_pattern/raw/master/schema.png)
 
-Esses segmentos são observados em um listener ou em listeners separados. Também podem ser combinados para se obter um novo segmento, sempre partindo dos 3 segmentos principais.
+These segments are observed in a listener or separate listeners. They can also be combined to obtain a new segment, always starting from the 3 main segments.
 
-## Sobre o Package
+## The Package
 
-Este package tem por objetivo introduzir Stores no padrão de segmentos pré-implementadas usando a API de Streams(StreamStore) e do objeto ValueNotifier (NotifierStore).
+This package introduces Stores in the pre-implemented segment pattern using the Streams API (StreamStore) and the ValueNotifier object (NotifierStore).
 
-As Stores já oferecem por padrão um observador (**store.observer()**) e os métodos **store.update()**(Atualizar o Estado), **store.setLoading()**(Para mudar o loading), **store.setError()**(Para mudar o Erro).
-Também conta com o mixin **MementoMixin** que utilizam o design pattern **Memento** para desfazer ou refazer o valor do estado, portanto, os métodos **store.undo()** e **store.redo()** também são adicionado a Store por esse mixin.
+Stores already offer by default an observer (**store.observer()**) and **store.update()** (Update State), **store.setLoading()** (To change the loading), **store.setError()** (To change the error).
+It also has the mixin **MementoMixin** that uses the pattern design **Memento** to undo or redo the state value, therefore, the **store.undo()** and **store.redo() methods** are also added to Store by this mixin.
+Using the ValueNotifier (NotifierStore), the properties *state*, *loading*, and *error* are reactive thanks to the extension [rx_notifier](https://pub.dev/packages/rx_notifier).
 
-Usando o ValueNotifier(NotifierStore), as propriedades *state*,*loading* e *error* são reativas graças a extensão [rx_notifier](https://pub.dev/packages/rx_notifier).
+The Package also has **Builder Widgets** to observe changes in the state in the Flutter widget tree.
 
-O Package também conta com **Builder Widgets** para observar as modificações do estado na árvore de widget do Flutter.
+## Maintaining the State with Streams
 
-## Gerênciando o Estado com Streams
-
-Para criar uma Store que ficará responsável pela Lógica do estado, crie uma classe e herde de **StreamStore**:
+To create a Store that will be responsible for the State Logic, create a class and inherit from **StreamStore**:
 
 ```dart
 class Counter extends StreamStore {}
 ```
 
-Você também pode colocar tipos no valor do estado e no objeto de exception que iremos trabalhar nesse Store:
+You can also put types in the state value and in the exception object that we will be working on in this Store:
 
 ```dart
 class Counter extends StreamStore<Exception, int> {}
 ```
 
-Finalizamos atribuindo um valor inicial para o estado desse Store invocando o construtor da classe pai (super):
+We ended by assigning an initial value for the state of this Store by invoking the constructor of the parent class (super):
 
 ```dart
 class Counter extends StreamStore<Exception, int> {
@@ -47,7 +46,8 @@ class Counter extends StreamStore<Exception, int> {
 }
 ```
 
-Temos disponível na Store 3 métodos para mudar os segmentos **(update, setError e setLoading)**. Vamos começar incrementando o estado:
+It is available in the Store 3 methods to change the segments **(update, setError, and setLoading)**. 
+Let's start by incrementing the state:
 
 ```dart
 class Counter extends StreamStore<Exception, int> {
@@ -60,8 +60,8 @@ class Counter extends StreamStore<Exception, int> {
 }
 ```
 
-Esse código já é o suficiente para fazer o contador funcionar.
-Vamos adicionar um pouco de código assincrono para apresentar os métodos **setError** e **setLoading**
+This code is enough to make the counter work.
+Let's add a little bit of asynchronous code to introduce the methods **setError** and **setLoading**
 
 ```dart
 class Counter extends StreamStore<Exception, int> {
@@ -84,16 +84,16 @@ class Counter extends StreamStore<Exception, int> {
 }
 ```
 
-Aqui experimentamos a mudança de estados e os outros segmentos de loading e error. 
-> **NOTE**: Tudo o que foi mostrado aqui para o **StreamStore** também server para o **NotifierStore**.
+Here we experience the change of states and the other segments of loading and error. 
+> **NOTE**: To use **NotifierStore** it is the same as we saw on **StreamStore**.
 
-Os 3 segmentos operam separados mas podem ser "escutados" juntos. Agora iremos ver como observar esse store.
+The 3 segments operate separately but can be "heard" together. Now we will see how to observe this store.
 
 ## Observers and Builders
 
 ### observer
 
-Podemos observar os segmentos de forma individual ou de todos usando o método **store.observer()**;
+We can observe the segments separately or together by using **store.observer()**;
 
 ```dart
 counter.observer(
@@ -102,11 +102,11 @@ counter.observer(
     onLoading: (loading) => print(loading),
 );
 ```
-Já nos Widgets podemos escolher escutar em um Builder com Escopo ou escutar todas as modificações do Triple.
+On Widgets we can observe on a Builder with ScopedBuilder or observe all changes with TripleBuilder.
 
 ### ScopedBuilder
 
-Use o **ScopedBuilder** para escutar os segmentos de forma individual ou de todos, semelhante ao que faz o método **store.observer()**;
+Use **ScopedBuilder** to listen the segments, likewise the method **store.observer()**;
 
 ```dart
 ScopedBuilder(
@@ -117,11 +117,11 @@ ScopedBuilder(
 );
 ```
 
-> **NOTE**: No ScopedBuilder O **onLoading** só é chamado quando for "true". Isso significa que se o estado for modificado ou for adicionado um erro, o widget a ser construido será o do **onState** ou do **onError**. Porém é muito importante modificar o Loading para "false" quando a ação de carregamento for completada. Os **observers** do Triple *NÃO PROPAGAM OBJETOS REPETIDOS* (mais sobre isso na sessão sobre **distinct**). Esse é um comportamento exclusivo do ScopedBuilder.
+> **NOTE**: On ScopedBuilder the **onLoading** is only called when "true". This means that if the state is modified or an error is added, the widget to be built will be the **onState** or **onError**. However, it is very important to change Loading to "false" when the loading action is completed. **observers** of Triple *DO NOT PROPAGATE REPEATED OBJECTS* (more on this in the section on **distinct**). This is a behavior exclusive to ScopedBuilder.
 
 ### TripleBuilder
 
-Use o **TripleBuilder** para escutar todas as modificações dos segmentos e refleti-las na arvore de Widgets.
+Use **TripleBuilder** to listen all segment modifications and reflect them in the Widgets tree.
 
 ```dart
 TripleBuilder(
@@ -130,19 +130,19 @@ TripleBuilder(
 );
 ```
 
-> **NOTE**: O Builder do **TripleBuilder** é chamado quando há qualquer alteração nos segmentos. Seu uso é recomendado apenas se tiver interesse em escutar todos os segmentos ao mesmo tempo.
+> **NOTE**: The **TripleBuilder** builder is called when there is any change in the segments. Its use is recommended only if you are interested in listening to all segments at the same time.
 
 ### Distinct
 
-Por padrão, o observer da Store não reage a objetos repetidos. Esse comportamento é benéfico pois evita reconstruções de estado e notificações se o segmento não foi alterado.
+By default, the Store's observer does not react to repeated objects. This behavior is beneficial as it avoids state reconstructions and notifications if the segment has not been changed.
 
-É uma boa prática sobreescrever o **operation==** do valor do estado e error. Uma boa dica também é usar o package [equateble](https://pub.dev/packages/equatable) para simplificar esse tipo de comparação.
+It is good practice to overwrite the **operation==** of the state value and error. A good tip is also to use the package [equatable](https://pub.dev/packages/equatable) to simplify this type of comparison.
 
 ## Selectors
 
-Podemos recuperar a reatividade dos segmentos de forma individual para transformações ou combinações. Temos então 3 selectors que podem ser recuperados como propriedades do Store: **store.selectState**, **store.selectError** e **store.selectLoading**.
+We can recover the reactivity of the segments individually for transformations or combinations. We then have 3 selectors that can be retrieved as Store properties: **store.selectState**, **store.selectError** and **store.selectLoading**.
 
-O Tipo dos selectors muda dependendo da ferramenta reativa que estiver utilizando nos Stores. Por exemplo, se estiver usando **StreamStore** então seus selectors serão Streams, porém se estiver usando **NotifierStore** então seus selectors serão ValueListenable;
+The type of selectors changes depending on the reactive tool you are using in the Stores. For example, if you are using **StreamStore** then your selectors will be Streams, however,  if you are using **NotifierStore** then your selectors will be ValueListenable;
 
 ```dart
 //StreamStore
@@ -157,15 +157,15 @@ ValueListenable<bool> myLoading$ = counter.selectLoading;
 
 ```
 
-## Gerênciando o Estado com ValueNotifier
+## Maintaining the State with ValueNotifier
 
-[ValueNotifier](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) é uma implementação de [ChangeNotifier](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html) e está presente em todo o ecosistema do Flutter, desde ScrollController ao TabController.
+[ValueNotifier](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) is an implementation of [ChangeNotifier](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html) and is present in the entire ecosystem of Flutter, from ScrollController to TabController.
 
-Usar a API do *ChangeNotifier* significa reaproveitar tudo o que já existe no Flutter, por isso é normal considerá o seu uso.
+Using the *ChangeNotifier* API means reusing everything that already exists in Flutter.
 
-O ValueNotifier usado nessa Store é extendido pela library [rx_notifier](https://pub.dev/packages/rx_notifier) que trás a possibilidade de aplicar a **functional reactive programming (TFRP)**, escutando as mudanças de seus valores de forma transparente como faz o [MobX](https://pub.dev/packages/mobx) por exemplo.
+The ValueNotifier used in this Store is extended by the library [rx_notifier](https://pub.dev/packages/rx_notifier) which brings the possibility of applying **functional reactive programming (TFRP)**, listening to changes in their values ​​in a transparent way as does the [MobX](https://pub.dev/packages/mobx).
 
-Um Store baseado em **ValueNotifier** é chamado de **NotifierStore**:
+A Store based on **ValueNotifier** its called **NotifierStore**:
 
 ```dart
 class Counter extends NotifierStore<Exception, int> {
@@ -188,7 +188,7 @@ class Counter extends NotifierStore<Exception, int> {
 }
 ```
 
-Nossos selectors (selectState, selectError e selectBool) agora serão **ValueListenable** que podem ser escutados separadamente usando **.addListener()** ou na Árvore de Widget com o **AnimatedBuilder** ambos do próprio Flutter:
+Our selectors (selectState, selectError, and selectBool) now will be **ValueListenable** that can be listen separately using **.addListener()** or in the Widget Tree with **AnimatedBuilder** both from Flutter:
 
 ```dart
 
@@ -205,7 +205,7 @@ Widget builder(BuildContext context){
 
 ```
 
-Ou escutar as reações de forma transparente usando o **rxObserver** ou na árvore widget com o **RxBuilder**:
+Or listen to reactions transparently using the **rxObserver** or in the widget tree with the **RxBuilder**:
 
 ```dart
 
@@ -221,13 +221,14 @@ Widget builder(BuildContext context){
 
 ```
 
-Para mais informações sobre a extensão leia a documentação do [rx_notifier](https://pub.dev/packages/rx_notifier)
+For more information about the extension read the documentation for [rx_notifier](https://pub.dev/packages/rx_notifier)
 
-> **IMPORTANT**: Obviamente você pode continuar a usar os listeners do **Triple** (**observer**, **ScopedBuilder** e **TripleBuilder**);
+> **IMPORTANT**: You can also continue to use the **Triple** (**observer**, **ScopedBuilder** e **TripleBuilder**);
 
-## Usando o Padrão Memento com o MementoMixin
+## Memento with MementoMixin
 
-Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
+You can add, undo or redo a state using the Memento Pattern. 
+This means that you can return to the previous state using the method **undo()** and also advance with the method **redo()**.
 
 ```dart
 
@@ -235,11 +236,11 @@ class Counter extends StreamStore<Exception, int> with MementoMixin {}
 
 ```
 
-## Dúvidas e Problemas
+## Questions and Problems
 
-O Canal de **issues** está aberto para dúvidas, reportar problemas e sugestões, não exite em usar esse canal de comunicação.
+The **issues** channel is open for questions, to report problems and suggestions, do not hesitate to use this communication channel.
 
-> **VAMOS SER REFERRENCIAS JUNTOS**
+> **LET'S BE REFERENCES TOGETHER**
 
 
 
