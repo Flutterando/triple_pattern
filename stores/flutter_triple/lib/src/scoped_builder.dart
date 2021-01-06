@@ -66,6 +66,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
 
   @override
   void dispose() {
+    disposer?.call();
     isDisposed = true;
     super.dispose();
   }
