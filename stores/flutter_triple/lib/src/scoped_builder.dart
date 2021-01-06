@@ -30,29 +30,30 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
 
   Disposer? disposer;
 
+  bool isDisposed = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (disposer != null) {
-      disposer!.call();
-    }
+    disposer?.call();
+
     disposer = widget.store.observer(
       onState: (state) {
-        if (widget.onState != null) {
+        if (widget.onState != null && !isDisposed) {
           setState(() {
             child = widget.onState?.call(context, state);
           });
         }
       },
       onError: (error) {
-        if (widget.onError != null) {
+        if (widget.onError != null && !isDisposed) {
           setState(() {
             child = widget.onError?.call(context, error);
           });
         }
       },
       onLoading: (isLoading) {
-        if (widget.onLoading != null) {
+        if (widget.onLoading != null && !isDisposed) {
           setState(() {
             child = isLoading
                 ? widget.onLoading?.call(context)
@@ -65,8 +66,9 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
 
   @override
   void dispose() {
-    super.dispose();
     disposer?.call();
+    isDisposed = true;
+    super.dispose();
   }
 
   @override

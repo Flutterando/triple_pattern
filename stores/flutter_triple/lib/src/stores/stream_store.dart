@@ -56,7 +56,9 @@ abstract class StreamStore<Error extends Object, State extends Object>
     });
 
     return () async {
-      await _sub.cancel();
+      try {
+        await _sub.cancel();
+      } catch (ex) {}
     };
   }
 }
