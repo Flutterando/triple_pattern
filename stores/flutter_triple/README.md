@@ -223,7 +223,7 @@ Widget builder(BuildContext context){
 
 For more information about the extension read the documentation for [rx_notifier](https://pub.dev/packages/rx_notifier)
 
-> **IMPORTANT**: You can also continue to use the **Triple** (**observer**, **ScopedBuilder** e **TripleBuilder**);
+> **IMPORTANT**: You can also continue to use the **Triple** (**observer**, **ScopedBuilder** and **TripleBuilder**);
 
 ## Memento with MementoMixin
 
