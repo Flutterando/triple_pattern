@@ -61,15 +61,17 @@ abstract class NotifierStore<Error extends Object, State extends Object>
     }
 
     return () async {
-      if (onState != null) {
-        selectState.removeListener(funcState);
-      }
-      if (onLoading != null) {
-        selectLoading.removeListener(funcLoading);
-      }
-      if (onError != null) {
-        selectError.removeListener(funcError);
-      }
+      try {
+        if (onState != null) {
+          selectState.removeListener(funcState);
+        }
+        if (onLoading != null) {
+          selectLoading.removeListener(funcLoading);
+        }
+        if (onError != null) {
+          selectError.removeListener(funcError);
+        }
+      } catch(ex) {}
     };
   }
 
