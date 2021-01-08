@@ -66,6 +66,26 @@ abstract class Store<Error extends Object, State extends Object> {
     }
   }
 
+  ///Execute a Future.
+  ///
+  ///This function is a sugar code used to run a Future in a simple way,
+  ///executing SetLoading and adding to SetError if an error occurs in Future
+  Future execute(Future<State> future,
+      {void Function(Error error)? onError}) async {
+    setLoading(true);
+
+    await future
+        .then(update)
+        .catchError(onError ?? setError, test: (_error) => _error is Error)
+        .then(
+          (value) => value,
+          onError: (_error) =>
+              throw 'is expected a ${Error.toString()} type, and receipt ${_error.runtimeType}',
+        );
+
+    setLoading(false);
+  }
+
   ///Discard the store
   Future destroy();
 
