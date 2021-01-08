@@ -300,6 +300,7 @@ As we have seen, the purpose of the Segmented State Standard (Triple) is to help
 - [triple](https://pub.dev/packages/triple) (Abstraction to Dart)
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (Implements **triple** building Stores based on Stream and ValueNotifier)
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
+- [getx_triple](https://pub.dev/packages/mobx_triple) (GetXStore)
 
 ## Examples
 

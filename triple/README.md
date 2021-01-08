@@ -215,6 +215,7 @@ class Counter extends StreamStore<int, Exception> with MementoMixin {}
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (StreamStore, NotifierStore, ScopedBuilder, TripleBuilder);
 
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore);
+- [getx_triple](https://pub.dev/packages/getx_triple) (GetXStore);
 
 
 
