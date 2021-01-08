@@ -126,7 +126,7 @@ Observable<bool> myLoading$ = counter.selectLoading;
 
 ```
 
-## Usando o Padrão Memento com o MementoMixin
+## https://github.com/Flutterando/triple_pattern
 
 You can add, undo or redo a state using the Memento Pattern. 
 This means that you can return to the previous state using the method **undo()** and also advance with the method **redo()**.

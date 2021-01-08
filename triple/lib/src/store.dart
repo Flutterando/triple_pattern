@@ -38,8 +38,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This also stores the state value to be retrieved using the [undo()] method when using MementoMixin
   void update(State newState) {
-    final candidate =
-        _triple.copyWith(state: newState, event: TripleEvent.state);
+    final candidate = _triple.copyWith(state: newState, event: TripleEvent.state);
     if (candidate != _triple && candidate.state != _triple.state) {
       _triple = candidate;
       propagate(_triple);
@@ -48,8 +47,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
   ///Change the loading value.
   void setLoading(bool newloading) {
-    final candidate =
-        _triple.copyWith(isLoading: newloading, event: TripleEvent.loading);
+    final candidate = _triple.copyWith(isLoading: newloading, event: TripleEvent.loading);
     if (candidate != _triple && candidate.isLoading != _triple.isLoading) {
       _triple = candidate;
       propagate(_triple);
@@ -58,8 +56,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
   ///Change the error value.
   void setError(Error newError) {
-    final candidate =
-        _triple.copyWith(error: newError, event: TripleEvent.error);
+    final candidate = _triple.copyWith(error: newError, event: TripleEvent.error);
     if (candidate != _triple && candidate.error != _triple.error) {
       _triple = candidate;
       propagate(_triple);
@@ -69,18 +66,13 @@ abstract class Store<Error extends Object, State extends Object> {
   ///Execute a Future.
   ///
   ///This function is a sugar code used to run a Future in a simple way,
-  ///executing SetLoading and adding to SetError if an error occurs in Future
-  Future execute(Future<State> future,
-      {void Function(Error error)? onError}) async {
+  ///executing [setLoading] and adding to [setError] if an error occurs in Future
+  Future execute(Future<State> future, {void Function(Error error)? onError}) async {
     setLoading(true);
 
-    await future
-        .then(update)
-        .catchError(onError ?? setError, test: (_error) => _error is Error)
-        .then(
+    await future.then(update).catchError(onError ?? setError, test: (_error) => _error is Error).then(
           (value) => value,
-          onError: (_error) =>
-              throw 'is expected a ${Error.toString()} type, and receipt ${_error.runtimeType}',
+          onError: (_error) => throw 'is expected a ${Error.toString()} type, and receipt ${_error.runtimeType}',
         );
 
     setLoading(false);
