@@ -96,7 +96,7 @@ Como o movimento do estado sempre está em torno do trio State, Error e Loading 
 
 Tendo 3 Fluxos separados poderemos ter 3 listeners diferentes, por exemplo, escutamos o error para lança-lo em forma de "SnackBar" e quando houver Loadings lançamos um Dialog, mas se precisarmos adicionar a esse estado um padrão como o "memento" teremos que colocar as 3 propriedades em um objeto genérico.
 
-Para fechar o padrão dos 3 Fluxos podemos criar um objeto genérico, as suas propriedades podem reativas bem como o próprio objeto em sí. Vejamos um exemplo com o MobX.
+Para fechar o padrão dos 3 Fluxos podemos criar um objeto genérico, com propriedades que podem ser reativas, bem como o próprio objeto em sí. Vejamos um exemplo com o MobX.
 
 ```dart
 
@@ -136,7 +136,7 @@ Future<void> fetchProducts() async {
 }
 ```
 
-Agora temos um objeto que junta as 3 propriedades do estado segmentadas que também podem ser acessadas e transformadas individualmente usando o @computed do MobX que faz distinção automática e só dispara uma reação se a propriedade for realmente um novo objeto.
+Agora temos um objeto que junta as 3 propriedades do estado segmentadas, que também podem ser acessadas e transformadas individualmente usando o @computed do MobX, que faz distinção automática e só dispara uma reação se a propriedade for realmente um novo objeto.
 
 ```dart
 @observable 
@@ -154,7 +154,7 @@ bool get isLoading => triple.isLoading;
 ...
 ```
 
-Com o objeto reunindo o estado e as suas ações, podemos implementar outros design patterns ou apenas fazer transformações no objeto ou separadamente nas suas propriedades.
+Com o objeto reunindo o estado e as suas ações, podemos implementar outros design patterns, ou fazer transformações separadamente nas propriedades desse objeto, ou apenas fazer transformações no objeto.
 Vamos ver um pequeno exemplo de implementação do Design Pattern Memento que tornará possível o estado dar rollback, isso é, retornar aos estados anteriores como uma máquina do tempo.
 
 ```dart
@@ -295,7 +295,7 @@ Mais uma vez OBRIGADO MÃE ORIENTAÇÃO A OBJETOS.
 
 ## Extension (Dart)
 
-Como vimos, o propósito do Padrão de Estado Segmentado(Triple) ajuda na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) baseados nas reatividades desenvolvidas pela comunidade e nas nativas do Flutter como o ValueNotifier e Streams. Mais detalhes na documentação das próprias abstrações.
+Como vimos, o propósito do Padrão de Estado Segmentado(Triple) é ajudar na padronização das lógicas de gerenciamento do estado. Estamos trabalhando em abstrações(packages) baseados nas reatividades desenvolvidas pela comunidade, e nas reatividades nativas do próprio Flutter como o ValueNotifier e Streams. Mais detalhes na documentação das próprias abstrações.
 
 - [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
