@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
+import 'package:dartz/dartz.dart';
+
 import 'models/triple_model.dart';
 import 'package:meta/meta.dart';
 
@@ -8,6 +11,9 @@ typedef Disposer = Future<void> Function();
 abstract class Store<Error extends Object, State extends Object> {
   late Triple<Error, State> _triple;
   late Triple<Error, State> lastTripleState;
+
+  CancelableOperation? _completerExecution;
+  var _lastExecution = DateTime.now();
 
   ///Get the complete triple value;
   Triple<Error, State> get triple => _triple;
@@ -67,15 +73,64 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This function is a sugar code used to run a Future in a simple way,
   ///executing [setLoading] and adding to [setError] if an error occurs in Future
-  Future execute(Future<State> future, {void Function(Error error)? onError}) async {
+  Future<void> execute(Future<State> future, {Duration delay = const Duration(milliseconds: 50)}) async {
+    final localTime = DateTime.now();
+    _lastExecution = localTime;
+    await Future.delayed(delay);
+    if (localTime != _lastExecution) {
+      return;
+    }
+
     setLoading(true);
 
-    await future.then(update).catchError(onError ?? setError, test: (_error) => _error is Error).then(
-          (value) => value,
-          onError: (_error) => throw 'is expected a ${Error.toString()} type, and receipt ${_error.runtimeType}',
-        );
+    await _completerExecution?.cancel();
 
-    setLoading(false);
+    _completerExecution = CancelableOperation.fromFuture(future);
+
+    await _completerExecution!.then(
+      (value) {
+        if (value is State) {
+          update(value);
+          setLoading(false);
+        }
+      },
+      onError: (error, __) {
+        if (error is Error) {
+          setError(error);
+          setLoading(false);
+        } else {
+          //    throw 'is expected a ${Error.toString()} type, and receipt ${error.runtimeType}';
+        }
+      },
+    ).valueOrCancellation();
+  }
+
+  ///Execute a Future Either [dartz].
+  ///
+  ///This function is a sugar code used to run a Future in a simple way,
+  ///executing [setLoading] and adding to [setError] if an error occurs in Either
+  Future<void> executeEither(Future<Either<Error, State>> future, {Duration delay = const Duration(milliseconds: 50)}) async {
+    final localTime = DateTime.now();
+    _lastExecution = localTime;
+    await Future.delayed(delay);
+    if (localTime != _lastExecution) {
+      return;
+    }
+
+    setLoading(true);
+
+    await _completerExecution?.cancel();
+
+    _completerExecution = CancelableOperation.fromFuture(future);
+
+    await _completerExecution!.then(
+      (value) {
+        if (value is Either<Error, State>) {
+          value.fold(setError, update);
+          setLoading(false);
+        }
+      },
+    ).valueOrCancellation();
   }
 
   ///Discard the store
