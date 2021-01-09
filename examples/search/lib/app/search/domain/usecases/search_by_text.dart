@@ -1,7 +1,7 @@
 import 'package:search/app/search/domain/entities/result.dart';
 import 'package:search/app/search/domain/errors/erros.dart';
 import 'package:search/app/search/domain/repositories/search_repository.dart';
-import 'package:either_dart/either.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../errors/erros.dart';

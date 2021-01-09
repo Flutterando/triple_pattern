@@ -73,7 +73,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This function is a sugar code used to run a Future in a simple way,
   ///executing [setLoading] and adding to [setError] if an error occurs in Future
-  Future<void> execute(Future<State> future, {Duration delay = const Duration(milliseconds: 50)}) async {
+  Future<void> execute(Future<State> Function() func, {Duration delay = const Duration(milliseconds: 50)}) async {
     final localTime = DateTime.now();
     _lastExecution = localTime;
     await Future.delayed(delay);
@@ -85,7 +85,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
     await _completerExecution?.cancel();
 
-    _completerExecution = CancelableOperation.fromFuture(future);
+    _completerExecution = CancelableOperation.fromFuture(func());
 
     await _completerExecution!.then(
       (value) {
@@ -109,7 +109,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This function is a sugar code used to run a Future in a simple way,
   ///executing [setLoading] and adding to [setError] if an error occurs in Either
-  Future<void> executeEither(Future<Either<Error, State>> future, {Duration delay = const Duration(milliseconds: 50)}) async {
+  Future<void> executeEither(Future<Either<Error, State>> Function() func, {Duration delay = const Duration(milliseconds: 50)}) async {
     final localTime = DateTime.now();
     _lastExecution = localTime;
     await Future.delayed(delay);
@@ -121,7 +121,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
     await _completerExecution?.cancel();
 
-    _completerExecution = CancelableOperation.fromFuture(future);
+    _completerExecution = CancelableOperation.fromFuture(func());
 
     await _completerExecution!.then(
       (value) {

@@ -50,6 +50,12 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    store.observer(onError: print, onState: print);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -70,10 +76,13 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
           Expanded(
             child: ScopedBuilder<SearchStore, Failure, List<Result>>(
                 store: store,
-                onLoading: (_, isLoading) =>
-                    Center(child: CircularProgressIndicator()),
-                onError: (_, error) => _buildError(error!),
+                onLoading: (_) => Center(child: CircularProgressIndicator()),
+                onError: (_, error) {
+                  print('build error');
+                  return _buildError(error!);
+                },
                 onState: (_, state) {
+                  print('build state');
                   if (state.isEmpty) {
                     return Center(
                       child: Text('Digita alguma coisa...'),

@@ -56,8 +56,8 @@ void main() {
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
-  FutureOr<void> increment() => execute(Future.delayed(Duration(seconds: 2)).then((value) => state + 1));
-  FutureOr<void> incrementEither() => executeEither(Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
+  FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 2)).then((value) => state + 1));
+  FutureOr<void> incrementEither() => executeEither(() => Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
 }
 
 abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {

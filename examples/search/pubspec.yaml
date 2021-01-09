@@ -21,14 +21,14 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
+  triple: ^0.0.22
+  dartz: ^0.10.0-nullsafety.0
   async: ^2.5.0-nullsafety.3
   flutter_mobx: ^2.0.0-nullsafety.0
-  flutter_triple: ^0.0.18
+  flutter_triple: ^0.0.24
   mobx_triple: ^0.0.18
   mobx: ^2.0.0-nullsafety.2
   rxdart: ^0.26.0-nullsafety.0
-  either_dart: 
-    git: https://github.com/Flutterando/either_dart
   http:
     git: https://github.com/dart-lang/http
   flutter_modular: ^3.0.0-nullsafety.24

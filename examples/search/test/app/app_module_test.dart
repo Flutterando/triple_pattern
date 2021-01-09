@@ -24,8 +24,8 @@ main() {
 
     var usecase = Modular.get<SearchByText>();
     var result = await usecase("jacob");
-    expect(result.isRight, true);
-    expect(result.right, isA<List<Result>>());
+    expect(result.isRight(), true);
+    expect(result | [], isA<List<Result>>());
   });
 }
 
