@@ -21,7 +21,7 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
-  triple: ^0.0.22
+  triple: ^0.0.24
   dartz: ^0.10.0-nullsafety.0
   async: ^2.5.0-nullsafety.3
   flutter_mobx: ^2.0.0-nullsafety.0

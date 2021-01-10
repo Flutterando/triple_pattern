@@ -39,8 +39,7 @@ abstract class Store<Error extends Object, State extends Object> {
   Error? get error => _mutableObjects.triple.error;
 
   ///[initialState] Start this store with a value defalt.
-  Store(State initialState)
-      : _mutableObjects = _MutableObjects<Error, State>(initialState);
+  Store(State initialState) : _mutableObjects = _MutableObjects<Error, State>(initialState);
 
   ///IMPORTANT!!!
   ///THIS METHOD TO BE VISIBLE FOR OVERRIDING ONLY!!!
@@ -52,37 +51,31 @@ abstract class Store<Error extends Object, State extends Object> {
   ///Change the State value.
   ///
   ///This also stores the state value to be retrieved using the [undo()] method when using MementoMixin
-  void update(State newState) {
-    var candidate = _mutableObjects.triple
-        .copyWith(state: newState, event: TripleEvent.state);
+  void update(State newState, {bool force = false}) {
+    var candidate = _mutableObjects.triple.copyWith(state: newState, event: TripleEvent.state);
     candidate = middleware(candidate);
-    if (candidate != _mutableObjects.triple &&
-        candidate.state != _mutableObjects.triple.state) {
-      _mutableObjects.lastState = triple.copyWith(isLoading: false);
+    if (force || (candidate.state != _mutableObjects.triple.state)) {
+      _mutableObjects.lastState = candidate.copyWith(isLoading: false);
       _mutableObjects.triple = candidate;
       propagate(_mutableObjects.triple);
     }
   }
 
   ///Change the loading value.
-  void setLoading(bool newloading) {
-    var candidate = _mutableObjects.triple
-        .copyWith(isLoading: newloading, event: TripleEvent.loading);
+  void setLoading(bool newloading, {bool force = false}) {
+    var candidate = _mutableObjects.triple.copyWith(isLoading: newloading, event: TripleEvent.loading);
     candidate = middleware(candidate);
-    if (candidate != _mutableObjects.triple &&
-        candidate.isLoading != _mutableObjects.triple.isLoading) {
+    if (force || (candidate.isLoading != _mutableObjects.triple.isLoading)) {
       _mutableObjects.triple = candidate;
       propagate(_mutableObjects.triple);
     }
   }
 
   ///Change the error value.
-  void setError(Error newError) {
-    var candidate = _mutableObjects.triple
-        .copyWith(error: newError, event: TripleEvent.error);
+  void setError(Error newError, {bool force = false}) {
+    var candidate = _mutableObjects.triple.copyWith(error: newError, event: TripleEvent.error);
     candidate = middleware(candidate);
-    if (candidate != _mutableObjects.triple &&
-        candidate.error != _mutableObjects.triple.error) {
+    if (force || (candidate.error != _mutableObjects.triple.error)) {
       _mutableObjects.triple = candidate;
       propagate(_mutableObjects.triple);
     }
@@ -98,8 +91,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This function is a sugar code used to run a Future in a simple way,
   ///executing [setLoading] and adding to [setError] if an error occurs in Future
-  Future<void> execute(Future<State> Function() func,
-      {Duration delay = const Duration(milliseconds: 50)}) async {
+  Future<void> execute(Future<State> Function() func, {Duration delay = const Duration(milliseconds: 50)}) async {
     final localTime = DateTime.now();
     _mutableObjects.lastExecution = localTime;
     await Future.delayed(delay);
@@ -125,7 +117,7 @@ abstract class Store<Error extends Object, State extends Object> {
           setError(error);
           setLoading(false);
         } else {
-          //    throw 'is expected a ${Error.toString()} type, and receipt ${error.runtimeType}';
+          throw Exception('is expected a ${Error.toString()} type, and receipt ${error.runtimeType}');
         }
       },
     ).valueOrCancellation();
@@ -135,8 +127,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This function is a sugar code used to run a Future in a simple way,
   ///executing [setLoading] and adding to [setError] if an error occurs in Either
-  Future<void> executeEither(Future<Either<Error, State>> Function() func,
-      {Duration delay = const Duration(milliseconds: 50)}) async {
+  Future<void> executeEither(Future<Either<Error, State>> Function() func, {Duration delay = const Duration(milliseconds: 50)}) async {
     final localTime = DateTime.now();
     _mutableObjects.lastExecution = localTime;
     await Future.delayed(delay);

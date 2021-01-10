@@ -2,8 +2,7 @@ import 'store.dart';
 import 'models/triple_model.dart';
 import 'dart:math' as math;
 
-mixin MementoMixin<State extends Object, Error extends Object>
-    on Store<Error, State> {
+mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, State> {
   final _history = <Triple<Error, State>>[];
   final int _historyLimit = 32;
   int _historyIndex = 0;
@@ -15,8 +14,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
   bool canUndo() => _history.isNotEmpty && _historyIndex > 0;
 
   ///Return [true] if you can redo
-  bool canRedo() =>
-      (_historyIndex + 1) < _history.length || triple.state != lastState.state;
+  bool canRedo() => (_historyIndex + 1) < _history.length || triple.state != lastState.state;
 
   void _addHistory(Triple<Error, State> observableCache) {
     if (_historyIndex == _history.length) {
@@ -33,17 +31,20 @@ mixin MementoMixin<State extends Object, Error extends Object>
   }
 
   @override
-  void update(newState) {
-    _addHistory(lastState.copyWith(isLoading: false));
-    super.update(newState);
+  void update(newState, {bool force = false}) {
+    final _last = lastState;
+    super.update(newState, force: force);
+    if (_last.state != triple.state) {
+      _addHistory(_last.copyWith(isLoading: false));
+    }
   }
 
   ///Undo the last state value.
   void undo() {
+    print(_historyIndex);
+    print(_history);
     if (canUndo()) {
-      _historyIndex = _historyIndex > _history.length
-          ? math.max(_history.length - 1, 0)
-          : _historyIndex - 1;
+      _historyIndex = _historyIndex > _history.length ? math.max(_history.length - 1, 0) : _historyIndex - 1;
       propagate(_history[_historyIndex]);
     }
   }

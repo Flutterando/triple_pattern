@@ -15,7 +15,6 @@ void main() {
       await counter.increment();
       expect(counter.state, 3);
       expect(listLoading, [true, false, true, false, true, false]);
-      await counter.increment();
     });
 
     test('Switch exec', () async {
@@ -31,7 +30,7 @@ void main() {
   });
 
   group('Either | ', () {
-    test('exec', () async {
+    test('Either exec', () async {
       final listLoading = <bool>[];
       final counter = Counter(listLoading);
       await counter.incrementEither();
@@ -41,7 +40,7 @@ void main() {
       expect(listLoading, [true, false, true, false, true, false]);
     });
 
-    test('Switch exec', () async {
+    test('Either  exec with switch', () async {
       final listLoading = <bool>[];
       final counter = Counter(listLoading);
       counter.incrementEither();
@@ -58,12 +57,10 @@ class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
   FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
-        if (state < 3) {
-          return state + 1;
-        } else {
-          throw 'Error';
-        }
+        return state + 1;
       }));
+
+  FutureOr<void> incrementWithError() => execute(() => Future.error('error'));
   FutureOr<void> incrementEither() => executeEither(() => Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
 }
 
@@ -78,14 +75,9 @@ abstract class TestImplements<Error extends Object, State extends Object> extend
   Future destroy() async {}
 
   @override
-  void setLoading(bool newloading) {
+  void setLoading(bool newloading, {bool force = false}) {
     super.setLoading(newloading);
     list.add(newloading);
-  }
-
-  @override
-  void update(State newState) {
-    super.update(newState);
   }
 
   @override
