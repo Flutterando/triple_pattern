@@ -15,6 +15,7 @@ void main() {
       await counter.increment();
       expect(counter.state, 3);
       expect(listLoading, [true, false, true, false, true, false]);
+      await counter.increment();
     });
 
     test('Switch exec', () async {
@@ -56,7 +57,13 @@ void main() {
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
-  FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 2)).then((value) => state + 1));
+  FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
+        if (state < 3) {
+          return state + 1;
+        } else {
+          throw 'Error';
+        }
+      }));
   FutureOr<void> incrementEither() => executeEither(() => Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
 }
 
