@@ -108,13 +108,13 @@ abstract class Store<Error extends Object, State extends Object> {
     await _mutableObjects.completerExecution!.then(
       (value) {
         if (value is State) {
-          update(value);
+          update(value, force: true);
           setLoading(false);
         }
       },
       onError: (error, __) {
         if (error is Error) {
-          setError(error);
+          setError(error, force: true);
           setLoading(false);
         } else {
           throw Exception('is expected a ${Error.toString()} type, and receipt ${error.runtimeType}');

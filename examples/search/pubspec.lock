@@ -101,7 +101,7 @@ packages:
       name: flutter_triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.24"
+    version: "0.0.26"
   http:
     dependency: "direct main"
     description:
@@ -229,12 +229,12 @@ packages:
     source: hosted
     version: "0.2.19-nullsafety.6"
   triple:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: triple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.24"
+    version: "0.0.25"
   typed_data:
     dependency: transitive
     description:
