@@ -13,6 +13,6 @@ class SearchStore extends MobXStore<Failure, List<Result>> {
   SearchStore(this.searchByText) : super([]);
 
   void setSearchText(String value) {
-    execute(() async => (await searchByText(value)).fold((l) => [], (r) => r), delay: Duration(milliseconds: 500));
+    executeEither(() => searchByText(value), delay: Duration(milliseconds: 500));
   }
 }
