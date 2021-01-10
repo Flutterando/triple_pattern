@@ -41,8 +41,6 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
 
   ///Undo the last state value.
   void undo() {
-    print(_historyIndex);
-    print(_history);
     if (canUndo()) {
       _historyIndex = _historyIndex > _history.length ? math.max(_history.length - 1, 0) : _historyIndex - 1;
       propagate(_history[_historyIndex]);
