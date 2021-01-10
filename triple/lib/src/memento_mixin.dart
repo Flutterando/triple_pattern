@@ -16,8 +16,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
 
   ///Return [true] if you can redo
   bool canRedo() =>
-      (_historyIndex + 1) < _history.length ||
-      triple.state != lastTripleState.state;
+      (_historyIndex + 1) < _history.length || triple.state != lastState.state;
 
   void _addHistory(Triple<Error, State> observableCache) {
     if (_historyIndex == _history.length) {
@@ -35,9 +34,8 @@ mixin MementoMixin<State extends Object, Error extends Object>
 
   @override
   void update(newState) {
-    _addHistory(lastTripleState.copyWith(isLoading: false));
+    _addHistory(lastState.copyWith(isLoading: false));
     super.update(newState);
-    lastTripleState = triple.copyWith(isLoading: false);
   }
 
   ///Undo the last state value.
@@ -55,9 +53,9 @@ mixin MementoMixin<State extends Object, Error extends Object>
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
       propagate(_history[_historyIndex]);
-    } else if (triple.state != lastTripleState.state) {
+    } else if (triple.state != lastState.state) {
       _historyIndex++;
-      propagate(lastTripleState);
+      propagate(lastState);
     }
   }
 }
