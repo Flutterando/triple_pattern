@@ -99,6 +99,66 @@ By default, the Store's observer does not react to repeated objects. This behavi
 
 It is good practice to overwrite the **operation==** of the state value and error. A good tip is also to use the package [equatable](https://pub.dev/packages/equatable) to simplify this type of comparison.
 
+## Middleware
+
+We can add interceptors and modify the triple when the setLoading, setError or update action is executed.
+
+```dart
+class Counter extends StreamStore<Exception, int> {
+
+  Counter(0): super(0);
+
+  ...
+  @override
+  Triple<Exception, int> middleware(triple){
+    if(triple.event == TripleEvent.state){
+      return triple.copyWith(state + 2);
+    }
+
+    return triple;
+  }
+
+}
+```
+
+## Executors
+
+A very common pattern in an asynchronous request is:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+    setLoading(true);
+    try {
+      final result = await repository.fetch();
+      update(result);
+    } catch(e){
+      setError(e);
+    }
+    setLoading(false);
+  }
+
+```
+
+You can use the ** execute **method** and pass on Future to perform the same steps described in the previous example:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+   execute(() => repository.fetch());
+  }
+
+```
+for users using **dartz** using Clean Architecture for example, they can also run the Either class using the **executeEither** method:
+
+```dart
+ @override
+  Future<void> fetchData(){
+   executeEither(() => myUsecase());
+  }
+```
 
 
 ## Using the Memento Pattern with MementoMixin

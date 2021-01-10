@@ -1,6 +1,6 @@
 name: getx_triple
 description: Segmented State Pattern for GetX
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:
@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   get: ">=3.24.0 <4.0.0"
-  triple: ">=0.0.23 <1.0.0"
+  triple: ">=0.0.26 <1.0.0"
   flutter:
     sdk: flutter
 
