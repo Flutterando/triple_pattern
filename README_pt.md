@@ -300,6 +300,7 @@ Como vimos, o propósito do Padrão de Estado Segmentado(Triple) é ajudar na pa
 - [triple](https://pub.dev/packages/triple) (Abstração para o Dart)
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (Implementa o **triple** criando Stores baseadas em Stream e ValueNotifier, )
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
+- [getx_triple](https://pub.dev/packages/getx_triple) (GetXStore)
 
 ## Exemplos
 
