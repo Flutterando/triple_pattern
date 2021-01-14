@@ -13,6 +13,8 @@ Seguindo o [SSP](https://github.com/Flutterando/triple_pattern), nossa Store pre
 Vamos entao ver passo-a-passo como criar um Store baseado em qualquer sistema de Reatividade existente.
 
 
+
+
 ### PASSO 1: Escolha uma forma de Reatividade.
 
 O SSP não coloca nenhum requerimento sobre o tipo de reatividade que poderá ser utilizada no padrão, então o desenvolvedor deve escolher a que mais lhe agrada para criar uma Store.
@@ -27,21 +29,21 @@ Para os próximos passos usaremos "Streams", mas fique a vontade sobre essa esco
 
 Como já falamos, um objeto **Store** serve para armazenar a Lógica de Estado de um componente.
 ```dart
-class StreamStore extends Store {}
+abstract class StreamStore extends Store {}
 ```
 
-Também é prudente colocar "tipos genéricos" para o "state" e "error", faremos isso no **StreamStore** e depois reatribuiremos na **Store**.
+Também é prudente colocar "tipos genéricos" para o "error" e "state", faremos isso no **StreamStore** e depois reatribuiremos na **Store**.
 > **IMPORTANTE**: Herde os tipos genéricos de Object para impedir o uso de dynamics.
 
 e assim temos:
 ```dart
-class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {}
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {}
 ```
 
 Precisamos ainda declarar o construtor da classe pai com um valor inicial do state e assim concluimos essa etapa:
 
 ```dart
-class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   StreamStore(State state) : super(state);
 
@@ -51,13 +53,13 @@ class StreamStore<State extends Object, Error extends Object> extends Store<Stat
 ### PASSO 3: Inicie um objeto com a reatividade escolhida.
  
 
-Inclua de forma privada uma propriedade reativa que trabalhe com o tipo **Triple<State, Error>()**:
+Inclua de forma privada uma propriedade reativa que trabalhe com o tipo **Triple<Error, State>()**:
 
 ```dart
-class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
@@ -70,10 +72,10 @@ Sobrescreva o método **destroy** que será chamado quando a Store for descartad
 
 
 ```dart
-class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
@@ -87,19 +89,20 @@ class StreamStore<State extends Object, Error extends Object> extends Store<Stat
 
 ### PASSO 5: Sobrescreva o método de Propagação.
 
-Quando o Store decide propagar um valor do tipo **Triple**, ele o faz chamando o método **propagate()**. Sobreescreva esse método para direcionar o fluxo para o seu controle principal de reatividade.
+Quando o Store decide propagar um valor do tipo **Triple**, ele o faz chamando o método **propagate()**. Sobreescreva esse método para direcionar o fluxo para o seu controle principal de reatividade. Não se esqueça de chamar o método **super.propagate()**.
 
 ```dart
-class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple){
+  void propagate(Triple<Error, State> triple){
+    super.propagate(triple);
     _tripleController.add(triple);
   }
 
@@ -120,16 +123,16 @@ Esse método é chamado para escutar os eventos segmentados do estado(state, err
 
 
 ```dart
-class StreamStore<State extends Object, Error extends Object> extends Store<State, Error> {
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
 
   //main stream
-  final _tripleController = StreamController<Triple<State, Error>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   StreamStore(State state) : super(state);
 
   @protected
   @override
-  void propagate(Triple<State, Error> triple){
+  void propagate(Triple<Error, State> triple){
     _tripleController.add(triple);
   }
 
@@ -163,17 +166,116 @@ class StreamStore<State extends Object, Error extends Object> extends Store<Stat
 
 ### PASSO 7 (OPCIONAL): Defina Seletores
 
-Pode ser interessande ter seletores de quada segmento do estado de forma reativa. Isso é um State, Error e loading reativo.
+Pode ser interessande ter seletores de quada segmento do estado de forma reativa. Isso é um Error, State e loading reativo.
+Se dejesa ter essa possibilidade no Store implemente a interface **Selectors**:
 
-## Considerações sobre o Padrão Memento
+```dart
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State>
+implements Selectors<Stream<Error>, Stream<State>, Stream<bool>>
+ {
 
-Uma Store já contem por padrão a possibilidade de rollback de estado. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
+  //main stream
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
+
+  @override
+  late final Stream<State> selectState = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.state)
+      .map((triple) => triple.state);
+
+  @override
+  late final Stream<Error> selectError = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.error)
+      .where((triple) => triple.error != null)
+      .map((triple) => triple.error!);
+
+  @override
+  late final Stream<bool> selectLoading = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.loading)
+      .map((triple) => triple.loading);
+
+  StreamStore(State state) : super(state);
+
+  ...
+```
+
+## Middleware
+
+Podemos adicionar interceptadores e modificar o triple quando for executado a ação de setLoading, setError ou update.
+
+```dart
+class Counter extends StreamStore<Exception, int> {
+
+  Counter(0): super(0);
+
+  ...
+  @override
+  Triple<Exception, int> middleware(triple){
+    if(triple.event == TripleEvent.state){
+      return triple.copyWith(state + 2);
+    }
+
+    return triple;
+  }
+
+}
+```
+
+## Executors
+
+Um padráo muito comum em uma requisição assincrona é:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+    setLoading(true);
+    try {
+      final result = await repository.fetch();
+      update(result);
+    } catch(e){
+      setError(e);
+    }
+    setLoading(false);
+  }
+
+```
+
+Você pode utilizar o método **execute** e passar a Future para executar os mesmos passos descritos no exemplo anterior:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+   execute(() => repository.fetch());
+  }
+
+```
+para usuários que utilizam o **dartz** utilizando o Clean Architecture por exemplo, também podem executar os eithers utilizando o método **executeEither**:
+
+```dart
+ @override
+  Future<void> fetchData(){
+   executeEither(() => myUsecase());
+  }
+```
+
+## Usando o Padrão Memento com o MementoMixin
+
+Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
+
+```dart
+
+class Counter extends StreamStore<Exception, int> with MementoMixin {}
+
+```
+
 
 ## Exemplos
 
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (StreamStore, NotifierStore, ScopedBuilder, TripleBuilder);
 
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore);
+- [getx_triple](https://pub.dev/packages/getx_triple) (GetXStore);
 
 
 
