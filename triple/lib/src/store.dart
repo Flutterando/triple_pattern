@@ -151,6 +151,19 @@ abstract class Store<Error extends Object, State extends Object> {
     ).valueOrCancellation();
   }
 
+  ///Execute a Stream.
+  ///
+  ///This function is a sugar code used to run a Stream in a simple way,
+  ///executing [setLoading] and adding to [setError] if an error occurs in Stream
+  StreamSubscription executeStream(Stream<State> stream) {
+    StreamSubscription sub = stream.listen(
+      update,
+      onError: setError,
+      onDone: () => setLoading(false),
+    );
+    return sub;
+  }
+
   ///Discard the store
   Future destroy();
 
