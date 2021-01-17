@@ -271,7 +271,7 @@ agora basta implementar o **MobXStore** em qualquer Store do MobX que deseja uti
 ```dart
 class Product = ProductBase with _$Product;
 
-abstract class ProductBase extends MobXStore<ProductData, Exception> with Store {
+abstract class ProductBase extends MobXStore<Exception, ProductData> with Store {
 
   ProductBase(): super(ProductData.empty());
 
