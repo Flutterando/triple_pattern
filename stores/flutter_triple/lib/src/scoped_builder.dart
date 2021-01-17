@@ -39,7 +39,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
 
         bool isReload;
         if (value is List) {
-          isReload = eq(value, _distinct);
+          isReload = !eq(value, _distinct);
         } else {
           isReload = value != _distinct;
         }
