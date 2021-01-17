@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
@@ -25,6 +26,8 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
 
   bool isDisposed = false;
 
+  final Function eq = const ListEquality().equals;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -33,7 +36,13 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
     disposer = widget.store.observer(
       onState: (state) {
         final value = widget.distinct?.call(state);
-        bool isReload = value != _distinct;
+
+        bool isReload;
+        if (value is List) {
+          isReload = eq(value, _distinct);
+        } else {
+          isReload = value != _distinct;
+        }
         _distinct = value;
         if (widget.onState != null && !isDisposed && isReload) {
           setState(() {

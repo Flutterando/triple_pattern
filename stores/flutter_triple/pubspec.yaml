@@ -9,6 +9,7 @@ environment:
 dependencies:
   triple: ">=0.0.26 <1.0.0"
   rx_notifier: ">=1.0.0-nullsafety.2 <2.0.0"
+  collection: ^1.15.0-nullsafety.5
   flutter:
     sdk: flutter
 
