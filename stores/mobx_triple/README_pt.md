@@ -34,13 +34,13 @@ class Counter extends MobXStore<int, Exception> {
     Future<void> increment() async {
         setLoading(true);
 
-        await Future.delayer(Duration(seconds: 1));
+        await Future.delayed(Duration(seconds: 1));
 
         int value = state + 1;
         if(value < 5) {
             update(value);
         } else {
-            setError(Exception('Error: state not can be > 4'))
+            setError(Exception('Error: state not can be > 4'));
         }
         setLoading(false);
     }
