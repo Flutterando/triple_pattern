@@ -2,7 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-main() {
+void main() {
+  test('instance', () {
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
+  });
+  test('throw assert when no have onState, onLoading, onError', () {
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
+    expect(() => ScopedBuilder(store: Counter()), throwsAssertionError);
+  });
+  test('throw assert when have distinct but don\'t have onState', () {
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
+    expect(() => ScopedBuilder(store: Counter(), distinct: (s) => s, onLoading: (c) => Container()), throwsAssertionError);
+  });
+  test('throw assert when have filter but don\'t have onState', () {
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
+    expect(() => ScopedBuilder(store: Counter(), filter: (s) => true, onLoading: (c) => Container()), throwsAssertionError);
+  });
   testWidgets('test change state', (WidgetTester tester) async {
     final counter = Counter();
     await tester.pumpWidget(MaterialApp(home: TestCounterPage(counter: counter)));

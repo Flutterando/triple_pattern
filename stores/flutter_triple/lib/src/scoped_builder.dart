@@ -12,6 +12,8 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
 
   const ScopedBuilder({Key? key, this.distinct, this.filter, this.onState, this.onError, this.onLoading, required this.store})
       : assert(onState != null || onError != null || onLoading != null, 'Define at least one listener (onState, onError or onLoading)'),
+        assert(distinct == null ? true : onState != null, 'Distinct needs onState implementation'),
+        assert(filter == null ? true : onState != null, 'Filter needs onState implementation'),
         super(key: key);
 
   @override
