@@ -86,6 +86,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
           break;
         case (TripleEvent.state):
           child = widget.onState?.call(context, widget.store.state);
+          _distinct = widget.distinct?.call(widget.store.state);
           break;
       }
       if (child == null) {
