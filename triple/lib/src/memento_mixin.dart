@@ -1,11 +1,20 @@
+import 'package:meta/meta.dart';
+
 import 'store.dart';
 import 'models/triple_model.dart';
 import 'dart:math' as math;
 
+class _MutableIndex {
+  int value = 0;
+}
+
+@immutable
 mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, State> {
   final _history = <Triple<Error, State>>[];
   final int _historyLimit = 32;
-  int _historyIndex = 0;
+  final _MutableIndex _mutableIndex = _MutableIndex();
+  int get _historyIndex => _mutableIndex.value;
+  set _historyIndex(int value) => _mutableIndex.value = value;
 
   /// Total size of history state caches;
   int get historyLength => _history.length;
