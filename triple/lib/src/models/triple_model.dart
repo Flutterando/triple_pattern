@@ -11,12 +11,7 @@ class Triple<Error extends Object, State extends Object> {
     this.event = TripleEvent.state,
   });
 
-  Triple<Error, State> copyWith(
-      {State? state,
-      Error? error,
-      bool? isLoading,
-      int? index,
-      TripleEvent? event}) {
+  Triple<Error, State> copyWith({State? state, Error? error, bool? isLoading, int? index, TripleEvent? event}) {
     return Triple<Error, State>(
       state: state ?? this.state,
       error: error ?? this.error,
@@ -26,22 +21,20 @@ class Triple<Error extends Object, State extends Object> {
   }
 
   @override
+  String toString() {
+    return '$event: $state | $error | $isLoading';
+  }
+
+  @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is Triple<Error, State> &&
-        o.state == state &&
-        o.error == error &&
-        o.isLoading == isLoading &&
-        o.event == event;
+    return o is Triple<Error, State> && o.state == state && o.error == error && o.isLoading == isLoading && o.event == event;
   }
 
   @override
   int get hashCode {
-    return state.hashCode ^
-        error.hashCode ^
-        isLoading.hashCode ^
-        event.hashCode;
+    return state.hashCode ^ error.hashCode ^ isLoading.hashCode ^ event.hashCode;
   }
 }
 

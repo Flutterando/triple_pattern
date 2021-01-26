@@ -51,6 +51,7 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
 
   @override
   Widget build(BuildContext context) {
+    print('setState');
     return Scaffold(
       appBar: AppBar(
         title: Text("Github Search"),
@@ -70,9 +71,10 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
           Expanded(
             child: ScopedBuilder<SearchStore, Failure, List<Result>>(
                 store: store,
-                onLoading: (_, isLoading) =>
-                    Center(child: CircularProgressIndicator()),
-                onError: (_, error) => _buildError(error!),
+                onLoading: (_) => Center(child: CircularProgressIndicator()),
+                onError: (_, error) {
+                  return _buildError(error!);
+                },
                 onState: (_, state) {
                   if (state.isEmpty) {
                     return Center(

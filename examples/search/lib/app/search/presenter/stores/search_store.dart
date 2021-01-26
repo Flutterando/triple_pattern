@@ -1,46 +1,27 @@
-import 'dart:async';
-
-import 'package:either_dart/either.dart';
 import 'package:search/app/search/domain/entities/result.dart';
 import 'package:search/app/search/domain/errors/erros.dart';
 import 'package:search/app/search/domain/usecases/search_by_text.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx_triple/mobx_triple.dart';
-import 'package:rxdart/rxdart.dart';
 
 part 'search_store.g.dart';
 
 @Injectable()
-class SearchStore extends MobXStore<Failure, List<Result>>
-    implements Disposable {
+class SearchStore extends MobXStore<Failure, List<Result>> {
   final SearchByText searchByText;
-  final _textStream = StreamController<String>(sync: true);
-  late final StreamSubscription _sub;
 
-  SearchStore(this.searchByText) : super([]) {
-    _sub = _textStream.stream
-        .debounceTime(Duration(milliseconds: 300))
-        .map(startLoading)
-        .asyncMap(searchByText.call)
-        .switchMap((value) => Stream.value(value))
-        .listen(_makeSearch);
+  SearchStore(this.searchByText) : super([]);
+
+  void setSearchText(String value) {
+    executeEither(() => searchByText(value), delay: Duration(milliseconds: 500));
   }
-
-  String startLoading(String value) {
-    setLoading(true);
-    return value;
-  }
-
-  Future<void> _makeSearch(Either<Failure, List<Result>> result) async {
-    result.fold(setError, update);
-    setLoading(false);
-  }
-
-  void setSearchText(String value) => _textStream.add(value);
 
   @override
-  void dispose() {
-    _sub.cancel();
-    _textStream.close();
+  Triple<Failure, List<Result>> middleware(Triple<Failure, List<Result>> newTriple) {
+    if (newTriple.event == TripleEvent.state) {
+      if (newTriple.state.isEmpty) return newTriple.copyWith(event: TripleEvent.error, error: EmptyList());
+    }
+
+    return newTriple;
   }
 }

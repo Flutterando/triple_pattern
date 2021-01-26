@@ -126,7 +126,7 @@ Observable<bool> myLoading$ = counter.selectLoading;
 
 ```
 
-## Usando o Padrão Memento com o MementoMixin
+## https://github.com/Flutterando/triple_pattern
 
 You can add, undo or redo a state using the Memento Pattern. 
 This means that you can return to the previous state using the method **undo()** and also advance with the method **redo()**.
@@ -135,6 +135,66 @@ This means that you can return to the previous state using the method **undo()**
 
 class Counter extends MobXStore<int, Exception> with MementoMixin {}
 
+```
+## Middleware
+
+We can add interceptors and modify the triple when the setLoading, setError or update action is executed.
+
+```dart
+class Counter extends StreamStore<Exception, int> {
+
+  Counter(0): super(0);
+
+  ...
+  @override
+  Triple<Exception, int> middleware(triple){
+    if(triple.event == TripleEvent.state){
+      return triple.copyWith(state + 2);
+    }
+
+    return triple;
+  }
+
+}
+```
+
+## Executors
+
+A very common pattern in an asynchronous request is:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+    setLoading(true);
+    try {
+      final result = await repository.fetch();
+      update(result);
+    } catch(e){
+      setError(e);
+    }
+    setLoading(false);
+  }
+
+```
+
+You can use the ** execute **method** and pass on Future to perform the same steps described in the previous example:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+   execute(() => repository.fetch());
+  }
+
+```
+for users using **dartz** using Clean Architecture for example, they can also run the Either class using the **executeEither** method:
+
+```dart
+ @override
+  Future<void> fetchData(){
+   executeEither(() => myUsecase());
+  }
 ```
 
 ## Questions and Problems

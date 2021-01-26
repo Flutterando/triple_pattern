@@ -198,6 +198,66 @@ implements Selectors<Stream<Error>, Stream<State>, Stream<bool>>
   ...
 ```
 
+## Middleware
+
+Podemos adicionar interceptadores e modificar o triple quando for executado a ação de setLoading, setError ou update.
+
+```dart
+class Counter extends StreamStore<Exception, int> {
+
+  Counter(0): super(0);
+
+  ...
+  @override
+  Triple<Exception, int> middleware(triple){
+    if(triple.event == TripleEvent.state){
+      return triple.copyWith(state + 2);
+    }
+
+    return triple;
+  }
+
+}
+```
+
+## Executors
+
+Um padráo muito comum em uma requisição assincrona é:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+    setLoading(true);
+    try {
+      final result = await repository.fetch();
+      update(result);
+    } catch(e){
+      setError(e);
+    }
+    setLoading(false);
+  }
+
+```
+
+Você pode utilizar o método **execute** e passar a Future para executar os mesmos passos descritos no exemplo anterior:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+   execute(() => repository.fetch());
+  }
+
+```
+para usuários que utilizam o **dartz** utilizando o Clean Architecture por exemplo, também podem executar os eithers utilizando o método **executeEither**:
+
+```dart
+ @override
+  Future<void> fetchData(){
+   executeEither(() => myUsecase());
+  }
+```
 
 ## Usando o Padrão Memento com o MementoMixin
 
@@ -205,7 +265,7 @@ Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Iss
 
 ```dart
 
-class Counter extends StreamStore<int, Exception> with MementoMixin {}
+class Counter extends StreamStore<Exception, int> with MementoMixin {}
 
 ```
 
@@ -215,6 +275,7 @@ class Counter extends StreamStore<int, Exception> with MementoMixin {}
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (StreamStore, NotifierStore, ScopedBuilder, TripleBuilder);
 
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore);
+- [getx_triple](https://pub.dev/packages/getx_triple) (GetXStore);
 
 
 

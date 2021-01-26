@@ -271,7 +271,7 @@ Now, just implement **MobXStore** in any Store of MobX.
 ```dart
 class Product = ProductBase with _$Product;
 
-abstract class ProductBase extends MobXStore<ProductData, Exception> with Store {
+abstract class ProductBase extends MobXStore<Exception, ProductData> with Store {
 
   ProductBase(): super(ProductData.empty());
 
@@ -300,6 +300,7 @@ As we have seen, the purpose of the Segmented State Standard (Triple) is to help
 - [triple](https://pub.dev/packages/triple) (Abstraction to Dart)
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (Implements **triple** building Stores based on Stream and ValueNotifier)
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
+- [getx_triple](https://pub.dev/packages/getx_triple) (GetXStore)
 
 ## Examples
 

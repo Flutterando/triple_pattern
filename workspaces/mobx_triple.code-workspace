@@ -1,10 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "..\\triple"
+			"path": "../triple"
 		},
 		{
-			"path": "..\\stores\\mobx_triple"
+			"path": "../stores/mobx_triple"
 		}
 	],
 	"settings": {}
