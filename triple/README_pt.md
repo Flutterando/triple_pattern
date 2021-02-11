@@ -1,45 +1,46 @@
 # Triple
 
-This package is an abstraction of the [Segmented State Pattern](https://github.com/Flutterando/triple_pattern) that forces architectural barriers to individual reactivities.
+Este package é uma abstração do [Segmented State Pattern( Padrão de Estado Segmentado)](https://github.com/Flutterando/triple_pattern) que impõem barreiras arquiteturais para reatividades individuais.
 
-This abstraction serves to create implementations of [SSP](https://github.com/Flutterando/triple_pattern) using any Reactive object as a basis to create a Store (Object responsible for the State Logic of a component).
+Essa abstração serve para a crição de implementações do [SSP](https://github.com/Flutterando/triple_pattern) usando qualquer objeto Reativo como base para criar uma Store(Objeto Responsável pela Lógica do Estado de um componente).
 
-## How to build a Store?
+## Como criar uma Store?
 .
 
 ![Triple](https://github.com/Flutterando/triple_pattern/raw/master/schema.png)
 
-Following the [SSP](https://github.com/Flutterando/triple_pattern), our Store needs to segment the state data in 3 ways, a State (containing the State value), and Error (Containing the exception object of state), and Loading (indicating whether the state value is being loaded). These 3 properties are part of the Triple object that is inherited as a property in the abstract class Store. We will then see step-by-step how to create a Store based on any existing Reactivity system.
+Seguindo o [SSP](https://github.com/Flutterando/triple_pattern), nossa Store precisa segmentar os dados do estado em 3 vias, um State(contendo o valor do Estado), um Error(Contendo o objeto de exception do estado) e o Loading(indicando se o valor do estado está sendo carregado). Essas 3 propriedades fazem parte do objeto Triple que é herdado como propriedade na classe abstrata Store.
+Vamos então ver passo-a-passo como criar um Store baseado em qualquer sistema de Reatividade existente.
 
 
 
 
-### STEP 1: Choose a Reactivity system.
+### PASSO 1: Escolha uma forma de Reatividade.
 
-The SSP does not place any requirements on the type of reactivity that can be used in the standard, so the developer must choose the one he likes best to create a Store.
-Some examples of reactivity:
+O SSP não coloca nenhum requerimento sobre o tipo de reatividade que poderá ser utilizada no padrão, então o desenvolvedor deve escolher a que mais lhe agrada para criar uma Store.
+Alguns exemplos de ferramentas:
 - Streams
 - ValueNotifier/ChangeNotifier
 - MobX
 
-For the next steps we will use "Streams", but feel free about that choice.
+Para os próximos passos usaremos "Streams", mas fique a vontade sobre essa escolha.
 
-### STEP 2: Create a class that inherits from **Store**
+### PASSO 2: Crie uma classe que herde de **Store**
 
-As we said, an object **Store** serves to store the state logic of a component.
+Como já falamos, um objeto **Store** serve para armazenar a Lógica de Estado de um componente.
 ```dart
 abstract class StreamStore extends Store {}
 ```
 
-It is reasonable to put "generic types" for "error" and "state", we will do that in **StreamStore** and then pass them in **Store**.
-> **IMPORTANT**: Inherit generic Object types to prevent the use of dynamics.
+Também é prudente colocar "tipos genéricos" para o "error" e "state", faremos isso no **StreamStore** e depois reatribuiremos na **Store**.
+> **IMPORTANTE**: Herde os tipos genéricos de Object para impedir o uso de dynamics.
 
-and so we have:
+e assim temos:
 ```dart
 abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {}
 ```
 
-We still need to declare the constructor of the parent class with an initial value of the state and thus we conclude this step:
+Precisamos ainda declarar o construtor da classe pai com um valor inicial do state e assim concluímos essa etapa:
 
 ```dart
 abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
@@ -49,10 +50,10 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
 }
 ```
 
-### STEP 3: Starts an object with the chosen reactivity.
+### PASSO 3: Inicie um objeto com a reatividade escolhida.
  
 
-Privately include a reactive property that works with the type **Triple<Error, State>()**:
+Inclua de forma privada uma propriedade reativa que trabalhe com o tipo **Triple<Error, State>()**:
 
 ```dart
 abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
@@ -65,9 +66,9 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
 }
 ```
 
-### STEP 4: Dispose of the reactive object
+### PASSO 4: Encerre o objeto reativo
 
-Override the **destroy** method that will be called when the Store is disposed.
+Sobrescreva o método **destroy** que será chamado quando a Store for descartada.
 
 
 ```dart
@@ -86,9 +87,9 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
 }
 ```
 
-### STEP 5: Override the propagate method.
+### PASSO 5: Sobrescreva o método de Propagação.
 
-When the Store decides to propagate a value of type **Triple**, it does so by calling the **propagate()** method. Override this method to direct the flow to your main reactivity control. Don't forget to call the **super.propagate()** method.
+Quando o Store decide propagar um valor do tipo **Triple**, ele o faz chamando o método **propagate()**. Sobrescreva esse método para direcionar o fluxo para o seu controle principal de reatividade. Não se esqueça de chamar o método **super.propagate()**.
 
 ```dart
 abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> {
@@ -113,12 +114,12 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
 }
 ```
 
-> **IMPORTANT**: The method **propagate** is assign with **@protected** because it might only be used within the class **StreamStore**.
+> **IMPORTANTE**: O método **propagate** está assinado com **@protected** porque ele só deve ser usado dentro da classe **StreamStore**.
 
 
-### STEP 6: Override the method **observer**
+### PASSO 6: Sobreescreva o método **observer**
 
-This method is called to listen to the state's segmented events (state, error, and loading). Overwrite by calling the functions of each segment.
+Esse método é chamado para escutar os eventos segmentados do estado(state, error e loading). Sobrescreva chamando as funções de cada segmento. 
 
 
 ```dart
@@ -163,10 +164,10 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
 }
 ```
 
-### STEP 7 (OPTIONAL): Define Selectors
+### PASSO 7 (OPCIONAL): Defina Seletores
 
-It may be interesting to have selectors from each state segment reactively. This is an Error, State and reactive loading.
-If you want to have this possibility in the Store, implement the interface **Selectors**:
+Pode ser interessante ter seletores de cada segmento do estado de forma reativa. Isso é um Error, State e loading reativo.
+Se deseja ter essa possibilidade no Store implemente a interface **Selectors**:
 
 ```dart
 abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State>
@@ -199,7 +200,7 @@ implements Selectors<Stream<Error>, Stream<State>, Stream<bool>>
 
 ## Middleware
 
-We can add interceptors and modify the triple when the setLoading, setError or update action is executed.
+Podemos adicionar interceptadores e modificar o triple quando for executado a ação de setLoading, setError ou update.
 
 ```dart
 class Counter extends StreamStore<Exception, int> {
@@ -221,7 +222,7 @@ class Counter extends StreamStore<Exception, int> {
 
 ## Executors
 
-A very common pattern in an asynchronous request is:
+Um padrão muito comum em uma requisição assincrona é:
 
 ```dart
 
@@ -239,7 +240,7 @@ A very common pattern in an asynchronous request is:
 
 ```
 
-You can use the **execute** method and pass on Future to perform the same steps described in the previous example:
+Você pode utilizar o método **execute** e passar a Future para executar os mesmos passos descritos no exemplo anterior:
 
 ```dart
 
@@ -249,7 +250,7 @@ You can use the **execute** method and pass on Future to perform the same steps 
   }
 
 ```
-for users using **dartz** using Clean Architecture, for example, they can also run either using the **executeEither** method:
+para usuários que utilizam o **dartz** utilizando o Clean Architecture por exemplo, também podem executar os eithers utilizando o método **executeEither**:
 
 ```dart
  @override
@@ -258,10 +259,9 @@ for users using **dartz** using Clean Architecture, for example, they can also r
   }
 ```
 
-## Memento with MementoMixin
+## Usando o Padrão Memento com o MementoMixin
 
-You can add, undo or redo a state using the Memento Pattern. 
-This means that you can return to the previous state using the method **undo()** and also advance with the method **redo()**.
+Você pode adicionar Desfazer ou refazer um estado usando o Memento Pattern. Isso significa que poderá retornar ao estado anterior usando o método **undo()** e também prosseguir com o método **redo()**.
 
 ```dart
 
@@ -270,7 +270,7 @@ class Counter extends StreamStore<Exception, int> with MementoMixin {}
 ```
 
 
-## Examples
+## Exemplos
 
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (StreamStore, NotifierStore, ScopedBuilder, TripleBuilder);
 
