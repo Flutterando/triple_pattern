@@ -12,6 +12,7 @@ void main() {
   });
 }
 
+// ignore: must_be_immutable
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
@@ -27,6 +28,7 @@ class Counter extends TestImplements<Exception, int> {
   }
 }
 
+// ignore: must_be_immutable
 abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
   final List<bool> list;
 

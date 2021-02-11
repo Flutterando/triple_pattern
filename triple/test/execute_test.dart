@@ -14,7 +14,14 @@ void main() {
       await counter.increment();
       await counter.increment();
       expect(counter.state, 3);
-      expect(listLoading, [true, false, true, false, true, false]);
+      expect(listLoading, [
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ]);
     });
 
     test('Switch exec', () async {
@@ -25,7 +32,10 @@ void main() {
       counter.increment();
       await Future.delayed(Duration(seconds: 5));
       expect(counter.state, 1);
-      expect(listLoading, [true, false]);
+      expect(listLoading, [
+        true,
+        false
+      ]);
     });
   });
 
@@ -37,7 +47,14 @@ void main() {
       await counter.incrementEither();
       await counter.incrementEither();
       expect(counter.state, 3);
-      expect(listLoading, [true, false, true, false, true, false]);
+      expect(listLoading, [
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ]);
     });
 
     test('Either  exec with switch', () async {
@@ -48,11 +65,15 @@ void main() {
       counter.incrementEither();
       await Future.delayed(Duration(seconds: 5));
       expect(counter.state, 1);
-      expect(listLoading, [true, false]);
+      expect(listLoading, [
+        true,
+        false
+      ]);
     });
   });
 }
 
+// ignore: must_be_immutable
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
@@ -64,6 +85,7 @@ class Counter extends TestImplements<Exception, int> {
   FutureOr<void> incrementEither() => executeEither(() => Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
 }
 
+// ignore: must_be_immutable
 abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
   final List<bool> list;
 
