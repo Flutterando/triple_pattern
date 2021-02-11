@@ -51,6 +51,7 @@ void main() {
   });
 }
 
+// ignore: must_be_immutable
 class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> with MementoMixin implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 

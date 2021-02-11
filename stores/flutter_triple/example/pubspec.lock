@@ -80,7 +80,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.34"
+    version: "0.0.35"
   matcher:
     dependency: transitive
     description:
@@ -108,7 +108,7 @@ packages:
       name: rx_notifier
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-nullsafety.2"
+    version: "1.0.0-nullsafety.3"
   sky_engine:
     dependency: transitive
     description: flutter

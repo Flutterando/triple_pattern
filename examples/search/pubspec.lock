@@ -72,10 +72,10 @@ packages:
   flutter_modular:
     dependency: "direct main"
     description:
-      name: flutter_modular
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0-nullsafety.24"
+      path: "/Users/jacobmoura/Projects/modular/flutter_modular"
+      relative: false
+    source: path
+    version: "3.0.0-nullsafety.40"
   flutter_modular_annotations:
     dependency: transitive
     description:
@@ -83,13 +83,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
-  flutter_modular_test:
-    dependency: "direct main"
-    description:
-      name: flutter_modular_test
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0-nullsafety.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
