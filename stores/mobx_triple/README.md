@@ -197,6 +197,25 @@ for users using **dartz** using Clean Architecture for example, they can also ru
   }
 ```
 
+## For Tracking
+
+Use the **TripleObserver** singleton for Triple tracker in all Store of your project.
+
+```dart
+
+void main(){
+  
+  TripleObserver.addListener((triple){
+    print(triple);
+  });
+
+  runApp(MyApp());
+}
+```
+
+> This feature can be used to gather information for Firebase Analytic for example.
+
+
 ## Questions and Problems
 
 The **issues** channel is open for questions, to report problems and suggestions, do not hesitate to use this communication channel.

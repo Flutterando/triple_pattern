@@ -1,4 +1,4 @@
- ## 1.0.0 - 2021/03/03
+ ## [1.0.0] - 2021-03-03
 
 The Initial version providers:
 - abstract Stores
