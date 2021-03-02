@@ -7,6 +7,10 @@ import 'package:triple/triple.dart';
 void main() {
   late TestImplements<MyException, int> store;
 
+  TripleObserver.addListener((triple) {
+    print(triple);
+  });
+
   setUp(() {
     store = TestImplements(0);
   });

@@ -1,3 +1,6 @@
- 0.0.1
+ ## 1.0.0 - 2021/03/03
 
-- Initial version, created by Stagehand
+The Initial version providers:
+- abstract Stores
+- Triple Objects
+- Triple Tracking

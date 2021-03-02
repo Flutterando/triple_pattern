@@ -9,6 +9,9 @@ import 'search/presenter/pages/details_page.dart';
 import 'search/presenter/pages/search_page.dart';
 import 'search/presenter/stores/search_store.dart';
 
+final clientBind = Bind.instance(http.Client());
+final datasourceBind = Bind((i) => GithubSearchDatasource(i(clientBind)));
+
 class AppModule extends Module {
   @override
   List<Bind> get binds => [

@@ -8,6 +8,28 @@ import 'package:meta/meta.dart';
 
 typedef Disposer = Future<void> Function();
 
+typedef TripleCallback = void Function(Triple triple);
+
+final _tripleCallbackList = <TripleCallback>{};
+
+void _execTripleObserver(Triple triple) {
+  for (var callback in _tripleCallbackList) {
+    callback(triple);
+  }
+}
+
+class TripleObserver {
+  static void addListener(TripleCallback callback) {
+    _tripleCallbackList.add(callback);
+  }
+
+  static void removeListener(TripleCallback callback) {
+    _tripleCallbackList.remove(callback);
+  }
+
+  TripleObserver._();
+}
+
 class _MutableObjects<Error extends Object, State extends Object> {
   late Triple<Error, State> triple;
   late Triple<Error, State> lastState;
@@ -46,6 +68,7 @@ abstract class Store<Error extends Object, State extends Object> {
   @visibleForOverriding
   void propagate(Triple<Error, State> triple) {
     _mutableObjects.triple = triple;
+    _execTripleObserver(triple);
   }
 
   ///Change the State value.
