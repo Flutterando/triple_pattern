@@ -181,7 +181,7 @@ abstract class Store<Error extends Object, State extends Object> {
   StreamSubscription executeStream(Stream<State> stream) {
     StreamSubscription sub = stream.listen(
       update,
-      onError: setError,
+      onError: (error) => setError(error, force: true),
       onDone: () => setLoading(false),
     );
     return sub;
