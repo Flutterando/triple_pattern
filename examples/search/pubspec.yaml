@@ -21,25 +21,29 @@ environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
+  mocktail: ^0.0.2-dev.5
   dartz: ^0.10.0-nullsafety.0
   async: ^2.5.0-nullsafety.3
   flutter_mobx: ^2.0.0-nullsafety.0
-  flutter_triple: ^0.0.26
-  mobx_triple: ^0.0.18
+  flutter_triple: ^1.0.0
+  mobx_triple: ^1.0.0
   mobx: ^2.0.0-nullsafety.2
   rxdart: ^0.26.0-nullsafety.0
   http:
     git: https://github.com/dart-lang/http
-  flutter_modular: 
-    path: /Users/jacobmoura/Projects/modular/flutter_modular
+  flutter_modular: ^3.0.0
   flutter:
     sdk: flutter
 
+dependency_overrydes:
+  flutter_modular:
+        path: /Users/jacobmoura/Projects/modular/flutter_modular    
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
 dev_dependencies:
+  flutter_modular_test: ^1.0.0-nullsafety.3
   mocktail: ^0.0.1-dev.3
   flutter_test:
     sdk: flutter

@@ -3,18 +3,19 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:dartz/dartz.dart';
 
+import 'models/dispatched_triple.dart';
 import 'models/triple_model.dart';
 import 'package:meta/meta.dart';
 
 typedef Disposer = Future<void> Function();
 
-typedef TripleCallback = void Function(Triple triple);
+typedef TripleCallback = void Function(DispatchedTriple triple);
 
 final _tripleCallbackList = <TripleCallback>{};
 
-void _execTripleObserver(Triple triple) {
+void _execTripleObserver(Triple triple, Type storeType) {
   for (var callback in _tripleCallbackList) {
-    callback(triple);
+    callback(DispatchedTriple(triple, storeType));
   }
 }
 
@@ -68,7 +69,7 @@ abstract class Store<Error extends Object, State extends Object> {
   @visibleForOverriding
   void propagate(Triple<Error, State> triple) {
     _mutableObjects.triple = triple;
-    _execTripleObserver(triple);
+    _execTripleObserver(triple, runtimeType);
   }
 
   ///Change the State value.

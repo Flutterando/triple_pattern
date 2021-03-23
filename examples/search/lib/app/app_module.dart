@@ -9,22 +9,23 @@ import 'search/presenter/pages/details_page.dart';
 import 'search/presenter/pages/search_page.dart';
 import 'search/presenter/stores/search_store.dart';
 
-final clientBind = Bind.instance(http.Client());
-final datasourceBind = Bind((i) => GithubSearchDatasource(i(clientBind)));
+dd() {
+  Modular.get()
+}
 
 class AppModule extends Module {
   @override
-  List<Bind> get binds => [
-        $SearchByTextImpl,
-        $SearchRepositoryImpl,
-        $GithubSearchDatasource,
-        Bind.instance<http.Client>(http.Client()),
-        $SearchStore,
-      ];
+  final List<Bind> binds = [
+    $SearchByTextImpl,
+    $SearchRepositoryImpl,
+    $GithubSearchDatasource,
+    Bind.instance<http.Client>(http.Client()),
+    $SearchStore,
+  ];
 
   @override
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, __) => SearchPage()),
-    ChildRoute('/details', child: (_, args) => DetailsPage(result: args?.data)),
+    ChildRoute('/details', child: (_, args) => DetailsPage(result: args.data)),
   ];
 }

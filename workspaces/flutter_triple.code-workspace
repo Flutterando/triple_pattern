@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../stores/flutter_triple"
+		},
+		{
+			"path": "../triple_test"
 		}
 	],
 	"settings": {}
