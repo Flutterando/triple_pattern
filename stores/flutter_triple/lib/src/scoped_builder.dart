@@ -57,6 +57,10 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
           setState(() {
             child = widget.onError?.call(context, error);
           });
+        }else if(widget.onError == null && widget.onState != null && !isDisposed){
+          setState(() {
+            child = widget.onState?.call(context, widget.store.state);
+          });
         }
       },
       onLoading: (isLoading) {
