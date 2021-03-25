@@ -81,8 +81,12 @@ FutureOr<void> storeTest<T extends Store>(
       );
       act?.call(store);
       await completer.future;
-      verify?.call(store);
       disposer.call();
+      try {
+        verify?.call(store);
+      } on test.TestFailure catch (e) {
+        throw VerifyError(e.message);
+      }
     }, (Object error, _) {
       if (error is test.TestFailure) {
         // ignore: only_throw_errors
@@ -93,7 +97,6 @@ FutureOr<void> storeTest<T extends Store>(
 ''',
         );
       } else {
-        // ignore: only_throw_errors
         throw error;
       }
     });
@@ -120,4 +123,12 @@ class TripleMatcher extends test.Matcher {
   String toString() {
     return '${event.toString().replaceFirst('TripleEvent', 'TripleMatcher')}';
   }
+}
+
+class VerifyError {
+  final String message;
+  VerifyError(this.message);
+
+  @override
+  String toString() => message;
 }

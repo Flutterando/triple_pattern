@@ -9,10 +9,6 @@ import 'search/presenter/pages/details_page.dart';
 import 'search/presenter/pages/search_page.dart';
 import 'search/presenter/stores/search_store.dart';
 
-dd() {
-  Modular.get()
-}
-
 class AppModule extends Module {
   @override
   final List<Bind> binds = [
