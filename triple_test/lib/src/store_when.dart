@@ -10,10 +10,10 @@ void whenObserve<Error extends Object, State extends Object>(
   State? initialState,
 }) {
   if (initialState != null) {
+    when(() => store.triple).thenReturn(Triple<Error, State>(state: initialState));
     when(() => store.state).thenReturn(initialState);
     when(() => store.error).thenReturn(null);
     when(() => store.isLoading).thenReturn(false);
-    when(() => store.triple).thenReturn(Triple<Error, State>(state: initialState));
   }
 
   when(input).thenAnswer((invocation) async {

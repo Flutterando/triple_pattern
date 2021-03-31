@@ -9,36 +9,34 @@ import 'package:triple_test/src/store_when.dart';
 class TestImplementsMock extends MockStore<MyException, int> implements TestImplements<MyException, int> {}
 
 void main() async {
-  final mock = TestImplementsMock();
+  TestImplementsMock _mountMock() {
+    final mock = TestImplementsMock();
+    whenObserve<MyException, int>(
+      mock,
+      input: () => mock.testAdd(),
+      initialState: 0,
+      triples: [
+        Triple(state: 1),
+        Triple(isLoading: true, event: TripleEvent.loading, state: 1),
+        Triple(state: 2),
+      ],
+    );
+    return mock;
+  }
 
-  whenObserve<MyException, int>(
-    mock,
-    input: () => mock.testAdd(),
-    initialState: 0,
-    triples: [
-      Triple(state: 1),
-      Triple(isLoading: true, event: TripleEvent.loading, state: 1),
-      Triple(state: 2),
-    ],
-  );
-
-  setUp(() {
-    mock.restartInitialTriple(Triple(state: 0));
-  });
-
-  storeTest<TestImplements>(
+  storeTest<TestImplementsMock>(
     'Teste triple',
-    build: () => mock,
+    build: () => _mountMock(),
     act: (store) => store.testAdd(),
     expect: () => [0, isA<int>(), tripleLoading, 2],
   );
 
-  storeTest<TestImplements>(
+  storeTest<TestImplementsMock>(
     'Teste triple initital 0',
-    build: () => mock,
+    build: () => _mountMock(),
     expect: () => 0,
     verify: (store) {
-      verifyNever(() => store.testAdd());
+      verifyNever(() => store.testAdd()).called(0);
     },
   );
 
@@ -55,6 +53,7 @@ void main() async {
   });
 }
 
+// ignore: must_be_immutable
 class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> with MementoMixin implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 

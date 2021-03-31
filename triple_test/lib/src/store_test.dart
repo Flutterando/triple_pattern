@@ -66,7 +66,6 @@ FutureOr<void> storeTest<T extends Store>(
         if (completer.isCompleted) {
           return;
         }
-
         final matcher = expectList[i];
         actualList.add('${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
         test.expect(matcher is TripleMatcher ? triple : value, matcher);
