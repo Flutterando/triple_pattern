@@ -63,6 +63,10 @@ FutureOr<void> storeTest<T extends Store>(
     final expectList = _list is List ? _list : List.from([_list]);
     await runZonedGuarded(() async {
       testTriple(Triple triple, dynamic value) {
+        if (completer.isCompleted) {
+          return;
+        }
+
         final matcher = expectList[i];
         actualList.add('${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
         test.expect(matcher is TripleMatcher ? triple : value, matcher);
