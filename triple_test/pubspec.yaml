@@ -1,5 +1,5 @@
 name: triple_test
-description: A new Flutter package project.
+description: Test Helper for Store of flutter_triple with Mocktail.
 version: 0.0.2
 homepage:
 

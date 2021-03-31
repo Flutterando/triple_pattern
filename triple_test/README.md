@@ -1,14 +1,34 @@
 # triple_test
 
-A new Flutter package project.
+Test Helper for Store of **flutter_triple** with **Mocktail**.
+** Inspired by **bloc_test** **
 
-## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+## Create a Mock
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```dart
+import 'package:bloc_test/bloc_test.dart';
+
+class MockCounterStore extends MockStore<Exception, int> implements CounterStore {}
+
+...
+
+final mock = MockCounterStore();
+
+```
+
+Now creates a stud for the method on Triple Store.
+
+```dart
+whenObserve<MyException, int>(
+    mock,
+    input: () => mock.testAdd(),
+    initialState: 0,
+    triples: [
+      Triple(state: 1),
+      Triple(isLoading: true, event: TripleEvent.loading, state: 1),
+      Triple(state: 2),
+    ],
+  );
+```
+
