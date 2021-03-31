@@ -32,3 +32,16 @@ whenObserve<MyException, int>(
   );
 ```
 
+## Testing Stores
+
+The flutter_test gives us the test () function to describe what will be tested in a prepared scope. Triple_test makes it easier to test Triple Stores using the storeTest () function instead of test ();
+
+```dart
+  storeTest<TestImplementsMock>(
+    'Testing triple',
+    build: () => MyStore(),
+    act: (store) => store.testAdd(),
+    expect: () => [0, tripleLoading, 1],
+  );
+```
+

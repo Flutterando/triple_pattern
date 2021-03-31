@@ -315,6 +315,19 @@ void main(){
 
 > This feature can be used to gather information for Firebase Analytic for example.
 
+## Testing
+
+Use [triple_test](https://pub.dev/packages/triple_test) for Unity Test:
+
+```dart
+  storeTest<TestImplementsMock>(
+    'Testing triple',
+    build: () => MyStore(),
+    act: (store) => store.testAdd(),
+    expect: () => [0, tripleLoading, 1],
+  );
+```
+
 ## Questions and Problems
 
 The **issues** channel is open for questions, to report problems and suggestions, do not hesitate to use this communication channel.
