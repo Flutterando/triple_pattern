@@ -24,18 +24,6 @@ class Triple<Error extends Object, State extends Object> {
   String toString() {
     return '$event: $state | $error | $isLoading';
   }
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is Triple<Error, State> && o.state == state && o.error == error && o.isLoading == isLoading && o.event == event;
-  }
-
-  @override
-  int get hashCode {
-    return state.hashCode ^ error.hashCode ^ isLoading.hashCode ^ event.hashCode;
-  }
 }
 
 enum TripleEvent { state, loading, error }
