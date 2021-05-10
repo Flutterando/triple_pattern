@@ -168,7 +168,7 @@ abstract class Store<Error extends Object, State extends Object> {
     await _mutableObjects.completerExecution!.then(
       (value) {
         if (value is Either<Error, State>) {
-          value.fold(setError, update);
+          value.fold((e) => setError(e, force: true), (s) => update(s, force: true));
           setLoading(false);
         }
       },
