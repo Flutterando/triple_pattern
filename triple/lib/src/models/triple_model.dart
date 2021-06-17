@@ -20,6 +20,15 @@ class Triple<Error extends Object, State extends Object> {
     );
   }
 
+  Triple<Error, State> clearError() {
+    return Triple<Error, State>(
+      state: state ,
+      error: null,
+      isLoading: isLoading,
+      event: event,
+    );
+  }
+
   @override
   String toString() {
     return '$event: $state | $error | $isLoading';
