@@ -77,6 +77,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///This also stores the state value to be retrieved using the [undo()] method when using MementoMixin
   void update(State newState, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(state: newState, event: TripleEvent.state);
+    candidate = candidate.clearError();
     candidate = middleware(candidate);
     if (force || (candidate.state != _mutableObjects.triple.state)) {
       _mutableObjects.lastState = candidate.copyWith(isLoading: false);
