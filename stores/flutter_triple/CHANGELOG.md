@@ -1,3 +1,19 @@
+ ## [1.1.0] - 2021-06-27
+
+ - Added [optional] **ScopedBuilder.create** for customization of main widget.
+ ```dart 
+ ScopedBuilder<Counter, Exception, int>(
+    store: counter,
+    create: (_, child) {
+    return AnimatedSwitcher(
+        duration: Duration(milliseconds: 400),
+        child: child,
+      );
+    },
+    onLoading: (_) => Text('Loading...'),
+    onState: (_, state) => Text('$state'),
+  ),
+ ```
  ## [1.0.6] - 2021-05-10
 
  - Update Triple package

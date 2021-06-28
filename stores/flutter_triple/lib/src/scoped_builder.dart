@@ -8,9 +8,10 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
   final Widget Function(BuildContext context, TState state)? onState;
   final Widget Function(BuildContext context, TError? error)? onError;
   final Widget Function(BuildContext context)? onLoading;
+  final Widget Function(BuildContext context, Widget child)? create;
   final TStore store;
 
-  const ScopedBuilder({Key? key, this.distinct, this.filter, this.onState, this.onError, this.onLoading, required this.store})
+  const ScopedBuilder({Key? key, this.distinct, this.filter, this.onState, this.onError, this.onLoading, required this.store, this.create})
       : assert(onState != null || onError != null || onLoading != null, 'Define at least one listener (onState, onError or onLoading)'),
         assert(distinct == null ? true : onState != null, 'Distinct needs onState implementation'),
         assert(filter == null ? true : onState != null, 'Filter needs onState implementation'),
@@ -57,7 +58,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
           setState(() {
             child = widget.onError?.call(context, error);
           });
-        }else if(widget.onError == null && widget.onState != null && !isDisposed){
+        } else if (widget.onError == null && widget.onState != null && !isDisposed) {
           setState(() {
             child = widget.onState?.call(context, widget.store.state);
           });
@@ -105,6 +106,9 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
         child = widget.onState?.call(context, widget.store.state);
       }
     }
+
+    child = widget.create?.call(context, child!) ?? child;
+
     return child!;
   }
 }

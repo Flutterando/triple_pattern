@@ -62,6 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: ScopedBuilder<Counter, Exception, int>(
           store: counter,
+          create: (_, child) {
+            return AnimatedSwitcher(
+              duration: Duration(milliseconds: 400),
+              child: child,
+            );
+          },
           onLoading: (_) => Text('Carregando...'),
           onState: (_, state) {
             return Column(
