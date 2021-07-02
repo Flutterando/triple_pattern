@@ -60,20 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child: ScopedBuilder<Counter, Exception, int>(
+        child: ScopedBuilder(
           store: counter,
-          create: (_, child) {
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 400),
-              child: child,
-            );
-          },
           onLoading: (_) => Text('Carregando...'),
           onState: (_, state) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('You have pushed the button this many times:'),
+                Text('You have pushed the button 399 this many times:'),
                 Text(
                   '$state',
                   style: Theme.of(context).textTheme.headline4,

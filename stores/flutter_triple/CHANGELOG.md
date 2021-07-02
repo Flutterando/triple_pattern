@@ -1,10 +1,10 @@
- ## [1.1.0] - 2021-06-27
+ ## [1.2.0] - 2021-07-02
 
- - Added [optional] **ScopedBuilder.create** for customization of main widget.
+ - Added [factory] **ScopedBuilder.transition** for customization of main widget.
  ```dart 
- ScopedBuilder<Counter, Exception, int>(
+ ScopedBuilder.transition(
     store: counter,
-    create: (_, child) {
+    transition: (_, child) {
     return AnimatedSwitcher(
         duration: Duration(milliseconds: 400),
         child: child,

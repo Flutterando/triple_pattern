@@ -117,6 +117,24 @@ ScopedBuilder(
 );
 ```
 
+### ScopedBuilder.transition
+
+Use for add custom transition on state change:
+
+```dart
+ScopedBuilder.transition(
+    store: counter,
+    transition: (_, child) {
+    return AnimatedSwitcher(
+        duration: Duration(milliseconds: 400),
+        child: child,
+      );
+    },
+    onLoading: (_) => Text('Loading...'),
+    onState: (_, state) => Text('$state'),
+  ),
+```
+
 > **NOTE**: On ScopedBuilder the **onLoading** is only called when "true". This means that if the state is modified or an error is added, the widget to be built will be the **onState** or **onError**. However, it is very important to change Loading to "false" when the loading action is completed. **observers** of Triple *DO NOT PROPAGATE REPEATED OBJECTS* (more on this in the section on **distinct**). This is a behavior exclusive to ScopedBuilder.
 
 ### TripleBuilder
