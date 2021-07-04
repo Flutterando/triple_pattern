@@ -1,3 +1,5 @@
+ ## [1.2.1] - 2021-07-04
+- Fix [#41](https://github.com/Flutterando/triple_pattern/issues/41)
  ## [1.2.0] - 2021-07-02
 
  - Added [factory] **ScopedBuilder.transition** for customization of main widget.
