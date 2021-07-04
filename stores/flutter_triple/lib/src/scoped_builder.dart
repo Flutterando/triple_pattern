@@ -79,6 +79,8 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
 
   final Function eq = const ListEquality().equals;
 
+  var _tripleEvent = TripleEvent.state;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -95,19 +97,27 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
 
         final filter = widget.filter?.call(state) ?? true;
         if (widget.onState != null && !isDisposed && isReload && filter) {
-          setState(() {});
+          setState(() {
+            _tripleEvent = TripleEvent.state;
+          });
         }
       },
       onError: (error) {
         if (widget.onError != null && !isDisposed) {
-          setState(() {});
+          setState(() {
+            _tripleEvent = TripleEvent.error;
+          });
         } else if (widget.onError == null && widget.onState != null && !isDisposed) {
-          setState(() {});
+          setState(() {
+            _tripleEvent = TripleEvent.error;
+          });
         }
       },
       onLoading: (isLoading) {
         if (widget.onLoading != null && !isDisposed && isLoading) {
-          setState(() {});
+          setState(() {
+            _tripleEvent = TripleEvent.loading;
+          });
         }
       },
     );
@@ -124,7 +134,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
   Widget build(BuildContext context) {
     Widget? child;
 
-    switch (widget.store.triple.event) {
+    switch (_tripleEvent) {
       case (TripleEvent.loading):
         child = widget.store.triple.isLoading ? widget.onLoading?.call(context) : widget.onState?.call(context, widget.store.state);
         break;

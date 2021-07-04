@@ -1,92 +1,73 @@
 import 'package:flutter/material.dart';
-
-import 'counter.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return MaterialApp(title: 'Tripple Test', home: MyHomePage());
+  }
+}
+
+class Counter extends StreamStore<Exception, int> {
+  Counter() : super(0);
+
+  Future<void> increment() async {
+    setLoading(true);
+
+    await Future.delayed(Duration(seconds: 1));
+
+    int value = state + 1;
+    if (value < 5) {
+      update(value);
+    } else {
+      setError(Exception('State not can be > 4'));
+    }
+    setLoading(false);
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+  MyHomePage({Key? key}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final counter = Counter();
+  final _counter = Counter();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            onPressed: counter.undo,
-            icon: Icon(Icons.arrow_back_ios),
-          ),
-          IconButton(
-            onPressed: counter.redo,
-            icon: Icon(Icons.arrow_forward_ios),
-          ),
-        ],
+        title: Text('Test'),
       ),
-      body: Center(
-        child: ScopedBuilder(
-          store: counter,
-          onLoading: (_) => Text('Carregando...'),
-          onState: (_, state) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('You have pushed the button 399 this many times:'),
-                Text(
-                  '$state',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-      floatingActionButton: TripleBuilder<Counter, Exception, int>(
-        store: counter,
-        builder: (_, triple) {
-          return FloatingActionButton(
-            onPressed: triple.isLoading ? null : counter.increment,
-            tooltip: triple.isLoading ? 'no-active' : 'Increment',
-            backgroundColor: triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
-            child: Icon(Icons.add),
+      body: ScopedBuilder<Counter, Exception, int>(
+        store: _counter,
+        onState: (state, counter) {
+          print('onState called: $counter');
+          return Padding(
+            padding: EdgeInsets.all(10),
+            child: Text('$counter'),
           );
         },
+        onError: (context, error) {
+          print('onError called: $error');
+          return Center(
+            child: Text(
+              error.toString(),
+              style: TextStyle(color: Colors.red),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (() async {
+          await _counter.increment();
+        }),
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
       ),
     );
   }
