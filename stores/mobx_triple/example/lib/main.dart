@@ -49,8 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: [
           IconButton(onPressed: counter.undo, icon: Icon(Icons.arrow_back_ios)),
-          IconButton(
-              onPressed: counter.redo, icon: Icon(Icons.arrow_forward_ios)),
+          IconButton(onPressed: counter.redo, icon: Icon(Icons.arrow_forward_ios)),
         ],
       ),
       body: Center(
@@ -59,11 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ScopedBuilder(
                 store: counter,
-                onLoading: (_, loading) {
+                onLoading: (_) {
                   return Text(
-                    !loading
-                        ? 'You have pushed the button this many times:'
-                        : 'Carregando...',
+                    !counter.isLoading ? 'You have pushed the button this many times:' : 'Carregando...',
                   );
                 }),
             ScopedBuilder(
@@ -81,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: ScopedBuilder(
         store: counter,
         onError: (_, error) => _floatingButton(error == null),
-        onLoading: (_, isLoading) => _floatingButton(!isLoading),
+        onLoading: (_) => _floatingButton(!counter.isLoading),
         onState: (_, __) => _floatingButton(true),
       ),
     );
