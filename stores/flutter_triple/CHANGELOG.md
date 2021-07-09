@@ -1,3 +1,6 @@
+ ## [1.2.2] - 2021-07-09
+- Fix ScopedBuild in first event in triple;
+
  ## [1.2.1] - 2021-07-04
 - Fix [#41](https://github.com/Flutterando/triple_pattern/issues/41)
  ## [1.2.0] - 2021-07-02

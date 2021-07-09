@@ -82,6 +82,12 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
   var _tripleEvent = TripleEvent.state;
 
   @override
+  void initState() {
+    super.initState();
+    _tripleEvent = widget.store.triple.event;
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     disposer?.call();
