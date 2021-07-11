@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
   title: 'Triple',
   tagline: 'Segmented State Pattern',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://triplepattern.netlify.app',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   // onBrokenLinks: 'throw',
@@ -26,10 +26,16 @@ module.exports = {
           type: 'doc',
           docId: 'intro',
           position: 'left',
-          label: 'Tutorial',
+          label: 'SSP',
         },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          type: 'doc',
+          docId: 'getting-started/what-is-triple',
+          position: 'left',
+          label: 'Getting Started',
+        },
+        {
+          href: 'https://github.com/Flutterando/triple_pattern',
           label: 'GitHub',
           position: 'right',
         },
@@ -42,8 +48,12 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Segmented State Pattern (SSP)',
               to: '/docs/intro',
+            },
+            {
+              label: 'Getting Started',
+              to: '/docs/getting-started/what-is-triple',
             },
           ],
         },
@@ -51,16 +61,16 @@ module.exports = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
+              label: 'Flutterando',
               href: 'https://stackoverflow.com/questions/tagged/docusaurus',
             },
             {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              href: 'https://discord.com/invite/x7X4uA9',
             },
             {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              label: 'Telegram',
+              href: 'https://t.me/flutterando',
             },
           ],
         },
@@ -68,12 +78,12 @@ module.exports = {
           title: 'More',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'Medium Flutterando',
+              href: 'https://medium.com/flutterando',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/Flutterando/triple_pattern',
             },
           ],
         },

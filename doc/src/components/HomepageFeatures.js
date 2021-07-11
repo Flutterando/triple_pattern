@@ -8,28 +8,24 @@ const FeatureList = [
     Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
-      </>
+Triple was designed from the ground up to be easy while maintaining scalability and is perfect for large projects.      </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Any Reactivity',
     Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        SSP is a pattern that can be extended to be used with any reactivity making it more solid.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Open source',
     Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Created and maintained by the largest Flutter community in Brazil and free for everyone!
       </>
     ),
   },
