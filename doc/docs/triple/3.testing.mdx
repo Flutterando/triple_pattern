@@ -1,0 +1,59 @@
+---
+sidebar_position: 3
+---
+
+# Testing
+
+For a pattern to be concrete, we must test.
+There is a library with elements that help test a Triple Store.
+
+## Installation 
+
+```dart
+dev_dependencies:
+  triple_test: any
+  mocktail:
+```
+
+Use [triple_test](https://pub.dev/packages/triple_test) for Unity Test.
+
+## Create a Mock
+
+```dart
+import 'package:bloc_test/bloc_test.dart';
+
+class MockCounterStore extends MockStore<Exception, int> implements CounterStore {}
+...
+
+final mock = MockCounterStore();
+```
+
+Now creates a stud for the method on Triple Store.
+
+```dart
+whenObserve<MyException, int>(
+    mock,
+    input: () => mock.testAdd(),
+    initialState: 0,
+    triples: [
+      Triple(state: 1),
+      Triple(isLoading: true, event: TripleEvent.loading, state: 1),
+      Triple(state: 2),
+    ],
+  );
+```
+>NOTE: You can use Triple Matchers: **tripleState**, **tripleLoading** e **tripleError**;
+
+
+## Testing Stores
+
+The flutter_test gives us the test() function to describe what will be tested in a prepared scope. triple_test makes it easier to test Triple Stores using the storeTest() function instead of test();
+
+```dart
+  storeTest<TestImplementsMock>(
+    'Testing triple',
+    build: () => MyStore(),
+    act: (store) => store.testAdd(),
+    expect: () => [0, tripleLoading, 1],
+  );
+```

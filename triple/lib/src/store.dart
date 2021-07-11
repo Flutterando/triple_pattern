@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:dartz/dartz.dart';
 
 import 'models/dispatched_triple.dart';
 import 'models/triple_model.dart';
 import 'package:meta/meta.dart';
+
+import 'either_adapter.dart';
 
 typedef Disposer = Future<void> Function();
 
@@ -152,7 +153,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///
   ///This function is a sugar code used to run a Future in a simple way,
   ///executing [setLoading] and adding to [setError] if an error occurs in Either
-  Future<void> executeEither(Future<Either<Error, State>> Function() func, {Duration delay = const Duration(milliseconds: 50)}) async {
+  Future<void> executeEither(Future<EitherAdapter<Error, State>> Function() func, {Duration delay = const Duration(milliseconds: 50)}) async {
     final localTime = DateTime.now();
     _mutableObjects.lastExecution = localTime;
     await Future.delayed(delay);
@@ -168,7 +169,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
     await _mutableObjects.completerExecution!.then(
       (value) {
-        if (value is Either<Error, State>) {
+        if (value is EitherAdapter<Error, State>) {
           value.fold((e) => setError(e, force: true), (s) => update(s, force: true));
           setLoading(false);
         }
