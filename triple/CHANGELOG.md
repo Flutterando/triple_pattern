@@ -1,3 +1,7 @@
+  ## [1.1.0] - 2021-07-10
+
+ - Remove dartz dependency (Use **EitherAdapter**)
+ - Added EitherAdapter interface
   ## [1.0.2] - 2021-05-10
 
  - fix executeEither
