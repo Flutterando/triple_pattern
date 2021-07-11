@@ -7,7 +7,8 @@ module.exports = {
   tagline: 'Segmented State Pattern',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
+  // onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'flutterando', // Usually your GitHub org/user name.
