@@ -12,11 +12,12 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'flutterando', // Usually your GitHub org/user name.
   projectName: 'triple_pattern', // Usually your repo name.
+  
   themeConfig: {
     navbar: {
       title: 'Triple',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Triple Pattern',
         src: 'img/logo.svg',
       },
       items: [
@@ -76,12 +77,12 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © 2022 Flutterando, Inc. Built with Docusaurus.`,
     },
     prism: {
       theme: lightCodeTheme,
       darkTheme: darkCodeTheme,
-      additionalLanguages: ['dart'],
+      additionalLanguages: ['dart', 'yaml'],
     },
   },
   presets: [
