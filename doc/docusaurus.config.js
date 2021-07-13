@@ -62,7 +62,7 @@ module.exports = {
           items: [
             {
               label: 'Flutterando',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              href: 'https://flutterando.com.br',
             },
             {
               label: 'Discord',
@@ -104,13 +104,13 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+            'https://github.com/Flutterando/triple_pattern/blob/master/doc/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
+            'https://github.com/Flutterando/triple_pattern/blob/master/doc/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

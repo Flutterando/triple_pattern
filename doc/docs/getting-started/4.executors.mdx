@@ -1,0 +1,77 @@
+---
+sidebar_position: 4
+---
+
+# Executors
+
+A very common pattern in an asynchronous request is:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+    setLoading(true);
+    try {
+      final result = await repository.fetch();
+      update(result);
+    } catch(e){
+      setError(e);
+    }
+    setLoading(false);
+  }
+
+```
+
+You can use the ** execute **method** and pass on Future to perform the same steps described in the previous example:
+
+```dart
+
+  @override
+  Future<void> fetchData(){
+   execute(() => repository.fetch());
+  }
+
+```
+
+## Execute Either (**EitherAdapter**)
+
+For users using **dartz** using Clean Architecture for example, they can also run the Either class using the **executeEither** method:
+
+
+### Step 1 - Create Adapter:
+
+```dart
+class CustomEitherAdapter implements EitherAdapter {}
+```
+
+### Step 2 - Add Left and Right type:
+
+```dart
+class CustomEitherAdapter implements EitherAdapter<Exception, String> {}
+```
+
+### Step 3 - Implement fold method (Using dartz or any other functional package):
+
+```dart
+class CustomEitherAdapter implements EitherAdapter<Exception, String> {
+
+  // receive an usecase in constructor
+  final Either<Exception, String> usecase;
+  CustomEitherAdapter(this.usecase);
+
+  @override
+  dynamic fold(Function(Exception l) leftF, Function(String r) rightF){
+    return usecase.fold(leftF, rightF);
+  }
+
+}
+```
+
+### Step 4 - Just use:
+
+```dart
+ @override
+  Future<void> fetchData(){
+   executeEither(() => CustomEitherAdapter(myUsecase()));
+  }
+```

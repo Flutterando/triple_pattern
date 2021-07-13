@@ -1,0 +1,14 @@
+---
+sidebar_position: 6
+---
+
+# Memento with MementoMixin
+
+You can add, undo or redo a state using the Memento Pattern. 
+This means that you can return to the previous state using the method **undo()** and also advance with the method **redo()**.
+
+```dart
+
+class Counter extends StreamStore<Exception, int> with MementoMixin {}
+
+```
