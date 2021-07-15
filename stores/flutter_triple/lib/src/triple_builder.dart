@@ -23,7 +23,7 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
 class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends State<TripleBuilder<TStore, TError, TState>> {
   Widget? child;
 
-  dynamic? _distinct;
+  var _distinct;
 
   bool isDisposed = false;
 
