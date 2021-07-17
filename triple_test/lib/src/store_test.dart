@@ -67,7 +67,8 @@ FutureOr<void> storeTest<T extends Store>(
           return;
         }
         final matcher = expectList[i];
-        actualList.add('${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
+        actualList.add(
+            '${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
         test.expect(matcher is TripleMatcher ? triple : value, matcher);
         i++;
         if (i >= expectList.length) {
@@ -115,7 +116,8 @@ class TripleMatcher extends test.Matcher {
   const TripleMatcher(this.event);
 
   @override
-  test.Description describe(test.Description description) => description.add('Triple State');
+  test.Description describe(test.Description description) =>
+      description.add('Triple State');
 
   @override
   bool matches(covariant Triple triple, Map matchState) {
@@ -129,9 +131,9 @@ class TripleMatcher extends test.Matcher {
 }
 
 class VerifyError {
-  final String message;
+  final String? message;
   VerifyError(this.message);
 
   @override
-  String toString() => message;
+  String toString() => message.toString();
 }
