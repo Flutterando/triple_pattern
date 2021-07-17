@@ -1,3 +1,7 @@
+  ## [1.2.0] - 2021-07-17
+  
+  - Added HydratedMixin and HydratedDelegate;
+
   ## [1.1.0] - 2021-07-10
 
  - Remove dartz dependency (Use **EitherAdapter**)

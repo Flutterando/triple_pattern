@@ -63,7 +63,12 @@ abstract class Store<Error extends Object, State extends Object> {
   Error? get error => _mutableObjects.triple.error;
 
   ///[initialState] Start this store with a value defalt.
-  Store(State initialState) : _mutableObjects = _MutableObjects<Error, State>(initialState);
+  Store(State initialState) {
+    _mutableObjects = _MutableObjects<Error, State>(initialState);
+    initStore();
+  }
+
+  void initStore() {}
 
   ///IMPORTANT!!!
   ///THIS METHOD TO BE VISIBLE FOR OVERRIDING ONLY!!!
