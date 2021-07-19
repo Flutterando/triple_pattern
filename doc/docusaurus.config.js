@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
   title: 'Triple',
   tagline: 'Segmented State Pattern',
-  url: 'https://triplepattern.netlify.app',
+  url: 'https://triple.flutterando.com.br',
   baseUrl: '/',
   onBrokenLinks: 'warn',
   // onBrokenLinks: 'throw',
