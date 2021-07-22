@@ -1,6 +1,6 @@
 name: triple_test
 description: Test Helper for Store of flutter_triple with Mocktail.
-version: 0.0.6
+version: 0.0.7
 homepage:
 
 environment:
