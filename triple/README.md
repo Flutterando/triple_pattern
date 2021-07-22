@@ -1,15 +1,15 @@
 # Triple
 
-This package is an abstraction of the [Segmented State Pattern](https://github.com/Flutterando/triple_pattern) that forces architectural barriers to individual reactivities.
+This package is an abstraction of the [Segmented State Pattern](https://triple.flutterando.com.br) that forces architectural barriers to individual reactivities.
 
-This abstraction serves to create implementations of [SSP](https://github.com/Flutterando/triple_pattern) using any Reactive object as a basis to create a Store (Object responsible for the State Logic of a component).
+This abstraction serves to create implementations of [SSP](https://triple.flutterando.com.br) using any Reactive object as a basis to create a Store (Object responsible for the State Logic of a component).
 
 ## How to build a Store?
 .
 
 ![Triple](https://github.com/Flutterando/triple_pattern/raw/master/schema.png)
 
-Following the [SSP](https://github.com/Flutterando/triple_pattern), our Store needs to segment the state data in 3 ways, a State (containing the State value), and Error (Containing the exception object of state), and Loading (indicating whether the state value is being loaded). These 3 properties are part of the Triple object that is inherited as a property in the abstract class Store. We will then see step-by-step how to create a Store based on any existing Reactivity system.
+Following the [SSP](https://triple.flutterando.com.br/docs/intro), our Store needs to segment the state data in 3 ways, a State (containing the State value), and Error (Containing the exception object of state), and Loading (indicating whether the state value is being loaded). These 3 properties are part of the Triple object that is inherited as a property in the abstract class Store. We will then see step-by-step how to create a Store based on any existing Reactivity system.
 
 
 
@@ -293,7 +293,6 @@ void main(){
 - [flutter_triple](https://pub.dev/packages/flutter_triple) (StreamStore, NotifierStore, ScopedBuilder, TripleBuilder);
 
 - [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore);
-- [getx_triple](https://pub.dev/packages/getx_triple) (GetXStore);
 
 
 
