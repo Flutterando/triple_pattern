@@ -1,4 +1,4 @@
-  ## [1.2.0+1] - 2021-07-17
+  ## [1.2.0+3] - 2021-07-17
   
   - Added HydratedMixin and HydratedDelegate;
 

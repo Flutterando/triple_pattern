@@ -2,8 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends StatefulWidget {
-  final Widget Function(BuildContext context, Triple<TError, TState> triple) builder;
+class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends StatefulWidget {
+  final Widget Function(BuildContext context, Triple<TError, TState> triple)
+      builder;
   final bool Function(Triple<TError, TState> triple)? filter;
   final dynamic Function(Triple<TError, TState> state)? distinct;
   final TStore store;
@@ -17,10 +19,13 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
   }) : super(key: key);
 
   @override
-  _TripleBuilderState<TStore, TError, TState> createState() => _TripleBuilderState<TStore, TError, TState>();
+  _TripleBuilderState<TStore, TError, TState> createState() =>
+      _TripleBuilderState<TStore, TError, TState>();
 }
 
-class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends State<TripleBuilder<TStore, TError, TState>> {
+class _TripleBuilderState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<TripleBuilder<TStore, TError, TState>> {
   Widget? child;
 
   var _distinct;

@@ -56,15 +56,17 @@ void main() {
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
-  FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
-        return state + 1;
-      }));
+  FutureOr<void> increment() =>
+      execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
+            return state + 1;
+          }));
 
   FutureOr<void> incrementWithError() => execute(() => Future.error('error'));
 }
 
 // ignore: must_be_immutable
-abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
+abstract class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State> {
   final List<bool> list;
 
   TestImplements(State initialState, this.list) : super(initialState);

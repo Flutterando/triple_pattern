@@ -11,7 +11,12 @@ class Triple<Error extends Object, State extends Object> {
     this.event = TripleEvent.state,
   });
 
-  Triple<Error, State> copyWith({State? state, Error? error, bool? isLoading, int? index, TripleEvent? event}) {
+  Triple<Error, State> copyWith(
+      {State? state,
+      Error? error,
+      bool? isLoading,
+      int? index,
+      TripleEvent? event}) {
     return Triple<Error, State>(
       state: state ?? this.state,
       error: error ?? this.error,
@@ -22,7 +27,7 @@ class Triple<Error extends Object, State extends Object> {
 
   Triple<Error, State> clearError() {
     return Triple<Error, State>(
-      state: state ,
+      state: state,
       error: null,
       isLoading: isLoading,
       event: event,

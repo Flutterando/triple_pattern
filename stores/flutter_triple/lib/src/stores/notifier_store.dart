@@ -2,7 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
 
-abstract class NotifierStore<Error extends Object, State extends Object> extends Store<Error, State> implements Selectors<ValueListenable<Error?>, ValueListenable<State>, ValueListenable<bool>> {
+abstract class NotifierStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
+    implements
+        Selectors<ValueListenable<Error?>, ValueListenable<State>,
+            ValueListenable<bool>> {
   late final _selectState = RxNotifier<State>(triple.state);
   late final _selectError = RxNotifier<Error?>(triple.error);
   late final _selectLoading = RxNotifier<bool>(triple.isLoading);
@@ -38,7 +42,10 @@ abstract class NotifierStore<Error extends Object, State extends Object> extends
   }
 
   @override
-  Disposer observer({void Function(State state)? onState, void Function(bool loading)? onLoading, void Function(Error error)? onError}) {
+  Disposer observer(
+      {void Function(State state)? onState,
+      void Function(bool loading)? onLoading,
+      void Function(Error error)? onError}) {
     final funcState = () => onState?.call(state);
     final funcLoading = () => onLoading?.call(isLoading);
     final funcError = () => error != null ? onError?.call(error!) : null;

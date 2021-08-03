@@ -4,23 +4,38 @@ import 'package:flutter_triple/flutter_triple.dart';
 
 void main() {
   test('instance', () {
-    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()),
+        isA<ScopedBuilder>());
   });
   test('throw assert when no have onState, onLoading, onError', () {
-    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()),
+        isA<ScopedBuilder>());
     expect(() => ScopedBuilder(store: Counter()), throwsAssertionError);
   });
   test('throw assert when have distinct but don\'t have onState', () {
-    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
-    expect(() => ScopedBuilder(store: Counter(), distinct: (s) => s, onLoading: (c) => Container()), throwsAssertionError);
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()),
+        isA<ScopedBuilder>());
+    expect(
+        () => ScopedBuilder(
+            store: Counter(),
+            distinct: (s) => s,
+            onLoading: (c) => Container()),
+        throwsAssertionError);
   });
   test('throw assert when have filter but don\'t have onState', () {
-    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()), isA<ScopedBuilder>());
-    expect(() => ScopedBuilder(store: Counter(), filter: (s) => true, onLoading: (c) => Container()), throwsAssertionError);
+    expect(ScopedBuilder(store: Counter(), onState: (s, ss) => Container()),
+        isA<ScopedBuilder>());
+    expect(
+        () => ScopedBuilder(
+            store: Counter(),
+            filter: (s) => true,
+            onLoading: (c) => Container()),
+        throwsAssertionError);
   });
   testWidgets('test change state', (WidgetTester tester) async {
     final counter = Counter();
-    await tester.pumpWidget(MaterialApp(home: TestCounterPage(counter: counter)));
+    await tester
+        .pumpWidget(MaterialApp(home: TestCounterPage(counter: counter)));
     final buttonFinder = find.byType(FloatingActionButton);
     expect(buttonFinder, findsOneWidget);
     expect(find.text('0'), findsOneWidget);
@@ -34,7 +49,8 @@ void main() {
 
   testWidgets('test change state store directly', (WidgetTester tester) async {
     final counter = Counter();
-    await tester.pumpWidget(MaterialApp(home: TestCounterPage(counter: counter)));
+    await tester
+        .pumpWidget(MaterialApp(home: TestCounterPage(counter: counter)));
     expect(find.text('0'), findsOneWidget);
     counter.increment();
     await tester.pump();
@@ -46,7 +62,8 @@ void main() {
 
   testWidgets('test change state filter', (WidgetTester tester) async {
     final counter = Counter();
-    await tester.pumpWidget(MaterialApp(home: TestCounterPage(counter: counter, withFilter: true)));
+    await tester.pumpWidget(
+        MaterialApp(home: TestCounterPage(counter: counter, withFilter: true)));
     expect(find.text('0'), findsOneWidget);
     counter.increment();
     await tester.pump();
@@ -61,7 +78,8 @@ void main() {
   testWidgets('test change state distinct', (WidgetTester tester) async {
     final counter = Counter();
     final rebuild = [];
-    await tester.pumpWidget(MaterialApp(home: TestCounterPage(counter: counter, rebuild: rebuild)));
+    await tester.pumpWidget(
+        MaterialApp(home: TestCounterPage(counter: counter, rebuild: rebuild)));
     expect(find.text('0'), findsOneWidget);
     expect(rebuild.length, 1);
 
@@ -112,7 +130,9 @@ class TestCounterPage extends StatelessWidget {
   final bool withFilter;
   final List? rebuild;
 
-  const TestCounterPage({Key? key, required this.counter, this.withFilter = false, this.rebuild}) : super(key: key);
+  const TestCounterPage(
+      {Key? key, required this.counter, this.withFilter = false, this.rebuild})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +176,8 @@ class TestCounterPage extends StatelessWidget {
           return FloatingActionButton(
             onPressed: triple.isLoading ? null : counter.increment,
             tooltip: triple.isLoading ? 'no-active' : 'Increment',
-            backgroundColor: triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
+            backgroundColor:
+                triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
             child: Icon(Icons.add),
           );
         },

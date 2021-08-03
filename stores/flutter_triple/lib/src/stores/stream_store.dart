@@ -7,15 +7,25 @@ class _MutableIsDispose {
   bool value = false;
 }
 
-abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State> implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
-  final _tripleController = StreamController<Triple<Error, State>>.broadcast(sync: true);
+abstract class StreamStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
+    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
+  final _tripleController =
+      StreamController<Triple<Error, State>>.broadcast(sync: true);
 
   @override
-  late final Stream<State> selectState = _tripleController.stream.where((triple) => triple.event == TripleEvent.state).map((triple) => triple.state);
+  late final Stream<State> selectState = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.state)
+      .map((triple) => triple.state);
   @override
-  late final Stream<Error> selectError = _tripleController.stream.where((triple) => triple.event == TripleEvent.error).where((triple) => triple.error != null).map((triple) => triple.error!);
+  late final Stream<Error> selectError = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.error)
+      .where((triple) => triple.error != null)
+      .map((triple) => triple.error!);
   @override
-  late final Stream<bool> selectLoading = _tripleController.stream.where((triple) => triple.event == TripleEvent.loading).map((triple) => triple.isLoading);
+  late final Stream<bool> selectLoading = _tripleController.stream
+      .where((triple) => triple.event == TripleEvent.loading)
+      .map((triple) => triple.isLoading);
 
   final _MutableIsDispose _disposeValue = _MutableIsDispose();
 
