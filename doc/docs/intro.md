@@ -289,7 +289,7 @@ abstract class ProductBase extends MobXStore<Exception, ProductData> with Store 
       final error = Exception('Error');
       setError(error);
     }
-    setLoading(true);
+    setLoading(false);
   }
 }
 
