@@ -125,7 +125,7 @@ class Triple<Error, State> {
 So, we can use:
 ```dart
 @observable 
-var triple = Triple<ProductData, Exception>(state: ProductData.empty());
+var triple = Triple<Exception, ProductData>(state: ProductData.empty());
 
 @action
 Future<void> fetchProducts() async {
@@ -144,7 +144,7 @@ We now have an object that joins the 3 segmented state properties that can also 
 
 ```dart
 @observable 
-var _triple = Triple<ProductData, Exception>(state: ProductData.empty());
+var _triple = Triple<Exception, ProductData>(state: ProductData.empty());
 
 @computed
 ProductData get state => _triple.state;
@@ -165,7 +165,7 @@ Let's see a small example of implementation of the Design Pattern Memento that w
 ...
 
 @observable 
-var _triple = Triple<ProductData, Exception>(state: ProductData.empty());
+var _triple = Triple<Exception, ProductData>(state: ProductData.empty());
 
 @computed
 ProductData get state => _triple.state;
@@ -175,7 +175,7 @@ Exception get error => _triple.error;
 bool get isLoading => _triple.isLoading;
 
 //save all changed states
-final List<Triple<ProductData, Exception>> _history = [];
+final List<Triple<Exception, ProductData>> _history = [];
 
 @action
 void update(ProductData state){
