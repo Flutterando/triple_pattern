@@ -1,3 +1,6 @@
+  ## [1.3.0] - 2021-08-20
+  
+  - Added resolvers;
   ## [1.2.0+3] - 2021-07-17
   
   - Added HydratedMixin and HydratedDelegate;

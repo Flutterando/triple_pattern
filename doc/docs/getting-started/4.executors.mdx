@@ -55,15 +55,20 @@ class CustomEitherAdapter implements EitherAdapter<Exception, String> {}
 ### Step 3 - Implement fold method (Using dartz or any other functional package):
 
 ```dart
-class CustomEitherAdapter implements EitherAdapter<Exception, String> {
+class DartzEitherAdapter implements EitherAdapter<Exception, String> {
 
   // receive an usecase in constructor
   final Either<Exception, String> usecase;
-  CustomEitherAdapter(this.usecase);
+  DartzEitherAdapter(this.usecase);
 
   @override
   dynamic fold(Function(Exception l) leftF, Function(String r) rightF){
     return usecase.fold(leftF, rightF);
+  }
+
+  // Adapter Future Either(Dartz) to Future EitherAdapter(Triple)
+  static Future<EitherAdapter<L, R>> adapter<L, R>(Future<Either<L, R>> usecase) {
+    return usecase.then((value) => DartzEitherAdapter(value));
   }
 
 }
@@ -74,6 +79,6 @@ class CustomEitherAdapter implements EitherAdapter<Exception, String> {
 ```dart
  @override
   Future<void> fetchData(){
-   executeEither(() => CustomEitherAdapter(myUsecase()));
+   executeEither(() => DartzEitherAdapter.adapter(myUsecase()));
   }
 ```
