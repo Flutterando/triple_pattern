@@ -13,12 +13,12 @@ void main() {
   });
 }
 
-T _getInjection<T>() {
+T _getInjection<T extends Object>() {
   return _modularSimulation<T>();
 }
 
 final _injection = <Type, dynamic>{TestImplements: TestImplements(0)};
-T _modularSimulation<T>() {
+T _modularSimulation<T extends Object>() {
   final bind = _injection[T]!;
   return bind;
 }

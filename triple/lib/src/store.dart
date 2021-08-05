@@ -33,7 +33,7 @@ class TripleObserver {
 
 // Triple Inject
 
-typedef TripleResolverCallback = TStore Function<TStore>();
+typedef TripleResolverCallback = TStore Function<TStore extends Object>();
 
 TripleResolverCallback? _tripleResolver;
 

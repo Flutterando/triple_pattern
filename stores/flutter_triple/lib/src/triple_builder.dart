@@ -8,11 +8,11 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
       builder;
   final bool Function(Triple<TError, TState> triple)? filter;
   final dynamic Function(Triple<TError, TState> state)? distinct;
-  final TStore store;
+  final TStore? store;
 
   const TripleBuilder({
     Key? key,
-    required this.store,
+    this.store,
     required this.builder,
     this.filter,
     this.distinct,
@@ -36,18 +36,26 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
 
   Disposer? disposer;
 
+  late TStore store;
+
+  @override
+  void initState() {
+    super.initState();
+    store = widget.store ?? getTripleResolver<TStore>();
+  }
+
   void _listener(dynamic value) {
-    final value = widget.distinct?.call(widget.store.triple);
+    final value = widget.distinct?.call(store.triple);
     bool isReload = true;
     if (value != null) {
       isReload = value is List ? !eq(value, _distinct) : value != _distinct;
     }
     _distinct = value;
 
-    final filter = widget.filter?.call(widget.store.triple) ?? true;
+    final filter = widget.filter?.call(store.triple) ?? true;
     if (!isDisposed && isReload && filter) {
       setState(() {
-        child = widget.builder(context, widget.store.triple);
+        child = widget.builder(context, store.triple);
       });
     }
   }
@@ -58,7 +66,7 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
     if (disposer != null) {
       disposer!.call();
     }
-    disposer = widget.store.observer(
+    disposer = store.observer(
       onState: _listener,
       onError: _listener,
       onLoading: _listener,
@@ -75,8 +83,8 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
   @override
   Widget build(BuildContext context) {
     if (child == null) {
-      child = widget.builder(context, widget.store.triple);
-      _distinct = widget.distinct?.call(widget.store.triple);
+      child = widget.builder(context, store.triple);
+      _distinct = widget.distinct?.call(store.triple);
     }
     return child!;
   }

@@ -12,7 +12,7 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
   final Widget Function(BuildContext context, TState state)? onState;
   final Widget Function(BuildContext context, TError? error)? onError;
   final Widget Function(BuildContext context)? onLoading;
-  final TStore store;
+  final TStore? store;
 
   const ScopedBuilder(
       {Key? key,
@@ -21,7 +21,7 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
       this.onState,
       this.onError,
       this.onLoading,
-      required this.store})
+      this.store})
       : assert(onState != null || onError != null || onLoading != null,
             'Define at least one listener (onState, onError or onLoading)'),
         assert(distinct == null ? true : onState != null,
@@ -98,11 +98,13 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
   final Function eq = const ListEquality().equals;
 
   var _tripleEvent = TripleEvent.state;
+  late TStore store;
 
   @override
   void initState() {
     super.initState();
-    _tripleEvent = widget.store.triple.event;
+    store = widget.store ?? getTripleResolver<TStore>();
+    _tripleEvent = store.triple.event;
   }
 
   @override
@@ -110,7 +112,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
     super.didChangeDependencies();
     disposer?.call();
 
-    disposer = widget.store.observer(
+    disposer = store.observer(
       onState: (state) {
         final value = widget.distinct?.call(state);
         bool isReload = true;
@@ -162,26 +164,26 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
 
     switch (_tripleEvent) {
       case (TripleEvent.loading):
-        child = widget.store.triple.isLoading
+        child = store.triple.isLoading
             ? widget.onLoading?.call(context)
-            : widget.onState?.call(context, widget.store.state);
+            : widget.onState?.call(context, store.state);
         break;
       case (TripleEvent.error):
-        child = widget.onError?.call(context, widget.store.error);
+        child = widget.onError?.call(context, store.error);
         break;
       case (TripleEvent.state):
-        child = widget.onState?.call(context, widget.store.state);
-        _distinct = widget.distinct?.call(widget.store.state);
+        child = widget.onState?.call(context, store.state);
+        _distinct = widget.distinct?.call(store.state);
         break;
     }
     if (child == null) {
       child = widget.onLoading?.call(context);
     }
     if (child == null) {
-      child = widget.onError?.call(context, widget.store.error);
+      child = widget.onError?.call(context, store.error);
     }
     if (child == null) {
-      child = widget.onState?.call(context, widget.store.state);
+      child = widget.onState?.call(context, store.state);
     }
 
     return child!;
