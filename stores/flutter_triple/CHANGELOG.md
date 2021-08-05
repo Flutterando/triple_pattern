@@ -1,3 +1,5 @@
+ ## [1.2.4] - 2021-08-05
+- Update triple;
  ## [1.2.3+2] - 2021-07-17
 - Fix ScopedBuild in first event in triple;
 
