@@ -2,11 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-typedef TransitionCallback = Widget Function(
-    BuildContext context, Widget child);
+typedef TransitionCallback = Widget Function(BuildContext context, Widget child);
 
-class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends StatefulWidget {
+class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends StatefulWidget {
   final dynamic Function(TState state)? distinct;
   final bool Function(TState state)? filter;
   final Widget Function(BuildContext context, TState state)? onState;
@@ -14,25 +12,15 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
   final Widget Function(BuildContext context)? onLoading;
   final TStore? store;
 
-  const ScopedBuilder(
-      {Key? key,
-      this.distinct,
-      this.filter,
-      this.onState,
-      this.onError,
-      this.onLoading,
-      this.store})
-      : assert(onState != null || onError != null || onLoading != null,
-            'Define at least one listener (onState, onError or onLoading)'),
-        assert(distinct == null ? true : onState != null,
-            'Distinct needs onState implementation'),
-        assert(filter == null ? true : onState != null,
-            'Filter needs onState implementation'),
+  const ScopedBuilder({Key? key, this.distinct, this.filter, this.onState, this.onError, this.onLoading, this.store})
+      : assert(onState != null || onError != null || onLoading != null, 'Define at least one listener (onState, onError or onLoading)'),
+        assert(distinct == null ? true : onState != null, 'Distinct needs onState implementation'),
+        assert(filter == null ? true : onState != null, 'Filter needs onState implementation'),
         super(key: key);
 
   factory ScopedBuilder.transition({
     Key? key,
-    required TStore store,
+    TStore? store,
     dynamic Function(TState)? distinct,
     bool Function(TState)? filter,
     TransitionCallback? transition,
@@ -52,8 +40,7 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
               if (transition != null) {
                 return transition(context, child);
               } else {
-                return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300), child: child);
+                return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
               }
             },
       onLoading: onLoading == null
@@ -63,8 +50,7 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
               if (transition != null) {
                 return transition(context, child);
               } else {
-                return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300), child: child);
+                return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
               }
             },
       onError: onError == null
@@ -74,21 +60,17 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
               if (transition != null) {
                 return transition(context, child);
               } else {
-                return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300), child: child);
+                return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
               }
             },
     );
   }
 
   @override
-  _ScopedBuilderState<TStore, TError, TState> createState() =>
-      _ScopedBuilderState<TStore, TError, TState>();
+  _ScopedBuilderState<TStore, TError, TState> createState() => _ScopedBuilderState<TStore, TError, TState>();
 }
 
-class _ScopedBuilderState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<ScopedBuilder<TStore, TError, TState>> {
+class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends State<ScopedBuilder<TStore, TError, TState>> {
   Disposer? disposer;
 
   var _distinct;
@@ -133,9 +115,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
           setState(() {
             _tripleEvent = TripleEvent.error;
           });
-        } else if (widget.onError == null &&
-            widget.onState != null &&
-            !isDisposed) {
+        } else if (widget.onError == null && widget.onState != null && !isDisposed) {
           setState(() {
             _tripleEvent = TripleEvent.error;
           });
@@ -164,9 +144,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
 
     switch (_tripleEvent) {
       case (TripleEvent.loading):
-        child = store.triple.isLoading
-            ? widget.onLoading?.call(context)
-            : widget.onState?.call(context, store.state);
+        child = store.triple.isLoading ? widget.onLoading?.call(context) : widget.onState?.call(context, store.state);
         break;
       case (TripleEvent.error):
         child = widget.onError?.call(context, store.error);
