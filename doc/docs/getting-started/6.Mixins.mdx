@@ -30,7 +30,10 @@ A mixin which automatically persists and restores store state.
 class CounterStore extends StreamStore<Exception, CounterState> with HydratedMixin {}
 ```
 
-### Step 2: Add a Serializable contract in your State class. (If be not primitive value). 
+### Step 2: Add a Serializable contract in your State class.
+
+> Only necessary if your state is not a primitive type, such as int.
+
 ```dart
 class CounterState implements Serializable<CounterState> {
     final int value;
