@@ -1,6 +1,6 @@
 name: mobx_triple
 description: Segmented State Pattern for MobX
-version: 1.1.3
+version: 1.1.3+1
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:
