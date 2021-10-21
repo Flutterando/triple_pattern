@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import 'store.dart';
 
 abstract class HydratedDelegate {
@@ -26,23 +28,15 @@ class MemoryHydratedDelegate implements HydratedDelegate {
 
   @override
   Future save(String key, value) async {
-    assert(
-        value is num ||
-            value is String ||
-            value is bool ||
-            value is List<String> ||
-            value is Map ||
-            value is Set ||
-            value is Serializable,
-        'not valid value');
+    assert(value is num || value is String || value is bool || value is List<String> || value is Map || value is Set || value is Serializable, 'not valid value');
     _cachedValue = value;
   }
 }
 
-mixin HydratedMixin<Error extends Object, State extends Object>
-    on Store<Error, State> {
+mixin HydratedMixin<Error extends Object, State extends Object> on Store<Error, State> {
   String get keyName => runtimeType.toString();
 
+  @protected
   @override
   void update(newState, {bool force = false}) {
     if (newState is Serializable) {
@@ -68,7 +62,6 @@ mixin HydratedMixin<Error extends Object, State extends Object>
   }
 }
 
-void setTripleHydratedDelegate(HydratedDelegate delegate) =>
-    _delegate = delegate;
+void setTripleHydratedDelegate(HydratedDelegate delegate) => _delegate = delegate;
 
 HydratedDelegate _delegate = MemoryHydratedDelegate();

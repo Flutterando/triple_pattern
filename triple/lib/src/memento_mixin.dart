@@ -9,8 +9,7 @@ class _MutableIndex {
 }
 
 @immutable
-mixin MementoMixin<State extends Object, Error extends Object>
-    on Store<Error, State> {
+mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, State> {
   final _history = <Triple<Error, State>>[];
   final int _historyLimit = 32;
   final _MutableIndex _mutableIndex = _MutableIndex();
@@ -24,8 +23,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
   bool canUndo() => _history.isNotEmpty && _historyIndex > 0;
 
   ///Return [true] if you can redo
-  bool canRedo() =>
-      (_historyIndex + 1) < _history.length || triple.state != lastState.state;
+  bool canRedo() => (_historyIndex + 1) < _history.length || triple.state != lastState.state;
 
   void _addHistory(Triple<Error, State> observableCache) {
     if (_historyIndex == _history.length) {
@@ -41,6 +39,7 @@ mixin MementoMixin<State extends Object, Error extends Object>
     _historyIndex = _history.length;
   }
 
+  @protected
   @override
   void update(newState, {bool force = false}) {
     final _last = lastState;
@@ -51,16 +50,16 @@ mixin MementoMixin<State extends Object, Error extends Object>
   }
 
   ///Undo the last state value.
+  @protected
   void undo() {
     if (canUndo()) {
-      _historyIndex = _historyIndex > _history.length
-          ? math.max(_history.length - 1, 0)
-          : _historyIndex - 1;
+      _historyIndex = _historyIndex > _history.length ? math.max(_history.length - 1, 0) : _historyIndex - 1;
       propagate(_history[_historyIndex]);
     }
   }
 
   ///redo the last state value.
+  @protected
   void redo() {
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;

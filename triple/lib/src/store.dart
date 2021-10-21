@@ -122,6 +122,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///Change the State value.
   ///
   ///This also stores the state value to be retrieved using the [undo()] method when using MementoMixin
+  @protected
   void update(State newState, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(state: newState, event: TripleEvent.state);
     candidate = candidate.clearError();
@@ -134,6 +135,7 @@ abstract class Store<Error extends Object, State extends Object> {
   }
 
   ///Change the loading value.
+  @protected
   void setLoading(bool newloading, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(isLoading: newloading, event: TripleEvent.loading);
     candidate = middleware(candidate);
@@ -144,6 +146,7 @@ abstract class Store<Error extends Object, State extends Object> {
   }
 
   ///Change the error value.
+  @protected
   void setError(Error newError, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(error: newError, event: TripleEvent.error);
     candidate = middleware(candidate);
@@ -256,6 +259,30 @@ abstract class Store<Error extends Object, State extends Object> {
     void Function(bool isLoading)? onLoading,
     void Function(Error error)? onError,
   });
+
+  ///Represents a value of one of three mapped possibilities.
+  ///
+  ///EXAMPLE:
+  ///```dart
+  ///int result = store.when<int>(
+  ///                 onState: (state) => state,
+  ///                 onLoading: () => 0,
+  ///                 onError: (error) => -1,
+  ///             );
+  ///```
+  TReturn when<TReturn>({
+    required TReturn Function(State state) onState,
+    TReturn Function(bool isLoading)? onLoading,
+    TReturn Function(Error error)? onError,
+  }) {
+    if (triple.event == TripleEvent.loading && onLoading != null && triple.isLoading) {
+      return onLoading(triple.isLoading);
+    } else if (triple.event == TripleEvent.error && onError != null) {
+      return onError(triple.error!);
+    } else {
+      return onState(triple.state);
+    }
+  }
 }
 
 class TripleException implements Exception {

@@ -1,3 +1,7 @@
+  ## [1.3.3] - 2021-10-21
+  - Added Store.when for a value of one of three mapped possibilities.
+  - Added @protected on update, setError, setLoading.
+
   ## [1.3.0+1] - 2021-08-20
   
   - Added resolvers;

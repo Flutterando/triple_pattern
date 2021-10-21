@@ -1,3 +1,8 @@
+ ## [1.2.5] - 2021-10-21
+- Update triple;
+- Added Store.when for a value of one of three mapped possibilities.
+- Added @protected on update, setError, setLoading.
+
  ## [1.2.4+3] - 2021-08-05
 - Update triple;
  ## [1.2.3+2] - 2021-07-17

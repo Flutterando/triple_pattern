@@ -83,8 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return FloatingActionButton(
             onPressed: triple.isLoading ? null : counter.increment,
             tooltip: triple.isLoading ? 'no-active' : 'Increment',
-            backgroundColor:
-                triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
+            backgroundColor: triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
             child: Icon(Icons.add),
           );
         },
