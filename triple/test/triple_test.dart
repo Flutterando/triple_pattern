@@ -60,6 +60,17 @@ void main() {
     expect(store.state, 0);
     store.redo();
     expect(store.state, 1);
+
+    store.update(2);
+    expect(store.state, 2);
+    store.update(3);
+    expect(store.state, 3);
+    store.undo();
+    expect(store.state, 2);
+    store.redo();
+    expect(store.state, 3);
+    store.redo();
+    expect(store.state, 3);
   });
 }
 

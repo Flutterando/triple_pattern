@@ -47,6 +47,9 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
     if (_last.state != triple.state) {
       _addHistory(_last.copyWith(isLoading: false));
     }
+    else if (_historyIndex + 1 == _history.length) {
+      _historyIndex++;
+    }
   }
 
   ///Undo the last state value.
