@@ -9,7 +9,7 @@ A very common pattern in an asynchronous request is:
 ```dart
 
   @override
-  Future<void> fetchData(){
+  Future<void> fetchData() async {
     setLoading(true);
     try {
       final result = await repository.fetch();
