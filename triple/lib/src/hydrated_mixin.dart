@@ -2,6 +2,10 @@ import 'package:meta/meta.dart';
 
 import 'store.dart';
 
+class _MutableFlags {
+  bool hasInitiated = false;
+}
+
 abstract class HydratedDelegate {
   Future get(String key);
   Future save(String key, dynamic value);
@@ -34,7 +38,10 @@ class MemoryHydratedDelegate implements HydratedDelegate {
 }
 
 mixin HydratedMixin<Error extends Object, State extends Object> on Store<Error, State> {
+  final _flags = _MutableFlags();
   String get keyName => runtimeType.toString();
+
+  bool get hasInitiated => _flags.hasInitiated;
 
   @protected
   @override
@@ -57,6 +64,7 @@ mixin HydratedMixin<Error extends Object, State extends Object> on Store<Error, 
       } else {
         value = s;
       }
+      _flags.hasInitiated = true;
       update(value);
     }
   }

@@ -46,8 +46,7 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
     super.update(newState, force: force);
     if (_last.state != triple.state) {
       _addHistory(_last.copyWith(isLoading: false));
-    }
-    else if (_historyIndex + 1 == _history.length) {
+    } else if (_historyIndex + 1 == _history.length) {
       _historyIndex++;
     }
   }
@@ -57,6 +56,7 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
   void undo() {
     if (canUndo()) {
       _historyIndex = _historyIndex > _history.length ? math.max(_history.length - 1, 0) : _historyIndex - 1;
+      // ignore: invalid_use_of_visible_for_overriding_member
       propagate(_history[_historyIndex]);
     }
   }
@@ -66,9 +66,11 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
   void redo() {
     if (_historyIndex + 1 < _history.length) {
       _historyIndex++;
+      // ignore: invalid_use_of_visible_for_overriding_member
       propagate(_history[_historyIndex]);
     } else if (triple.state != lastState.state) {
       _historyIndex++;
+      // ignore: invalid_use_of_visible_for_overriding_member
       propagate(lastState);
     }
   }
