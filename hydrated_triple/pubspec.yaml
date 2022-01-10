@@ -1,6 +1,6 @@
 name: hydrated_triple
 description: A mixin which automatically persists and restores store state. 
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:
@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.6
-  triple: ^1.2.0
+  triple: ">=1.4.0 <2.0.0"
 
 dev_dependencies:
   flutter_test:
