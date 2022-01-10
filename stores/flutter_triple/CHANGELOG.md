@@ -1,3 +1,6 @@
+ ## [1.2.6] - 2022-01-10
+- Update triple;
+
  ## [1.2.5] - 2021-10-21
 - Update triple;
 - Added Store.when for a value of one of three mapped possibilities.
