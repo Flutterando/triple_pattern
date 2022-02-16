@@ -51,6 +51,7 @@ FutureOr<void> storeTest<T extends Store>(
   required T Function() build,
   Function(T store)? act,
   required Function() expect,
+  Duration? wait,
   Function(T store)? verify,
 }) async {
   test.test(description, () async {
@@ -61,22 +62,32 @@ FutureOr<void> storeTest<T extends Store>(
     final actualList = <String>[];
     Disposer disposer;
     final expectList = _list is List ? _list : List.from([_list]);
+    bool isFinished = false;
     await runZonedGuarded(() async {
       testTriple(Triple triple, dynamic value) {
-        if (completer.isCompleted) {
+        if (isFinished) {
           return;
         }
+
+        actualList.add('${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
+
+        if (i >= expectList.length) {
+          throw test.TestFailure('''Expected: $expectList
+  Actual: $actualList
+
+''');
+        }
+
         final matcher = expectList[i];
-        actualList.add(
-            '${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
+
         test.expect(matcher is TripleMatcher ? triple : value, matcher);
         i++;
-        if (i >= expectList.length) {
+        if (i >= expectList.length && !completer.isCompleted) {
           completer.complete(true);
         }
       }
 
-      testTriple(store.triple, store.triple.state);
+      // testTriple(store.triple, store.triple.state);
 
       disposer = store.observer(
         onState: (value) => testTriple(store.triple, value),
@@ -84,7 +95,11 @@ FutureOr<void> storeTest<T extends Store>(
         onLoading: (value) => testTriple(store.triple, value),
       );
       act?.call(store);
-      await completer.future;
+      await Future.wait([
+        completer.future,
+        Future.delayed(wait ?? Duration.zero),
+      ]);
+      isFinished = true;
       disposer.call();
       try {
         verify?.call(store);
@@ -116,8 +131,7 @@ class TripleMatcher extends test.Matcher {
   const TripleMatcher(this.event);
 
   @override
-  test.Description describe(test.Description description) =>
-      description.add('Triple State');
+  test.Description describe(test.Description description) => description.add('Triple State');
 
   @override
   bool matches(covariant Triple triple, Map matchState) {

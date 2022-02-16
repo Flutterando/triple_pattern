@@ -1,3 +1,9 @@
+## [1.0.0] - 2022-16-02
+
+* Removed: First test gets initial state.
+* Updated internal libraries.
+* Added wait property.
+
 ## [0.0.8] - 2021-08-11
 
 * fix: nullsafety errors

@@ -28,7 +28,7 @@ void main() async {
     'Teste triple',
     build: () => _mountMock(),
     act: (store) => store.testAdd(),
-    expect: () => [0, isA<int>(), tripleLoading, 2],
+    expect: () => [isA<int>(), tripleLoading, 2],
   );
 
   storeTest<TestImplementsMock>(

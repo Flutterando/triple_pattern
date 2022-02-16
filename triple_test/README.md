@@ -44,7 +44,7 @@ The *flutter_test* gives us the **test()** function to describe what will be tes
     'Testing triple',
     build: () => MyStore(),
     act: (store) => store.testAdd(),
-    expect: () => [0, tripleLoading, 1],
+    expect: () => [tripleLoading, 1],
   );
 ```
 
