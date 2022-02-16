@@ -54,6 +54,6 @@ The `flutter_test` gives us the [test()](https://api.flutter.dev/flutter/flutter
     'Testing triple',
     build: () => MyStore(),
     act: (store) => store.testAdd(),
-    expect: () => [0, tripleLoading, 1],
+    expect: () => [tripleLoading, 1],
   );
 ```
