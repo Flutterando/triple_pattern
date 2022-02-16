@@ -60,7 +60,7 @@ Error is MyState; // it's also true!
 ```
 Thanks OOP :)
 
-> **IMPORTANT:** BLoC is an acronym for Bussines Logic Component.
+> **IMPORTANT:** BLoC is an acronym for Business Logic Component.
 
 ## Targeting the state in State, Error, Loading
 .
@@ -217,7 +217,7 @@ Future<void> fetchProducts() async {
 }
 ```
 
-We have implemented something very complex, but it is ease to understand what is happening just by reading the code.
+We have implemented something very complex, but it is easy to understand what is happening just by reading the code.
 So we come to a standard that can be used to manage states and sub-states using reactivity individually by property.
 
 The Segmented State (Or Triple) pattern can be abstracted to make its reusability stronger. We will use MobX again as an example, but we can use it in any type of reactivity by property.
