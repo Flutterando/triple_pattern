@@ -31,6 +31,17 @@ import 'package:test/test.dart' as test;
 ///   expect: () => [1],
 /// );
 /// ```
+/// [storeTest] can also be used to wait for async operations
+/// by optionally providing a `Duration` to [wait].
+///
+/// ```dart
+/// storeTest(
+///   'Counterstore emits [1] when increment is added',
+///   build: () => CounterStore(),
+///   act: (store) => store.update(1),
+///   wait: const Duration(milliseconds: 300),
+///   expect: () => [1],
+/// );
 ///
 /// [storeTest] can also be used to [verify] internal store functionality.
 ///
