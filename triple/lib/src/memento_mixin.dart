@@ -73,7 +73,7 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
     }
   }
 
-  void clearHistory(int position) {
+  void clearHistory() {
     _history.clear();
     _historyIndex = 0;
   }
