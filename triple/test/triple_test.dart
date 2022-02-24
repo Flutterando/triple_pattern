@@ -1,7 +1,5 @@
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
-import 'package:triple/src/memento_mixin.dart';
-import 'package:triple/src/selectors.dart';
 import 'package:triple/triple.dart';
 
 void main() {
@@ -17,25 +15,17 @@ void main() {
 
   test('check implementation. setState', () {
     store.update(1);
-    expect(store.propagated, Triple<MyException, int>(state: 1));
+    expect(store.propagated.toString(), Triple<MyException, int>(state: 1).toString());
   });
 
   test('check implementation. setLoading', () {
     store.setLoading(true);
-    expect(
-        store.propagated,
-        Triple<MyException, int>(
-            state: 0, isLoading: true, event: TripleEvent.loading));
+    expect(store.propagated.toString(), Triple<MyException, int>(state: 0, isLoading: true, event: TripleEvent.loading).toString());
   });
 
   test('check implementation. setError', () {
     store.setError(const MyException('error'));
-    expect(
-        store.propagated,
-        Triple<MyException, int>(
-            state: 0,
-            error: const MyException('error'),
-            event: TripleEvent.error));
+    expect(store.propagated.toString(), Triple<MyException, int>(state: 0, error: const MyException('error'), event: TripleEvent.error).toString());
   });
 
   test('check implementation. disctinct setState', () {
@@ -75,10 +65,7 @@ void main() {
 }
 
 // ignore: must_be_immutable
-class TestImplements<Error extends Object, State extends Object>
-    extends Store<Error, State>
-    with MementoMixin
-    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
+class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> with MementoMixin implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
   late Triple<Error, State> propagated = triple;
