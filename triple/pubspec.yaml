@@ -1,6 +1,6 @@
 name: triple
 description: Abstraction for the Segmented State Pattern. Use to create Triple Store. 
-version: 1.5.0
+version: 1.5.0+1
 homepage: https://github.com/Flutterando/triple_pattern
 
 environment:

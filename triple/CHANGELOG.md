@@ -1,4 +1,4 @@
-  ## [1.5.0] - 2022-02-24
+  ## [1.5.0+1] - 2022-02-24
   - Added `MementoMixin.clearHistory` method.
   - Remove @protected of `MementoMixin.undo` and `MementoMixin.redo` methods.
   ## [1.4.0] - 2021-10-21
