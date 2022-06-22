@@ -155,12 +155,6 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
         break;
     }
     if (child == null) {
-      child = widget.onLoading?.call(context);
-    }
-    if (child == null) {
-      child = widget.onError?.call(context, store.error);
-    }
-    if (child == null) {
       child = widget.onState?.call(context, store.state);
     }
 
