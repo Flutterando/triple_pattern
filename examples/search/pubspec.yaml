@@ -3,7 +3,8 @@ description: A new Flutter project.
 publish_to: 'none'
 version: 1.0.0+1
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
+
 dependencies:
   dartz: ^0.10.0-nullsafety.0
   async: ^2.5.0-nullsafety.3
@@ -17,20 +18,25 @@ dependencies:
   flutter_modular: ^3.0.0
   flutter:
     sdk: flutter
+
 dependency_overrydes:
   flutter_modular:
     path: /Users/jacobmoura/Projects/modular/flutter_modular
+    
 dev_dependencies:
-  flutter_modular_test: ^1.0.0-nullsafety.3
-  mocktail: ^0.0.2-dev.5
+  flutter_modular_test: ^1.0.4
+  mocktail: ^0.3.0
   flutter_test:
     sdk: flutter
+
 flutter:
   uses-material-design: true
+
 vars:
   clean: flutter clean
   get: flutter pub get
   runner: flutter pub run build_runner
+
 scripts:
   mobx_build: $clean & $get & $runner build --delete-conflicting-outputs
   mobx_watch: $clean & $get & $runner watch --delete-conflicting-outputs

@@ -1,8 +1,8 @@
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx_triple/mobx_triple.dart';
 import 'package:search/app/search/domain/entities/result.dart';
 import 'package:search/app/search/domain/errors/erros.dart';
 import 'package:search/app/search/domain/usecases/search_by_text.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:mobx_triple/mobx_triple.dart';
 
 part 'search_store.g.dart';
 
@@ -12,7 +12,16 @@ class SearchStore extends MobXStore<Failure, List<Result>> {
 
   SearchStore(this.searchByText) : super([]);
 
-  void setSearchText(String value) {
-    executeEither(() => searchByText(value), delay: Duration(milliseconds: 500));
+  void setSearchText(String value) async {
+    setLoading(true);
+
+    searchByText(value).then(
+      (value) {
+        if (value is EitherAdapter<Failure, List<Result>>) {
+          value.fold((e) => setError(e, force: true), (s) => update(s, force: true));
+          setLoading(false);
+        }
+      },
+    );
   }
 }

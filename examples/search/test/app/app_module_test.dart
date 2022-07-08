@@ -1,11 +1,11 @@
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_modular_test/flutter_modular_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:search/app/app_module.dart';
 import 'package:search/app/search/domain/entities/result.dart';
 import 'package:search/app/search/domain/usecases/search_by_text.dart';
-import 'package:http/http.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:flutter_modular_test/flutter_modular_test.dart';
 
 class HttpMock extends Mock implements Client {}
 
@@ -20,7 +20,7 @@ main() {
   );
 
   test('deve executar usecase search_by_text', () async {
-    when(() => client.get(any)).thenAnswer((_) async => Response(jsonResponse, 200));
+    when(() => client.get(any())).thenAnswer((_) async => Response(jsonResponse, 200));
 
     var usecase = Modular.get<SearchByText>();
     var result = await usecase("jacob");

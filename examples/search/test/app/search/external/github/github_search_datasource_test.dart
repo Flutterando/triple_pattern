@@ -1,20 +1,25 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:search/app/search/external/github/github_search_datasource.dart';
 import 'package:search/app/search/infra/models/result_model.dart';
-import 'package:http/http.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
 class ClientMock extends Mock implements Client {}
 
 main() {
-  var client = ClientMock();
-  var datasource = GithubSearchDatasource(client);
+  late ClientMock client;
+  late GithubSearchDatasource datasource;
+
+  setUpAll(() {
+    client = ClientMock();
+    datasource = GithubSearchDatasource(client);
+  });
+
   test('deve retornar um ResultModel', () async {
-    when(client)
-        .calls('get')
-        .thenAnswer((_) async => Response(jsonResponse, 200));
+    when(() => client.get(any())).thenAnswer((_) async => Response(jsonResponse, 200));
 
     var result = await datasource.searchText("jacob");
+
     expect(result, isA<List<ResultModel>>());
   });
 }

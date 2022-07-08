@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:meta/meta.dart';
-import 'package:triple/triple.dart';
 import 'package:test/test.dart' as test;
+import 'package:triple/triple.dart';
 
 /// Creates a new `store`-specific test case with the given [description].
 /// [storeTest] will handle asserting that the `store` emits the [expect]ed
@@ -59,7 +59,7 @@ import 'package:test/test.dart' as test;
 @isTest
 FutureOr<void> storeTest<T extends Store>(
   String description, {
-  required T Function() build,
+  required FutureOr<T> Function() build,
   Function(T store)? act,
   required Function() expect,
   Duration? wait,
@@ -67,12 +67,16 @@ FutureOr<void> storeTest<T extends Store>(
 }) async {
   test.test(description, () async {
     final completer = Completer();
-    final store = build();
+    final store = await build();
     int i = 0;
     final _list = expect();
     final actualList = <String>[];
     Disposer disposer;
-    final expectList = _list is List ? _list : List.from([_list]);
+    final expectList = _list is List
+        ? _list
+        : List.from([
+            _list
+          ]);
     bool isFinished = false;
     await runZonedGuarded(() async {
       testTriple(Triple triple, dynamic value) {

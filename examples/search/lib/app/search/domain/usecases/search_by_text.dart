@@ -1,10 +1,11 @@
+import 'package:dartz/dartz.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:search/app/search/domain/entities/result.dart';
 import 'package:search/app/search/domain/errors/erros.dart';
 import 'package:search/app/search/domain/repositories/search_repository.dart';
-import 'package:dartz/dartz.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../errors/erros.dart';
+
 part 'search_by_text.g.dart';
 
 mixin SearchByText {
@@ -22,7 +23,7 @@ class SearchByTextImpl implements SearchByText {
     if (textSearch != null && textSearch.isNotEmpty) {
       return await repository.getUsers(textSearch);
     } else {
-      return Right<Failure, List<Result>>([]);
+      return Right<Failure, List<Result>>(const []);
     }
   }
 }
