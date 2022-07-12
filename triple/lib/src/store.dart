@@ -42,7 +42,7 @@ void setTripleResolver(TripleResolverCallback tripleResolver) => _tripleResolver
 TStore getTripleResolver<TStore extends Store>() {
   try {
     if (_tripleResolver != null) {
-      final store = _tripleResolver!.call<TStore>();
+      final store = _tripleResolver?.call<TStore>();
       if (store is! Store) {
         throw TripleException(r''' 
       TRIPLE ERROR!
