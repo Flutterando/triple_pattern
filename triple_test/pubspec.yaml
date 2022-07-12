@@ -1,7 +1,11 @@
 name: triple_test
 description: Test Helper for Store of flutter_triple with Mocktail.
 version: 1.0.0+1
-homepage: http://triple.flutterando.com.br
+
+repository: https://github.com/Flutterando/triple_pattern
+issue_tracker: https://github.com/Flutterando/triple_pattern/issues
+homepage: https://triple.flutterando.com.br/
+documentation: https://triple.flutterando.com.br/
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -15,4 +19,3 @@ dependencies:
 # dev_dependencies:
 #   flutter_test:
 #     sdk: flutter
-
