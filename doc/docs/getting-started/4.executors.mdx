@@ -59,7 +59,7 @@ class CustomEitherAdapter<R, L> implements EitherAdapter<R, L> {
 
   // receive an usecase in constructor
   final Either<R, L> usecase;
-  DartzEitherAdapter(this.usecase);
+  CustomEitherAdapter(this.usecase);
 
   @override
   T fold<T>(T Function(L l) leftF, T Function(R r) rightF) {
