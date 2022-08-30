@@ -104,14 +104,14 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
         _distinct = value;
 
         final filter = widget.filter?.call(state) ?? true;
-        if (widget.onState != null && !isDisposed && isReload && filter) {
+        if (widget.onState != null && !isDisposed && isReload && filter && mounted) {
           setState(() {
             _tripleEvent = TripleEvent.state;
           });
         }
       },
       onError: (error) {
-        if (widget.onError != null && !isDisposed) {
+        if (widget.onError != null && !isDisposed && mounted) {
           setState(() {
             _tripleEvent = TripleEvent.error;
           });
@@ -122,7 +122,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
         }
       },
       onLoading: (isLoading) {
-        if (widget.onLoading != null && !isDisposed && isLoading) {
+        if (widget.onLoading != null && !isDisposed && isLoading && mounted) {
           setState(() {
             _tripleEvent = TripleEvent.loading;
           });
