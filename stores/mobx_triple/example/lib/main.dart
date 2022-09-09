@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:flutter/material.dart';
 
 import 'counter.dart';
@@ -17,7 +19,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(
+        title: 'Flutter Demo Home Page',
+      ),
     );
   }
 }
@@ -48,9 +52,18 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(onPressed: counter.undo, icon: Icon(Icons.arrow_back_ios)),
           IconButton(
-              onPressed: counter.redo, icon: Icon(Icons.arrow_forward_ios)),
+            onPressed: counter.undo,
+            icon: Icon(
+              Icons.arrow_back_ios,
+            ),
+          ),
+          IconButton(
+            onPressed: counter.redo,
+            icon: Icon(
+              Icons.arrow_forward_ios,
+            ),
+          ),
         ],
       ),
       body: Center(

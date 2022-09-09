@@ -1,8 +1,11 @@
+// ignore_for_file: lines_longer_than_80_chars, public_member_api_docs, cascade_invocations, type_annotate_public_apis
+
+import 'dart:math' as math;
+
 import 'package:meta/meta.dart';
 
-import 'store.dart';
 import 'models/triple_model.dart';
-import 'dart:math' as math;
+import 'store.dart';
 
 class _MutableIndex {
   int value = 0;
@@ -19,10 +22,10 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
   /// Total size of history state caches
   int get historyLength => _history.length;
 
-  /// Return [true] if you can undo
+  /// Return true if you can undo
   bool canUndo() => _history.isNotEmpty && _historyIndex > 0;
 
-  /// Return [true] if you can redo
+  /// Return true if you can redo
   bool canRedo() => (_historyIndex + 1) < _history.length || triple.state != lastState.state;
 
   void _addHistory(Triple<Error, State> observableCache) {
@@ -54,7 +57,12 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
   ///Undo the last state value.
   void undo() {
     if (canUndo()) {
-      _historyIndex = _historyIndex > _history.length ? math.max(_history.length - 1, 0) : _historyIndex - 1;
+      _historyIndex = _historyIndex > _history.length
+          ? math.max(
+              _history.length - 1,
+              0,
+            )
+          : _historyIndex - 1;
       // ignore: invalid_use_of_visible_for_overriding_member
       propagate(_history[_historyIndex]);
     }

@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'dart:async';
 
 import 'package:meta/meta.dart';
@@ -6,7 +8,9 @@ import 'package:triple/triple.dart';
 
 void main() {
   test('custom middleware', () {
-    final counter = Counter([]);
+    final counter = Counter(
+      const [],
+    );
     counter.increment();
     expect(counter.state, 3);
   });

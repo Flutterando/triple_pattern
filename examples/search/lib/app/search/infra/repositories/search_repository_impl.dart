@@ -17,9 +17,15 @@ class SearchRepositoryImpl implements SearchRepository {
   Future<Either<Failure, List<Result>>> getUsers(String searchText) async {
     try {
       final list = await datasource.searchText(searchText);
-      return list == null ? Left<Failure, List<Result>>(const DatasourceResultNull()) : Right<Failure, List<Result>>(list);
+      return list == null
+          ? const Left<Failure, List<Result>>(
+              DatasourceResultNull(),
+            )
+          : Right<Failure, List<Result>>(list);
     } catch (e) {
-      return Left<Failure, List<Result>>(const ErrorSearch());
+      return const Left<Failure, List<Result>>(
+        ErrorSearch(),
+      );
     }
   }
 }

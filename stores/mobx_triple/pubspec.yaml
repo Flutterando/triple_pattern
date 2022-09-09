@@ -13,6 +13,7 @@ dependencies:
 
 dev_dependencies:
   test: ^1.16.5
+  flutterando_analysis: ^0.0.1
 
 
 

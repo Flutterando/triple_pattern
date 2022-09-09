@@ -1,15 +1,35 @@
+// ignore_for_file: lines_longer_than_80_chars, prefer_typing_uninitialized_variables, library_private_types_in_public_api
+
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
+///[TripleBuilder] class it's the type <TStore extends Store<TError, TState>,
+///TError extends Object, TState extends Object>
 class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
     TState extends Object> extends StatefulWidget {
-  final Widget Function(BuildContext context, Triple<TError, TState> triple)
-      builder;
+  ///The Function [builder] it's the type [Widget] and receive
+  ///the params context it`s the type [BuildContext] and triple it's
+  ///the type Triple<TError, TState>
+
+  final Widget Function(
+    BuildContext context,
+    Triple<TError, TState> triple,
+  ) builder;
+
+  ///The Function [filter] it's the type [bool] and receive the
+  ///param triple it`s the type Triple<TError, TState>
+
   final bool Function(Triple<TError, TState> triple)? filter;
+
+  ///The Function [distinct] it's the type [dynamic] and receive the
+  ///param state it`s the type Triple<TError, TState>
   final dynamic Function(Triple<TError, TState> state)? distinct;
+
+  ///[store] it's the type [TStore]
   final TStore? store;
 
+  ///[TripleBuilder] constructor class
   const TripleBuilder({
     Key? key,
     this.store,
@@ -23,9 +43,8 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
       _TripleBuilderState<TStore, TError, TState>();
 }
 
-class _TripleBuilderState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<TripleBuilder<TStore, TError, TState>> {
+class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends State<TripleBuilder<TStore, TError, TState>> {
   Widget? child;
 
   var _distinct;
@@ -46,7 +65,7 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
 
   void _listener(dynamic value) {
     final value = widget.distinct?.call(store.triple);
-    bool isReload = true;
+    var isReload = true;
     if (value != null) {
       isReload = value is List ? !eq(value, _distinct) : value != _distinct;
     }

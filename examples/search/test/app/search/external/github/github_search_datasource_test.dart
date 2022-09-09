@@ -6,7 +6,7 @@ import 'package:search/app/search/infra/models/result_model.dart';
 
 class ClientMock extends Mock implements Client {}
 
-main() {
+void main() {
   late ClientMock client;
   late GithubSearchDatasource datasource;
 
@@ -16,15 +16,21 @@ main() {
   });
 
   test('deve retornar um ResultModel', () async {
-    when(() => client.get(any())).thenAnswer((_) async => Response(jsonResponse, 200));
+    when(() => client.get(any())).thenAnswer(
+      (_) async => Response(
+        jsonResponse,
+        200,
+      ),
+    );
 
-    var result = await datasource.searchText("jacob");
+    final result = await datasource.searchText('jacob');
 
     expect(result, isA<List<ResultModel>>());
   });
 }
 
-var jsonResponse = r'''{
+String jsonResponse = '''
+{
   "total_count": 27920,
   "incomplete_results": false,
   "items": [

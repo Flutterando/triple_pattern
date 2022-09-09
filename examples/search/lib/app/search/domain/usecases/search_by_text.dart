@@ -21,9 +21,11 @@ class SearchByTextImpl implements SearchByText {
   @override
   Future<Either<Failure, List<Result>>> call(String? textSearch) async {
     if (textSearch != null && textSearch.isNotEmpty) {
-      return await repository.getUsers(textSearch);
+      return repository.getUsers(textSearch);
     } else {
-      return Right<Failure, List<Result>>(const []);
+      return const Right<Failure, List<Result>>(
+        [],
+      );
     }
   }
 }

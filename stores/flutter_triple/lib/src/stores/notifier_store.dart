@@ -1,12 +1,13 @@
+// ignore_for_file: empty_catches, prefer_function_declarations_over_variables, lines_longer_than_80_chars
+
 import 'package:flutter/foundation.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
 
-abstract class NotifierStore<Error extends Object, State extends Object>
-    extends Store<Error, State>
-    implements
-        Selectors<ValueListenable<Error?>, ValueListenable<State>,
-            ValueListenable<bool>> {
+///[NotifierStore] it's an abstract class that
+///implements Selectors<ValueListenable<Error?>, ValueListenable<State>, ValueListenable<bool>>
+abstract class NotifierStore<Error extends Object, State extends Object> extends Store<Error, State>
+    implements Selectors<ValueListenable<Error?>, ValueListenable<State>, ValueListenable<bool>> {
   late final _selectState = RxNotifier<State>(triple.state);
   late final _selectError = RxNotifier<Error?>(triple.error);
   late final _selectLoading = RxNotifier<bool>(triple.isLoading);
@@ -27,6 +28,7 @@ abstract class NotifierStore<Error extends Object, State extends Object>
   @override
   bool get isLoading => selectLoading.value;
 
+  ///[NotifierStore] constructor class
   NotifierStore(State initialState) : super(initialState);
 
   @override
@@ -42,34 +44,47 @@ abstract class NotifierStore<Error extends Object, State extends Object>
   }
 
   @override
-  Disposer observer(
-      {void Function(State state)? onState,
-      void Function(bool loading)? onLoading,
-      void Function(Error error)? onError}) {
+  Disposer observer({
+    void Function(State state)? onState,
+    void Function(bool loading)? onLoading,
+    void Function(Error error)? onError,
+  }) {
     final funcState = () => onState?.call(state);
     final funcLoading = () => onLoading?.call(isLoading);
     final funcError = () => error != null ? onError?.call(error!) : null;
 
     if (onState != null) {
-      selectState.addListener(funcState);
+      selectState.addListener(
+        funcState,
+      );
     }
     if (onLoading != null) {
-      selectLoading.addListener(funcLoading);
+      selectLoading.addListener(
+        funcLoading,
+      );
     }
     if (onError != null) {
-      selectError.addListener(funcError);
+      selectError.addListener(
+        funcError,
+      );
     }
 
     return () async {
       try {
         if (onState != null) {
-          selectState.removeListener(funcState);
+          selectState.removeListener(
+            funcState,
+          );
         }
         if (onLoading != null) {
-          selectLoading.removeListener(funcLoading);
+          selectLoading.removeListener(
+            funcLoading,
+          );
         }
         if (onError != null) {
-          selectError.removeListener(funcError);
+          selectError.removeListener(
+            funcError,
+          );
         }
       } catch (ex) {}
     };

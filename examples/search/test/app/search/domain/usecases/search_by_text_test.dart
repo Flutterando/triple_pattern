@@ -8,23 +8,40 @@ import 'package:search/app/search/domain/usecases/search_by_text.dart';
 
 class SearchRepositoryMock extends Mock implements SearchRepository {}
 
-main() {
+void main() {
   final repository = SearchRepositoryMock();
   final usecase = SearchByTextImpl(repository);
 
   test('deve retornar uma lista com resultados', () async {
-    when(() => repository.getUsers(any())).thenAnswer((_) async => Right<Failure, List<Result>>(<Result>[
-          Result(image: '', name: '', nickname: '', url: '')
-        ]));
+    when(
+      () => repository.getUsers(
+        any(),
+      ),
+    ).thenAnswer(
+      (_) async => const Right<Failure, List<Result>>(
+        <Result>[
+          Result(
+            image: '',
+            name: '',
+            nickname: '',
+            url: '',
+          ),
+        ],
+      ),
+    );
 
-    var result = await usecase("jacob");
+    final result = await usecase('jacob');
     expect(result | [], isA<List<Result>>());
   });
 
   test('deve retornar um EmptyList caso o retorno seja vazio', () async {
-    when(() => repository.getUsers(any())).thenAnswer((_) async => Right<Failure, List<Result>>(<Result>[]));
+    when(() => repository.getUsers(any())).thenAnswer(
+      (_) async => const Right<Failure, List<Result>>(
+        <Result>[],
+      ),
+    );
 
-    var result = await usecase("jacob");
+    final result = await usecase('jacob');
     expect(result.isRight(), true);
     expect(result | [], const []);
   });

@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.2"
+    version: "2.9.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -60,6 +60,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutterando_analysis:
+    dependency: "direct dev"
+    description:
+      name: flutterando_analysis
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+1"
   matcher:
     dependency: transitive
     description:

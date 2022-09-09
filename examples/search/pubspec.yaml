@@ -29,6 +29,7 @@ dev_dependencies:
   mocktail: ^0.3.0
   flutter_test:
     sdk: flutter
+  flutterando_analysis: ^0.0.1
 
 flutter:
   uses-material-design: true

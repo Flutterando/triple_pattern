@@ -1,13 +1,26 @@
 import 'package:triple/triple.dart';
 
+///[DispatchedTriple] class
 class DispatchedTriple<Error extends Object, State extends Object> {
+  ///[_triple] it's the type Triple<Error, State>
   late final Triple<Error, State> _triple;
+
+  ///[storeTypeName] it's the type [String]
   late final String storeTypeName;
+
+  ///[state] it's a get and it's the type [String]
   State get state => _triple.state;
+
+  ///[error] it's a get and it's the type [Error]
   Error? get error => _triple.error;
+
+  ///[isLoading] it's a get and it's the type [bool]
   bool get isLoading => _triple.isLoading;
+
+  ///[event] it's a get and it's the type [TripleEvent]
   TripleEvent get event => _triple.event;
 
+  ///[DispatchedTriple] constructor class
   DispatchedTriple(Triple<Error, State> triple, Type storeType) {
     _triple = triple;
     storeTypeName = storeType.toString();
