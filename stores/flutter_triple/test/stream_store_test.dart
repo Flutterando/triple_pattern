@@ -1,6 +1,8 @@
+// ignore_for_file: avoid_print, unnecessary_statements
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:triple/triple.dart';
 
 void main() {
   late Counter counter;
@@ -8,13 +10,17 @@ void main() {
 
   setUpAll(() {
     counter = Counter();
-    disposer = counter.observer(onState: (state) {
-      print(counter.state);
-    }, onError: (error) {
-      print('Error: ${counter.error}');
-    }, onLoading: (loading) {
-      print(counter.isLoading);
-    });
+    disposer = counter.observer(
+      onState: (state) {
+        kDebugMode ? print(counter.state) : null;
+      },
+      onError: (error) {
+        kDebugMode ? print('Error: ${counter.error}') : null;
+      },
+      onLoading: (loading) {
+        kDebugMode ? print(counter.isLoading) : null;
+      },
+    );
   });
 
   tearDownAll(() async {
@@ -26,34 +32,67 @@ void main() {
     expect(counter.selectState, emitsInOrder([1, 2, 3, 2, 1, 2]));
     expect(counter.selectError, emitsInOrder([isA<Exception>()]));
     expect(
-        counter.selectLoading,
-        emitsInOrder([
-          true,
-          false,
-          true,
-          false,
-          true,
-          false,
-          true,
-          false,
-        ]));
+      counter.selectLoading,
+      emitsInOrder([
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+      ]),
+    );
     await counter.increment(); //dispach true, 1 and false
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
     await counter.increment(); //dispach true, 2 and false
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
     await counter.increment(); //dispach true, 3 and false
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
     await counter.increment(); //dispach true, Exception and false
-    await Future.delayed(Duration(milliseconds: 300));
-    print('---------------');
-    await Future.delayed(Duration(milliseconds: 1000));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
+    kDebugMode ? print('---------------') : null;
+    await Future.delayed(
+      const Duration(
+        milliseconds: 1000,
+      ),
+    );
     counter.undo(); // return to 2
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
     counter.undo(); // return to 1
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
 
-    print('---------------');
-    await Future.delayed(Duration(milliseconds: 500));
+    kDebugMode ? print('---------------') : null;
+    await Future.delayed(
+      const Duration(
+        milliseconds: 500,
+      ),
+    );
     counter.redo(); // redo to 2
   });
 }
@@ -63,11 +102,19 @@ class Counter extends StreamStore<Exception, int> with MementoMixin {
 
   Future<void> increment() async {
     setLoading(true);
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(
+      const Duration(
+        milliseconds: 300,
+      ),
+    );
     if (state != 3) {
       update(state + 1);
     } else {
-      setError(Exception('Error'));
+      setError(
+        Exception(
+          'Error',
+        ),
+      );
     }
     setLoading(false);
   }

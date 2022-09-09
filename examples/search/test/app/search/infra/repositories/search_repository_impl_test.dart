@@ -9,33 +9,47 @@ import 'package:search/app/search/infra/repositories/search_repository_impl.dart
 
 class SearchDatasourceMock extends Mock implements SearchDatasource {}
 
-main() {
+void main() {
   final datasource = SearchDatasourceMock();
   final repository = SearchRepositoryImpl(datasource);
 
   test('deve retornar uma lista de ResultModel', () async {
-    when(() => datasource.searchText(any())).thenAnswer((_) async => <ResultModel>[
-          ResultModel(image: '', name: '', nickname: '', url: ''),
-        ]);
+    when(
+      () => datasource.searchText(
+        any(),
+      ),
+    ).thenAnswer(
+      (_) async => <ResultModel>[
+        const ResultModel(image: '', name: '', nickname: '', url: ''),
+      ],
+    );
 
-    var result = await repository.getUsers("jacob");
+    final result = await repository.getUsers('jacob');
     expect(result | [], isA<List<ResultModel>>());
   });
 
-  test('deve retornar um ErrorSearch caso seja lançado throw no datasource', () async {
-    when(() => datasource.searchText(any())).thenThrow(ErrorSearch());
+  test('''deve retornar um ErrorSearch caso seja lançado throw no datasource''', () async {
+    when(() => datasource.searchText(any())).thenThrow(const ErrorSearch());
 
-    var result = await repository.getUsers("jacob");
+    final result = await repository.getUsers('jacob');
     expect(result.isLeft(), true);
 
-    expect(result, Left<Failure, List<Result>>(const ErrorSearch()));
+    expect(result, const Left<Failure, List<Result>>(ErrorSearch()));
   });
-  test('deve retornar um DatasourceResultNull caso o retorno do datasource seja nulo', () async {
-    when(() => datasource.searchText(any())).thenAnswer((_) async => null);
+  test(
+    '''deve retornar um DatasourceResultNull caso o retorno do datasource seja nulo''',
+    () async {
+      when(() => datasource.searchText(any())).thenAnswer((_) async => null);
 
-    var result = await repository.getUsers("jacob");
-    expect(result.isLeft(), true);
+      final result = await repository.getUsers('jacob');
+      expect(result.isLeft(), true);
 
-    expect(result, Left<Failure, List<Result>>(const DatasourceResultNull()));
-  });
+      expect(
+        result,
+        const Left<Failure, List<Result>>(
+          DatasourceResultNull(),
+        ),
+      );
+    },
+  );
 }

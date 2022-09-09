@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member, cascade_invocations, lines_longer_than_80_chars, avoid_print
+
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 import 'package:triple/triple.dart';
@@ -5,9 +7,7 @@ import 'package:triple/triple.dart';
 void main() {
   late TestImplements<MyException, int> store;
 
-  TripleObserver.addListener((triple) {
-    print(triple);
-  });
+  TripleObserver.addListener(print);
 
   setUp(() {
     store = TestImplements(0);
@@ -15,17 +15,34 @@ void main() {
 
   test('check implementation. setState', () {
     store.update(1);
-    expect(store.propagated.toString(), Triple<MyException, int>(state: 1).toString());
+    expect(
+      store.propagated.toString(),
+      Triple<MyException, int>(state: 1).toString(),
+    );
   });
 
   test('check implementation. setLoading', () {
     store.setLoading(true);
-    expect(store.propagated.toString(), Triple<MyException, int>(state: 0, isLoading: true, event: TripleEvent.loading).toString());
+    expect(
+      store.propagated.toString(),
+      Triple<MyException, int>(
+        state: 0,
+        isLoading: true,
+        event: TripleEvent.loading,
+      ).toString(),
+    );
   });
 
   test('check implementation. setError', () {
     store.setError(const MyException('error'));
-    expect(store.propagated.toString(), Triple<MyException, int>(state: 0, error: const MyException('error'), event: TripleEvent.error).toString());
+    expect(
+      store.propagated.toString(),
+      Triple<MyException, int>(
+        state: 0,
+        error: const MyException('error'),
+        event: TripleEvent.error,
+      ).toString(),
+    );
   });
 
   test('check implementation. disctinct setState', () {
@@ -65,7 +82,9 @@ void main() {
 }
 
 // ignore: must_be_immutable
-class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> with MementoMixin implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
+class TestImplements<Error extends Object, State extends Object> extends Store<Error, State>
+    with MementoMixin
+    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
   late Triple<Error, State> propagated = triple;

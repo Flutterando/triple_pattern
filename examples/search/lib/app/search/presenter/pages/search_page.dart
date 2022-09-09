@@ -1,12 +1,16 @@
+// ignore_for_file: library_private_types_in_public_api
+
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:search/app/search/domain/entities/result.dart';
 import 'package:search/app/search/domain/errors/erros.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../stores/search_store.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({Key? key}) : super(key: key);
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -16,7 +20,7 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
     return ListView.builder(
       itemCount: list.length,
       itemBuilder: (_, index) {
-        var item = list[index];
+        final item = list[index];
         return ListTile(
           leading: Hero(
             tag: item.image,
@@ -26,7 +30,10 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
           ),
           title: Text(item.nickname),
           onTap: () {
-            Modular.to.pushNamed('/details', arguments: item);
+            Modular.to.pushNamed(
+              '/details',
+              arguments: item,
+            );
           },
         );
       },
@@ -35,26 +42,34 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
 
   Widget _buildError(Failure error) {
     if (error is EmptyList) {
-      return Center(
-        child: Text('Nada encontrado'),
+      return const Center(
+        child: Text(
+          'Nada encontrado',
+        ),
       );
     } else if (error is ErrorSearch) {
-      return Center(
-        child: Text('Erro no github'),
+      return const Center(
+        child: Text(
+          'Erro no github',
+        ),
       );
     } else {
-      return Center(
-        child: Text('Erro interno'),
+      return const Center(
+        child: Text(
+          'Erro interno',
+        ),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('setState');
+    debugPrint('setState');
     return Scaffold(
       appBar: AppBar(
-        title: Text("Github Search"),
+        title: const Text(
+          'Github Search',
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -62,28 +77,33 @@ class _SearchPageState extends ModularState<SearchPage, SearchStore> {
             padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
             child: TextField(
               onChanged: store.setSearchText,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "Pesquise...",
+                labelText: 'Pesquise...',
               ),
             ),
           ),
           Expanded(
             child: ScopedBuilder<SearchStore, Failure, List<Result>>(
-                store: store,
-                onLoading: (_) => Center(child: CircularProgressIndicator()),
-                onError: (_, error) {
-                  return _buildError(error!);
-                },
-                onState: (_, state) {
-                  if (state.isEmpty) {
-                    return Center(
-                      child: Text('Digita alguma coisa...'),
-                    );
-                  } else {
-                    return _buildList(state);
-                  }
-                }),
+              store: store,
+              onLoading: (_) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              onError: (_, error) {
+                return _buildError(error!);
+              },
+              onState: (_, state) {
+                if (state.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Digita alguma coisa...',
+                    ),
+                  );
+                } else {
+                  return _buildList(state);
+                }
+              },
+            ),
           )
         ],
       ),

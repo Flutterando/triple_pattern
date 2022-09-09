@@ -19,6 +19,6 @@ T _getInjection<T extends Object>() {
 
 final _injection = <Type, dynamic>{TestImplements: TestImplements(0)};
 T _modularSimulation<T extends Object>() {
-  final bind = _injection[T]!;
+  final bind = _injection[T];
   return bind;
 }

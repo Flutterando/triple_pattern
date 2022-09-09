@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars, cascade_invocations
+
 import 'package:meta/meta.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:triple/triple.dart';
@@ -6,7 +8,7 @@ class MockStore<E extends Object, S extends Object> extends Mock implements Stor
   final _callList = <InvocationPropagation<E, S>>[];
 
   void dispatcherTriple(Triple<E, S> triple) {
-    for (var call in _callList) {
+    for (final call in _callList) {
       if (triple.event == TripleEvent.state) {
         call.onState?.call(triple.state);
       } else if (triple.event == TripleEvent.loading) {
@@ -21,9 +23,9 @@ class MockStore<E extends Object, S extends Object> extends Mock implements Stor
 
   @visibleForTesting
   void restartInitialTriple(Triple<E, S> triple) {
-    when(() => this.state).thenReturn(triple.state);
-    when(() => this.error).thenReturn(triple.error);
-    when(() => this.isLoading).thenReturn(triple.isLoading);
+    when(() => state).thenReturn(triple.state);
+    when(() => error).thenReturn(triple.error);
+    when(() => isLoading).thenReturn(triple.isLoading);
     when(() => this.triple).thenReturn(triple);
   }
 

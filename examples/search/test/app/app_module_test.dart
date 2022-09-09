@@ -9,8 +9,8 @@ import 'package:search/app/search/domain/usecases/search_by_text.dart';
 
 class HttpMock extends Mock implements Client {}
 
-main() {
-  var client = HttpMock();
+void main() {
+  final client = HttpMock();
 
   initModule(
     AppModule(),
@@ -20,16 +20,22 @@ main() {
   );
 
   test('deve executar usecase search_by_text', () async {
-    when(() => client.get(any())).thenAnswer((_) async => Response(jsonResponse, 200));
+    when(() => client.get(any())).thenAnswer(
+      (_) async => Response(
+        jsonResponse,
+        200,
+      ),
+    );
 
-    var usecase = Modular.get<SearchByText>();
-    var result = await usecase("jacob");
+    final usecase = Modular.get<SearchByText>();
+    final result = await usecase('jacob');
     expect(result.isRight(), true);
     expect(result | [], isA<List<Result>>());
   });
 }
 
-var jsonResponse = r'''{
+String jsonResponse = '''
+{
   "total_count": 27920,
   "incomplete_results": false,
   "items": [

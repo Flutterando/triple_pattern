@@ -12,13 +12,22 @@ class SearchStore extends MobXStore<Failure, List<Result>> {
 
   SearchStore(this.searchByText) : super([]);
 
-  void setSearchText(String value) async {
+  Future<void> setSearchText(String value) async {
     setLoading(true);
 
-    searchByText(value).then(
+    await searchByText(value).then(
       (value) {
         if (value is EitherAdapter<Failure, List<Result>>) {
-          value.fold((e) => setError(e, force: true), (s) => update(s, force: true));
+          value.fold(
+            (e) => setError(
+              e,
+              force: true,
+            ),
+            (s) => update(
+              s,
+              force: true,
+            ),
+          );
           setLoading(false);
         }
       },

@@ -1,3 +1,5 @@
+// ignore_for_file: cascade_invocations
+
 import 'dart:async';
 
 import 'package:meta/meta.dart';
@@ -22,7 +24,11 @@ void main() {
       counter.increment();
       counter.increment();
       counter.increment();
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(
+        const Duration(
+          seconds: 5,
+        ),
+      );
       expect(counter.state, 1);
       expect(listLoading, [true, false]);
     });
@@ -56,17 +62,21 @@ void main() {
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
-  FutureOr<void> increment() => execute(() {
-        return Future.delayed(Duration(seconds: 1)).then((value) {
-          return state + 1;
-        });
-      }, delay: const Duration(milliseconds: 500));
+  FutureOr<void> increment() => execute(
+        () {
+          return Future.delayed(const Duration(seconds: 1)).then((value) {
+            return state + 1;
+          });
+        },
+        delay: const Duration(milliseconds: 500),
+      );
 
   FutureOr<void> incrementWithError() => execute(() => Future.error('error'));
 }
 
 // ignore: must_be_immutable
-abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
+abstract class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State> {
   final List<bool> list;
 
   TestImplements(State initialState, this.list) : super(initialState);

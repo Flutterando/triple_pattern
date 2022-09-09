@@ -1,23 +1,64 @@
+// ignore_for_file: lines_longer_than_80_chars, avoid_bool_literals_in_conditional_expressions, library_private_types_in_public_api, prefer_typing_uninitialized_variables
+
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-typedef TransitionCallback = Widget Function(BuildContext context, Widget child);
+///The typedef [TransitionCallback]
+///receive Widget Function(BuildContext context, Widget child,)
+typedef TransitionCallback = Widget Function(
+  BuildContext context,
+  Widget child,
+);
 
-class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends StatefulWidget {
+///[ScopedBuilder] it's the type <TStore extends Store<TError, TState>, TError extends Object,
+///TState extends Object>
+class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends StatefulWidget {
+  ///The Function [distinct] it's the type [dynamic] and receive the param state it`s the type [TState]
   final dynamic Function(TState state)? distinct;
+
+  ///The Function [filter] it's the type [bool] and receive the param state it`s the type [TState]
   final bool Function(TState state)? filter;
+
+  ///The Function [onState] it's the type [Widget] and receive the params context it's the type [BuildContext]
+  ///and state it`s the type [TState]
   final Widget Function(BuildContext context, TState state)? onState;
+
+  ///The Function [onError] it's the type [Widget] and receive the params context it's the type [BuildContext] and
+  ///error it`s the type [TError]
   final Widget Function(BuildContext context, TError? error)? onError;
+
+  ///The Function [onLoading] it's the type [Widget] and receive the param context it`s the type [BuildContext]
   final Widget Function(BuildContext context)? onLoading;
+
+  ///[store] it's the type [TStore]
   final TStore? store;
 
-  const ScopedBuilder({Key? key, this.distinct, this.filter, this.onState, this.onError, this.onLoading, this.store})
-      : assert(onState != null || onError != null || onLoading != null, 'Define at least one listener (onState, onError or onLoading)'),
-        assert(distinct == null ? true : onState != null, 'Distinct needs onState implementation'),
-        assert(filter == null ? true : onState != null, 'Filter needs onState implementation'),
+  ///[ScopedBuilder] constructor class
+  const ScopedBuilder({
+    Key? key,
+    this.distinct,
+    this.filter,
+    this.onState,
+    this.onError,
+    this.onLoading,
+    this.store,
+  })  : assert(
+          onState != null || onError != null || onLoading != null,
+          'Define at least one listener (onState, onError or onLoading)',
+        ),
+        assert(
+          distinct == null ? true : onState != null,
+          'Distinct needs onState implementation',
+        ),
+        assert(
+          filter == null ? true : onState != null,
+          'Filter needs onState implementation',
+        ),
         super(key: key);
 
+  ///[ScopedBuilder.transition] it's a [factory]
   factory ScopedBuilder.transition({
     Key? key,
     TStore? store,
@@ -40,7 +81,12 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
               if (transition != null) {
                 return transition(context, child);
               } else {
-                return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
+                return AnimatedSwitcher(
+                  duration: const Duration(
+                    milliseconds: 300,
+                  ),
+                  child: child,
+                );
               }
             },
       onLoading: onLoading == null
@@ -50,7 +96,12 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
               if (transition != null) {
                 return transition(context, child);
               } else {
-                return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
+                return AnimatedSwitcher(
+                  duration: const Duration(
+                    milliseconds: 300,
+                  ),
+                  child: child,
+                );
               }
             },
       onError: onError == null
@@ -60,17 +111,24 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
               if (transition != null) {
                 return transition(context, child);
               } else {
-                return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: child);
+                return AnimatedSwitcher(
+                  duration: const Duration(
+                    milliseconds: 300,
+                  ),
+                  child: child,
+                );
               }
             },
     );
   }
 
   @override
-  _ScopedBuilderState<TStore, TError, TState> createState() => _ScopedBuilderState<TStore, TError, TState>();
+  _ScopedBuilderState<TStore, TError, TState> createState() =>
+      _ScopedBuilderState<TStore, TError, TState>();
 }
 
-class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends Object, TState extends Object> extends State<ScopedBuilder<TStore, TError, TState>> {
+class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends Object,
+    TState extends Object> extends State<ScopedBuilder<TStore, TError, TState>> {
   Disposer? disposer;
 
   var _distinct;
@@ -97,7 +155,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
     disposer = store.observer(
       onState: (state) {
         final value = widget.distinct?.call(state);
-        bool isReload = true;
+        var isReload = true;
         if (value != null) {
           isReload = value is List ? !eq(value, _distinct) : value != _distinct;
         }
@@ -143,26 +201,22 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
     Widget? child;
 
     switch (_tripleEvent) {
-      case (TripleEvent.loading):
-        child = store.triple.isLoading ? widget.onLoading?.call(context) : widget.onState?.call(context, store.state);
+      case TripleEvent.loading:
+        child = store.triple.isLoading
+            ? widget.onLoading?.call(context)
+            : widget.onState?.call(context, store.state);
         break;
-      case (TripleEvent.error):
+      case TripleEvent.error:
         child = widget.onError?.call(context, store.error);
         break;
-      case (TripleEvent.state):
+      case TripleEvent.state:
         child = widget.onState?.call(context, store.state);
         _distinct = widget.distinct?.call(store.state);
         break;
     }
-    if (child == null) {
-      child = widget.onLoading?.call(context);
-    }
-    if (child == null) {
-      child = widget.onError?.call(context, store.error);
-    }
-    if (child == null) {
-      child = widget.onState?.call(context, store.state);
-    }
+    child ??= widget.onLoading?.call(context);
+    child ??= widget.onError?.call(context, store.error);
+    child ??= widget.onState?.call(context, store.state);
 
     return child!;
   }

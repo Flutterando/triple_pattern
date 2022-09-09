@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches, lines_longer_than_80_chars
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -7,11 +9,13 @@ class _MutableIsDispose {
   bool value = false;
 }
 
-abstract class StreamStore<Error extends Object, State extends Object>
-    extends Store<Error, State>
+///[StreamStore] it's an abstract class that
+///implements Selectors<Stream<Error>, Stream<State>, Stream<bool>>
+abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State>
     implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
-  final _tripleController =
-      StreamController<Triple<Error, State>>.broadcast(sync: true);
+  final _tripleController = StreamController<Triple<Error, State>>.broadcast(
+    sync: true,
+  );
 
   @override
   late final Stream<State> selectState = _tripleController.stream
@@ -29,6 +33,7 @@ abstract class StreamStore<Error extends Object, State extends Object>
 
   final _MutableIsDispose _disposeValue = _MutableIsDispose();
 
+  ///[StreamStore] constructor class
   StreamStore(State initialState) : super(initialState);
 
   @protected
@@ -56,15 +61,23 @@ abstract class StreamStore<Error extends Object, State extends Object>
     void Function(bool isLoading)? onLoading,
     void Function(Error error)? onError,
   }) {
-    final _sub = _tripleController.stream.listen((triple) {
-      if (triple.event == TripleEvent.state) {
-        onState?.call(triple.state);
-      } else if (triple.event == TripleEvent.error) {
-        onError?.call(triple.error!);
-      } else if (triple.event == TripleEvent.loading) {
-        onLoading?.call(triple.isLoading);
-      }
-    });
+    final _sub = _tripleController.stream.listen(
+      (triple) {
+        if (triple.event == TripleEvent.state) {
+          onState?.call(
+            triple.state,
+          );
+        } else if (triple.event == TripleEvent.error) {
+          onError?.call(
+            triple.error!,
+          );
+        } else if (triple.event == TripleEvent.loading) {
+          onLoading?.call(
+            triple.isLoading,
+          );
+        }
+      },
+    );
 
     return () async {
       try {

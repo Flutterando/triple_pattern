@@ -1,3 +1,5 @@
+// ignore_for_file: only_throw_errors, duplicate_ignore, leading_newlines_in_multiline_strings, lines_longer_than_80_chars, avoid_renaming_method_parameters
+
 import 'dart:async';
 
 import 'package:meta/meta.dart';
@@ -16,7 +18,8 @@ import 'package:triple/triple.dart';
 /// [act] is an optional callback which will be invoked with the `store` under
 /// test and should be used to interact with the `store`.
 ///
-/// [expect] is an optional `Function` that returns a `Matcher` which the `store`
+/// [expect] is an optional `Function` that returns
+/// a `Matcher` which the `store`
 /// under test is expected to emit after [act] is executed.
 ///
 /// [verify] is a callback which is invoked after [expect]
@@ -68,29 +71,30 @@ FutureOr<void> storeTest<T extends Store>(
   test.test(description, () async {
     final completer = Completer();
     final store = await build();
-    int i = 0;
+    var i = 0;
     final _list = expect();
     final actualList = <String>[];
     Disposer disposer;
     final expectList = _list is List
         ? _list
-        : List.from([
-            _list
-          ]);
-    bool isFinished = false;
+        : List.from(
+            [_list],
+          );
+    var isFinished = false;
     await runZonedGuarded(() async {
-      testTriple(Triple triple, dynamic value) {
+      void testTriple(Triple triple, dynamic value) {
         if (isFinished) {
           return;
         }
 
-        actualList.add('${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)');
+        actualList.add(
+          '''${triple.event.toString().replaceFirst('TripleEvent.', '')}($value)''',
+        );
 
         if (i >= expectList.length) {
-          throw test.TestFailure('''Expected: $expectList
-  Actual: $actualList
-
-''');
+          throw test.TestFailure(
+            '''Expected: $expectList Actual: $actualList''',
+          );
         }
 
         final matcher = expectList[i];
@@ -115,7 +119,7 @@ FutureOr<void> storeTest<T extends Store>(
         Future.delayed(wait ?? Duration.zero),
       ]);
       isFinished = true;
-      disposer.call();
+      await disposer.call();
       try {
         verify?.call(store);
       } on test.TestFailure catch (e) {
@@ -123,7 +127,6 @@ FutureOr<void> storeTest<T extends Store>(
       }
     }, (Object error, _) {
       if (error is test.TestFailure) {
-        // ignore: only_throw_errors
         throw test.TestFailure(
           '''Expected: $expectList
   Actual: $actualList
@@ -146,7 +149,9 @@ class TripleMatcher extends test.Matcher {
   const TripleMatcher(this.event);
 
   @override
-  test.Description describe(test.Description description) => description.add('Triple State');
+  test.Description describe(test.Description description) => description.add(
+        'Triple State',
+      );
 
   @override
   bool matches(covariant Triple triple, Map matchState) {
@@ -155,7 +160,10 @@ class TripleMatcher extends test.Matcher {
 
   @override
   String toString() {
-    return '${event.toString().replaceFirst('TripleEvent', 'TripleMatcher')}';
+    return event.toString().replaceFirst(
+          'TripleEvent',
+          'TripleMatcher',
+        );
   }
 }
 

@@ -92,6 +92,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.0"
+  flutterando_analysis:
+    dependency: "direct dev"
+    description:
+      name: flutterando_analysis
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+1"
   glob:
     dependency: transitive
     description:
