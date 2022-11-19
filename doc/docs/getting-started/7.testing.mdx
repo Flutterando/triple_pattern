@@ -44,6 +44,38 @@ whenObserve<MyException, int>(
 ```
 >NOTE: You can use Triple Matchers: **tripleState**, **tripleLoading** e **tripleError**;
 
+full example to CounterPage:
+
+```dart
+void main() {
+  final mock = MockCounterStore();
+
+  testWidgets('Must update count state', (tester) async {
+    whenObserve<Exception, int>(
+      mock,
+      input: () => mock.incrementCount(),
+      initialState: 0,
+      triples: [
+        Triple(state: 1),
+        Triple(isLoading: true, event: TripleEvent.loading, state: 1),
+        Triple(state: 2),
+      ],
+    );
+
+    Widget testWidget = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+            home: CountPage(
+          store: mock,
+        )));
+
+    await tester.pumpWidget(testWidget);
+
+    final titleFinder = find.text('${mock.state}');
+    expect(titleFinder, findsOneWidget);
+  });
+}
+```
 
 ## Testing Stores
 
