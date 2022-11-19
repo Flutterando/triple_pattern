@@ -1,3 +1,4 @@
+///[Selectors] abstract class
 abstract class Selectors<ErrorRx, StateRx, LoadingRx> {
   ///Select the reativide State segment
   StateRx get selectState;

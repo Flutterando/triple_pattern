@@ -1,6 +1,6 @@
-import 'package:square_counter/src/stores/square_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:square_counter/src/stores/square_store.dart';
 
 class SquareWidget extends StatelessWidget with RxMixin {
   final SquareStore square;
@@ -21,8 +21,8 @@ class SquareWidget extends StatelessWidget with RxMixin {
             height: 100,
             alignment: Alignment.center,
             child: Text(
-              "${square.state}",
-              style: TextStyle(
+              '${square.state}',
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),

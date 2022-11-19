@@ -1,5 +1,5 @@
-import 'package:square_counter/src/errors/errors.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:square_counter/src/errors/errors.dart';
 
 import 'home_store.dart';
 
@@ -9,13 +9,17 @@ class SquareStore extends NotifierStore<SquareError, int> {
 
   SquareStore(this.homeStore, {required this.index}) : super(0);
 
-  increment() {
+  void increment() {
     if (state < 20) {
       update(state + 1);
     } else {
-      homeStore.setError(SquareError('Square $index chegou ao limite!'));
+      homeStore.setError(
+        SquareError(
+          'Square $index chegou ao limite!',
+        ),
+      );
     }
   }
 
-  reset() => update(0);
+  void reset() => update(0);
 }
