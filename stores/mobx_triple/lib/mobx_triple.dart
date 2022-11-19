@@ -5,7 +5,10 @@ import 'package:mobx/mobx.dart' hide Store;
 import 'package:triple/triple.dart';
 export 'package:triple/triple.dart';
 
-abstract class MobXStore<Error extends Object, State extends Object> extends Store<Error, State> implements Selectors<Observable<Error?>, Observable<State>, Observable<bool>> {
+abstract class MobXStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
+    implements
+        Selectors<Observable<Error?>, Observable<State>, Observable<bool>> {
   @override
   late final selectState = Observable<State>(triple.state);
 
@@ -44,7 +47,10 @@ abstract class MobXStore<Error extends Object, State extends Object> extends Sto
   }
 
   @override
-  Disposer observer({void Function(State state)? onState, void Function(bool loading)? onLoading, void Function(Error error)? onError}) {
+  Disposer observer(
+      {void Function(State state)? onState,
+      void Function(bool loading)? onLoading,
+      void Function(Error error)? onError}) {
     final disposers = <void Function()>[];
 
     if (onState != null) {

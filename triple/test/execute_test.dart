@@ -1,6 +1,7 @@
+// ignore_for_file: cascade_invocations
+
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 import 'package:triple/triple.dart';
@@ -23,48 +24,59 @@ void main() {
       counter.increment();
       counter.increment();
       counter.increment();
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(
+        const Duration(
+          seconds: 5,
+        ),
+      );
       expect(counter.state, 1);
       expect(listLoading, [true, false]);
     });
   });
 
-  group('Either | ', () {
-    test('Either exec', () async {
-      final listLoading = <bool>[];
-      final counter = Counter(listLoading);
-      await counter.incrementEither();
-      await counter.incrementEither();
-      await counter.incrementEither();
-      expect(counter.state, 3);
-      expect(listLoading, [true, false, true, false, true, false]);
-    });
+  // group('Either | ', () {
+  //   test('Either exec', () async {
+  //     final listLoading = <bool>[];
+  //     final counter = Counter(listLoading);
+  //     await counter.incrementEither();
+  //     await counter.incrementEither();
+  //     await counter.incrementEither();
+  //     expect(counter.state, 3);
+  //     expect(listLoading, [true, false, true, false, true, false]);
+  //   });
 
-    test('Either  exec with switch', () async {
-      final listLoading = <bool>[];
-      final counter = Counter(listLoading);
-      counter.incrementEither();
-      counter.incrementEither();
-      counter.incrementEither();
-      await Future.delayed(Duration(seconds: 5));
-      expect(counter.state, 1);
-      expect(listLoading, [true, false]);
-    });
-  });
+  //   test('Either  exec with switch', () async {
+  //     final listLoading = <bool>[];
+  //     final counter = Counter(listLoading);
+  //     counter.incrementEither();
+  //     counter.incrementEither();
+  //     counter.incrementEither();
+  //     await Future.delayed(Duration(seconds: 5));
+  //     expect(counter.state, 1);
+  //     expect(listLoading, [true, false]);
+  //   });
+  // });
 }
 
+// ignore: must_be_immutable
 class Counter extends TestImplements<Exception, int> {
   Counter(List<bool> list) : super(0, list);
 
-  FutureOr<void> increment() => execute(() => Future.delayed(Duration(seconds: 1)).then((value) {
-        return state + 1;
-      }));
+  FutureOr<void> increment() => execute(
+        () {
+          return Future.delayed(const Duration(seconds: 1)).then((value) {
+            return state + 1;
+          });
+        },
+        delay: const Duration(milliseconds: 500),
+      );
 
   FutureOr<void> incrementWithError() => execute(() => Future.error('error'));
-  FutureOr<void> incrementEither() => executeEither(() => Future.delayed(Duration(seconds: 2)).then((value) => Right(state + 1)));
 }
 
-abstract class TestImplements<Error extends Object, State extends Object> extends Store<Error, State> {
+// ignore: must_be_immutable
+abstract class TestImplements<Error extends Object, State extends Object>
+    extends Store<Error, State> {
   final List<bool> list;
 
   TestImplements(State initialState, this.list) : super(initialState);

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
 import 'package:search/app/search/domain/entities/result.dart';
@@ -17,7 +19,9 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.result.nickname),
+        title: Text(
+          widget.result.nickname,
+        ),
       ),
       body: Center(
         child: Column(
@@ -26,10 +30,14 @@ class _DetailsPageState extends State<DetailsPage> {
             Hero(
               tag: widget.result.image,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(widget.result.image),
+                backgroundImage: NetworkImage(
+                  widget.result.image,
+                ),
               ),
             ),
-            Text(widget.result.nickname),
+            Text(
+              widget.result.nickname,
+            ),
           ],
         ),
       ),
