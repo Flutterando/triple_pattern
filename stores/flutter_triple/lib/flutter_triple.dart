@@ -1,6 +1,5 @@
 library flutter_triple;
 
-export 'package:rx_notifier/rx_notifier.dart';
 export 'package:triple/triple.dart';
 
 export 'src/stores/notifier_store.dart';

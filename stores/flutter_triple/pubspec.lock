@@ -59,7 +59,7 @@ packages:
       name: flutterando_analysis
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+1"
+    version: "0.0.2"
   matcher:
     dependency: transitive
     description:
@@ -88,13 +88,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
-  rx_notifier:
-    dependency: "direct main"
-    description:
-      name: rx_notifier
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
