@@ -18,27 +18,27 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
   ///The Function [filter] it's the type [bool] and receive the param state it`s the type [TState]
   final bool Function(TState state)? filter;
 
-  ///The Function [onState] it's the type [Widget] and receive the params context it's the type [BuildContext]
+  ///The Function [onStateListener] it's the type [Widget] and receive the params context it's the type [BuildContext]
   ///and state it`s the type [TState]
   final Widget Function(BuildContext context, TState state)? onStateBuilder;
 
-  ///The Function [onError] it's the type [Widget] and receive the params context it's the type [BuildContext] and
+  ///The Function [onErrorListener] it's the type [Widget] and receive the params context it's the type [BuildContext] and
   ///error it`s the type [TError]
   final Widget Function(BuildContext context, TError? error)? onErrorBuilder;
 
-  ///The Function [onLoading] it's the type [Widget] and receive the param context it`s the type [BuildContext]
+  ///The Function [onLoadingListener] it's the type [Widget] and receive the param context it`s the type [BuildContext]
   final Widget Function(BuildContext context)? onLoadingBuilder;
 
-  ///The Function [onState] it's the type [Widget] and receive the params context it's the type [BuildContext]
+  ///The Function [onStateListener] it's the type [Widget] and receive the params context it's the type [BuildContext]
   ///and state it`s the type [TState]
-  final void Function(BuildContext context, TState state)? onState;
+  final void Function(BuildContext context, TState state)? onStateListener;
 
-  ///The Function [onError] it's the type [Widget] and receive the params context it's the type [BuildContext] and
+  ///The Function [onErrorListener] it's the type [Widget] and receive the params context it's the type [BuildContext] and
   ///error it`s the type [TError]
-  final void Function(BuildContext context, TError? error)? onError;
+  final void Function(BuildContext context, TError? error)? onErrorListener;
 
-  ///The Function [onLoading] it's the type [Widget] and receive the param context it`s the type [BuildContext]
-  final void Function(BuildContext context, bool isLoadding)? onLoading;
+  ///The Function [onLoadingListener] it's the type [Widget] and receive the param context it`s the type [BuildContext]
+  final void Function(BuildContext context, bool isLoading)? onLoadingListener;
 
   ///[store] it's the type [TStore]
   final TStore? store;
@@ -48,23 +48,25 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
     Key? key,
     this.distinct,
     this.filter,
-    this.onState,
-    this.onError,
-    this.onLoading,
+    this.onStateListener,
+    this.onErrorListener,
+    this.onLoadingListener,
     this.store,
     this.onStateBuilder,
     this.onErrorBuilder,
     this.onLoadingBuilder,
   })  : assert(
-          onState != null || onError != null || onLoading != null,
+          onStateListener != null ||
+              onErrorListener != null ||
+              onLoadingListener != null,
           'Define at least one listener (onState, onError or onLoading)',
         ),
         assert(
-          distinct == null ? true : onState != null,
+          distinct == null ? true : onStateListener != null,
           'Distinct needs onState implementation',
         ),
         assert(
-          filter == null ? true : onState != null,
+          filter == null ? true : onStateListener != null,
           'Filter needs onState implementation',
         ),
         super(key: key);
@@ -174,34 +176,37 @@ class _ScopedConsumerState<TStore extends Store<TError, TState>,
         _distinct = value;
 
         final filter = widget.filter?.call(state) ?? true;
-        if (widget.onState != null &&
+        if (widget.onStateListener != null &&
             !isDisposed &&
             isReload &&
             filter &&
             mounted) {
           setState(() {
-            widget.onState?.call(context, state);
+            widget.onStateListener?.call(context, state);
             _tripleEvent = TripleEvent.state;
           });
         }
       },
       onError: (error) {
-        if (widget.onError != null && !isDisposed && mounted) {
+        if (widget.onErrorListener != null && !isDisposed && mounted) {
           setState(() {
-            widget.onError?.call(context, error);
+            widget.onErrorListener?.call(context, error);
             _tripleEvent = TripleEvent.error;
           });
-        } else if (widget.onError == null &&
-            widget.onState != null &&
+        } else if (widget.onErrorListener == null &&
+            widget.onStateListener != null &&
             !isDisposed) {
           setState(() {
-            widget.onError?.call(context, error);
+            widget.onErrorListener?.call(context, error);
             _tripleEvent = TripleEvent.error;
           });
         }
       },
       onLoading: (isLoading) {
-        if (widget.onLoading != null && !isDisposed && isLoading && mounted) {
+        if (widget.onLoadingListener != null &&
+            !isDisposed &&
+            isLoading &&
+            mounted) {
           setState(() {
             _tripleEvent = TripleEvent.loading;
           });

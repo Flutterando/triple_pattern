@@ -1,3 +1,42 @@
+## [1.3.0] - 
+
+- Added TripleListener.
+```dart
+TripleListener(
+    store: counter,
+    listener: (context, triple) => print(triple.state),
+),
+```
+
+- Added ScopedListener.
+```dart
+ScopedListener(
+    store: counter,
+    onState: (context, state) => print(state),
+    onError: (context, error) => print(error.toString()),
+    onLoading: (context, isLoading) => print(isLoading),,
+),
+```
+
+- Added TripleConsumer.
+```dart
+TripleConsumer(
+    store: counter,
+    listener: (context, triple) => print(triple.state),
+    builder: (context, triple) => Text('${triple.state}'),
+),
+```
+
+- Added ScopedConsumer.
+```dart
+ScopedListener(
+    store: counter,
+    onStateListener: (context, state) => print(state),
+    onErrorListener: (context, error) => print(error.toString()),
+    onLoadingListener: (context, isLoading) => print(isLoading),,
+),
+```
+
 ## [1.2.8] - 
 
 - fix: Added Mounted
