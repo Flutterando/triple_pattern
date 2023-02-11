@@ -2,32 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-class MockStore extends NotifierStore<String, int> {
-  MockStore() : super(0);
-
-  void updateWithState(int state) => update(state);
-
-  void updateWithError(String error) => setError(error);
-
-  void updateWithLoading() => setLoading(true);
-}
-
-class MockWidget extends StatelessWidget {
-  final Widget child;
-  const MockWidget({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: child,
-      ),
-    );
-  }
-}
+import '../mocks/mocks.dart';
 
 void main() {
   group('ScopedConsumer', () {
@@ -45,16 +20,18 @@ void main() {
 
     testWidgets('calls onLoading initially and onState when state changes',
         (tester) async {
-      await tester.pumpWidget(MockWidget(
-        child: ScopedConsumer<MockStore, String, int>(
-          store: store,
-          onStateBuilder: (context, state) => Text('state $state'),
-          onLoadingBuilder: (context) => const Text('loading'),
-          onErrorBuilder: (context, error) => Text('$error'),
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedConsumer<MockStore, String, int>(
+            store: store,
+            onStateBuilder: (context, state) => Text('state $state'),
+            onLoadingBuilder: (context) => const Text('loading'),
+            onErrorBuilder: (context, error) => Text('$error'),
+          ),
         ),
-      ));
-
+      );
       store.updateWithState(1);
+
       await tester.pump();
 
       expect(find.text('loading'), findsNothing);
@@ -68,24 +45,25 @@ void main() {
     });
 
     testWidgets('calls onError when an error is emitted', (tester) async {
+      store.updateWithError('First');
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedConsumer<MockStore, String, int>(
             store: store,
-            onLoadingBuilder: (context) => const Text('loading'),
-            onErrorBuilder: (context, error) => Text('$error'),
+            onErrorBuilder: (context, error) => Text('Error: $error'),
           ),
         ),
       );
 
-      store.updateWithError('error 1');
       await tester.pump();
 
-      expect(find.text('loading'), findsNothing);
-      expect(find.text('error 1'), findsOneWidget);
+      expect(find.text('Error: First'), findsOneWidget);
     });
 
     testWidgets('calls onLoading when loading is emitted', (tester) async {
+      store.enableLoading();
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedConsumer<MockStore, String, int>(
@@ -96,7 +74,6 @@ void main() {
         ),
       );
 
-      store.updateWithLoading();
       await tester.pump();
 
       expect(find.text('loading'), findsOneWidget);

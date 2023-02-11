@@ -1,33 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-
-class MockStore extends NotifierStore<String, int> {
-  MockStore() : super(0);
-
-  void updateWithState(int state) => update(state);
-
-  void updateWithError(String error) => setError(error);
-
-  void updateWithLoading() => setLoading(true);
-}
-
-class MockWidget extends StatelessWidget {
-  final Widget child;
-  const MockWidget({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: child,
-      ),
-    );
-  }
-}
+import '../mocks/mocks.dart';
 
 void main() {
   group('ScopedBuilder', () {
@@ -45,14 +19,16 @@ void main() {
 
     testWidgets('calls onLoading initially and onState when state changes',
         (tester) async {
-      await tester.pumpWidget(MockWidget(
-        child: ScopedBuilder<MockStore, String, int>(
-          store: store,
-          onState: (context, state) => Text('state $state'),
-          onLoading: (context) => const Text('loading'),
-          onError: (context, error) => Text('$error'),
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onState: (context, state) => Text('state $state'),
+            onLoading: (context) => const Text('loading'),
+            onError: (context, error) => Text('$error'),
+          ),
         ),
-      ));
+      );
 
       store.updateWithState(1);
       await tester.pump();
@@ -96,7 +72,7 @@ void main() {
         ),
       );
 
-      store.updateWithLoading();
+      store.enableLoading();
       await tester.pump();
 
       expect(find.text('loading'), findsOneWidget);

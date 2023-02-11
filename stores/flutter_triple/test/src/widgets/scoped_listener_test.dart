@@ -1,28 +1,25 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_triple/src/stores/notifier_store.dart';
 import 'package:flutter_triple/src/widgets/scoped_listener.dart';
+
+import '../mocks/mocks.dart';
 
 void main() {
   group('ScopedListener', () {
-    late TripleTeste store;
-    late ScopedListener scopedListener;
+    late MockStore store;
 
-    setUp(() {
-      store = TripleTeste();
-      scopedListener = ScopedListener<TripleTeste, TripleTesteError, int>(
-        store: store,
-        onState: (context, state) {},
-        child: Container(),
-      );
+    setUpAll(() {
+      store = MockStore();
     });
 
     testWidgets('should throw an error if no listeners are defined',
         (tester) async {
       expect(
-        () => ScopedListener<TripleTeste, TripleTesteError, int>(
-          store: store,
-          child: Container(),
+        () => MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            child: Container(),
+          ),
         ),
         throwsAssertionError,
       );
@@ -32,10 +29,12 @@ void main() {
         'should throw an error if distinct is defined but onState is not',
         (tester) async {
       expect(
-        () => ScopedListener<TripleTeste, TripleTesteError, int>(
-          store: store,
-          distinct: (state) => state,
-          child: Container(),
+        () => MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            distinct: (state) => state,
+            child: Container(),
+          ),
         ),
         throwsAssertionError,
       );
@@ -44,32 +43,49 @@ void main() {
     testWidgets('should throw an error if filter is defined but onState is not',
         (tester) async {
       expect(
-        () => ScopedListener<TripleTeste, TripleTesteError, int>(
-          store: store,
-          filter: (state) => true,
-          child: Container(),
+        () => MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            filter: (state) => true,
+            child: Container(),
+          ),
         ),
         throwsAssertionError,
       );
     });
 
     testWidgets('should render child widget', (tester) async {
-      await tester.pumpWidget(scopedListener);
+      var count = 0;
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onState: (context, state) {
+              count++;
+            },
+            child: Container(),
+          ),
+        ),
+      );
       expect(find.byType(Container), findsOneWidget);
     });
 
     testWidgets('should trigger onState when state changes', (tester) async {
       var count = 0;
-      scopedListener = ScopedListener<TripleTeste, TripleTesteError, int>(
-        store: store,
-        onState: (context, state) {
-          count++;
-        },
-        child: Container(),
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onState: (context, state) {
+              count++;
+            },
+            child: Container(),
+          ),
+        ),
       );
 
-      await tester.pumpWidget(scopedListener);
-      store.update(1);
+      store.updateWithState(1);
       await tester.pump();
 
       expect(count, equals(1));
@@ -79,17 +95,18 @@ void main() {
         'should not trigger onState when state changes but filter returns false',
         (tester) async {
       var count = 0;
-      scopedListener = ScopedListener<TripleTeste, TripleTesteError, int>(
-        store: store,
-        onState: (context, state) {
-          count++;
-        },
-        filter: (state) => state > 1,
-        child: Container(),
+      await tester.pumpWidget(
+        ScopedListener<MockStore, String, int>(
+          store: store,
+          onState: (context, state) {
+            count++;
+          },
+          filter: (state) => state > 1,
+          child: Container(),
+        ),
       );
 
-      await tester.pumpWidget(scopedListener);
-      store.update(1);
+      store.updateWithState(1);
       await tester.pump();
 
       expect(count, equals(0));
@@ -97,28 +114,22 @@ void main() {
 
     testWidgets('should trigger onError when error is thrown', (tester) async {
       var count = 0;
-      scopedListener = ScopedListener<TripleTeste, TripleTesteError, int>(
-        store: store,
-        onError: (context, error) {
-          count++;
-        },
-        child: Container(),
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onError: (context, error) {
+              count++;
+            },
+            child: Container(),
+          ),
+        ),
       );
 
-      await tester.pumpWidget(scopedListener);
-      store.setError(TripleTesteError(''));
+      store.updateWithError('');
       await tester.pump();
 
       expect(count, equals(1));
     });
   });
-}
-
-class TripleTeste extends NotifierStore<TripleTesteError, int> {
-  TripleTeste() : super(0);
-}
-
-class TripleTesteError {
-  final String message;
-  TripleTesteError(this.message);
 }
