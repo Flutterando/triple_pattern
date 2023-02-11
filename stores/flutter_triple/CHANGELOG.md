@@ -29,13 +29,18 @@ TripleConsumer(
 
 - Added ScopedConsumer.
 ```dart
-ScopedListener(
+ScopedConsumer(
     store: counter,
     onStateListener: (context, state) => print(state),
     onErrorListener: (context, error) => print(error.toString()),
-    onLoadingListener: (context, isLoading) => print(isLoading),,
+    onLoadingListener: (context, isLoading) => print(isLoading),
+    onState: (context, state) => Text('${triple.state}'),
+    onError: (context, error) => Text('${triple.state}',
+    onLoading: (context, isLoading) => Text('${triple.state}',
+
 ),
 ```
+
 
 ## [1.2.8] - 
 

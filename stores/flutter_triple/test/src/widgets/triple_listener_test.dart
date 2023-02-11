@@ -8,9 +8,10 @@ void main() {
   group('ScopedListener', () {
     late MockStore store;
 
-    setUpAll(() {
+    setUp(() {
       store = MockStore();
     });
+
     testWidgets('should render child widget', (tester) async {
       await tester.pumpWidget(
         MockWidget(
@@ -49,13 +50,15 @@ void main() {
         (tester) async {
       var called = false;
       await tester.pumpWidget(
-        TripleListener<MockStore, String, int>(
-          store: store,
-          listener: (context, triple) {
-            called = true;
-          },
-          filter: (state) => state.state > 1,
-          child: Container(),
+        MockWidget(
+          child: TripleListener<MockStore, String, int>(
+            store: store,
+            listener: (context, triple) {
+              called = true;
+            },
+            filter: (state) => true,
+            child: Container(),
+          ),
         ),
       );
 

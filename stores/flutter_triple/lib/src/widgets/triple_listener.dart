@@ -82,7 +82,6 @@ class _TripleListenerState<TStore extends Store<TError, TState>,
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     if (disposer != null) {
       disposer!.call();
     }
@@ -91,6 +90,7 @@ class _TripleListenerState<TStore extends Store<TError, TState>,
       onError: _listener,
       onLoading: _listener,
     );
+    super.didChangeDependencies();
   }
 
   @override
@@ -102,8 +102,6 @@ class _TripleListenerState<TStore extends Store<TError, TState>,
 
   @override
   Widget build(BuildContext context) {
-    widget.listener(context, store.triple);
-    _distinct = widget.distinct?.call(store.triple);
     return widget.child;
   }
 }

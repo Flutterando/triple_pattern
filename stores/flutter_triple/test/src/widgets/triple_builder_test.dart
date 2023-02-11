@@ -7,7 +7,7 @@ void main() {
   group('ScopedBuilder', () {
     late MockStore store;
 
-    setUpAll(() {
+    setUp(() {
       store = MockStore();
     });
 

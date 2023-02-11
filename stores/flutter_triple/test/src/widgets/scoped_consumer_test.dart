@@ -8,7 +8,7 @@ void main() {
   group('ScopedConsumer', () {
     late MockStore store;
 
-    setUpAll(() {
+    setUp(() {
       store = MockStore();
     });
 

@@ -8,7 +8,7 @@ void main() {
   group('TripleConsumer', () {
     late MockStore store;
 
-    setUpAll(() {
+    setUp(() {
       store = MockStore();
     });
 

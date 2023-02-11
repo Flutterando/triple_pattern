@@ -113,8 +113,8 @@ class _TripleConsumerState<TStore extends Store<TError, TState>,
   @override
   Widget build(BuildContext context) {
     child = widget.builder(context, store.triple);
-    _distinct = widget.distinct?.call(store.triple);
     widget.listener(context, store.triple);
+    _distinct = widget.distinct?.call(store.triple);
     return child!;
   }
 }

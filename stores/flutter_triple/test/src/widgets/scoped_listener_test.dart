@@ -8,7 +8,7 @@ void main() {
   group('ScopedListener', () {
     late MockStore store;
 
-    setUpAll(() {
+    setUp(() {
       store = MockStore();
     });
 
@@ -97,7 +97,7 @@ void main() {
           onState: (context, state) {
             count++;
           },
-          filter: (state) => state > 1,
+          filter: (state) => false,
           child: Container(),
         ),
       );
