@@ -58,8 +58,11 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
   })  : assert(
           onStateListener != null ||
               onErrorListener != null ||
-              onLoadingListener != null,
-          'Define at least one listener (onState, onError or onLoading)',
+              onLoadingListener != null ||
+              onStateBuilder != null ||
+              onErrorBuilder != null ||
+              onLoadingBuilder != null,
+          'Define at least one listener (onStateListener, onErrorListener or onLoadingListener)',
         ),
         assert(
           distinct == null ? true : onStateListener != null,
