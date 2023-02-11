@@ -207,8 +207,8 @@ class TestCounterPage extends StatelessWidget {
           store: counter,
           distinct: (state) => state.value,
           filter: withFilter ? (state) => state.value != 2 : null,
-          onLoading: (_) => const Text('Carregando...'),
-          onState: (_, state) {
+          onLoading: (context) => const Text('Carregando...'),
+          onState: (context, state) {
             rebuild?.add(0);
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -216,7 +216,7 @@ class TestCounterPage extends StatelessWidget {
                 const Text('You have pushed the button this many times:'),
                 Text(
                   '${state.value}',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
             );
@@ -225,7 +225,7 @@ class TestCounterPage extends StatelessWidget {
       ),
       floatingActionButton: TripleBuilder<Counter, Exception, CounterState>(
         store: counter,
-        builder: (_, triple) {
+        builder: (context, triple) {
           return FloatingActionButton(
             onPressed: triple.isLoading ? null : counter.increment,
             tooltip: triple.isLoading ? 'no-active' : 'Increment',
@@ -234,9 +234,7 @@ class TestCounterPage extends StatelessWidget {
                 : Theme.of(
                     context,
                   ).primaryColor,
-            child: const Icon(
-              Icons.add,
-            ),
+            child: const Icon(Icons.add),
           );
         },
       ),

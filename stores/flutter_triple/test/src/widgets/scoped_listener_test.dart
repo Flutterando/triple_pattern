@@ -1,4 +1,6 @@
 // ignore_for_file: type_annotate_public_apis, always_declare_return_types
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
@@ -8,7 +10,7 @@ void main() {
     expect(
       ScopedListener(
         store: CounterStore(),
-        onState: (context, state) => print(state),
+        onState: (context, state) => log(state.toString()),
         child: Container(),
       ),
       isA<ScopedListener>(),
@@ -18,7 +20,7 @@ void main() {
     expect(
       ScopedListener(
         store: CounterStore(),
-        onState: (context, state) => print(state),
+        onState: (context, state) => log(state.toString()),
         child: Container(),
       ),
       isA<ScopedListener>(),
@@ -35,7 +37,7 @@ void main() {
     expect(
       ScopedListener(
         store: CounterStore(),
-        onState: (context, state) => print(state),
+        onState: (context, state) => log(state.toString()),
         child: Container(),
       ),
       isA<ScopedListener>(),
@@ -44,7 +46,7 @@ void main() {
       () => ScopedListener(
         store: CounterStore(),
         distinct: (s) => s,
-        onLoading: (context, isLoading) => print(isLoading),
+        onLoading: (context, isLoading) => log(isLoading.toString()),
         child: Container(),
       ),
       throwsAssertionError,
@@ -54,7 +56,7 @@ void main() {
     expect(
       ScopedListener(
         store: CounterStore(),
-        onState: (context, state) => print(state),
+        onState: (context, state) => log(state.toString()),
         child: Container(),
       ),
       isA<ScopedListener>(),
@@ -63,7 +65,7 @@ void main() {
       () => ScopedListener(
         store: CounterStore(),
         filter: (s) => true,
-        onLoading: (context, isLoading) => print(isLoading),
+        onLoading: (context, isLoading) => log(isLoading.toString()),
         child: Container(),
       ),
       throwsAssertionError,
@@ -74,7 +76,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: TestCounterPage(
-          counter: counter,
+          store: counter,
         ),
       ),
     );
@@ -94,7 +96,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: TestCounterPage(
-          counter: counter,
+          store: counter,
         ),
       ),
     );
@@ -112,7 +114,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: TestCounterPage(
-          counter: counter,
+          store: counter,
           withFilter: true,
         ),
       ),
@@ -134,8 +136,8 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: TestCounterPage(
-          counter: counter,
-          rebuild: rebuild,
+          store: counter,
+          onState: rebuild,
         ),
       ),
     );
@@ -187,15 +189,19 @@ class CounterStore extends NotifierStore<Exception, CounterState>
 }
 
 class TestCounterPage extends StatelessWidget {
-  final CounterStore counter;
+  final CounterStore store;
   final bool withFilter;
-  final List? rebuild;
+  final List? onLoading;
+  final List? onState;
+  final List? onError;
 
   const TestCounterPage({
     Key? key,
-    required this.counter,
+    required this.store,
     this.withFilter = false,
-    this.rebuild,
+    this.onLoading,
+    this.onState,
+    this.onError,
   }) : super(key: key);
 
   @override
@@ -204,71 +210,40 @@ class TestCounterPage extends StatelessWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: counter.undo,
+            onPressed: store.undo,
             icon: const Icon(Icons.arrow_back_ios),
           ),
           IconButton(
-            onPressed: counter.redo,
+            onPressed: store.redo,
             icon: const Icon(Icons.arrow_forward_ios),
           ),
         ],
       ),
       body: Center(
         child: ScopedListener<CounterStore, Exception, CounterState>(
-          store: counter,
+          store: store,
           distinct: (state) => state.value,
           filter: withFilter ? (state) => state.value != 2 : null,
-          onLoading: (context, isLoading) {
-            if (isLoading) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Carregando...'),
-                ),
-              );
-            }
-          },
-          onState: (context, state) => rebuild?.add(0),
-          onError: (context, error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(error.toString()),
-              ),
-            );
-          },
+          onLoading: (context, isLoading) => onLoading?.add(0),
+          onState: (context, state) => onState?.add(0),
+          onError: (context, error) => onError?.add(0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('You have pushed the button this many times:'),
               Text(
-                '${counter.state.value}',
-                style: Theme.of(context).textTheme.headline4,
+                '${store.state.value}',
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
         ),
       ),
-      floatingActionButton:
-          TripleListener<CounterStore, Exception, CounterState>(
-        store: counter,
-        listener: (context, triple) {
-          if (triple.isLoading) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Carregando...'),
-              ),
-            );
-          }
-        },
-        child: FloatingActionButton(
-          onPressed: counter.isLoading ? null : counter.increment,
-          tooltip: counter.isLoading ? 'no-active' : 'Increment',
-          backgroundColor: counter.isLoading
-              ? Colors.grey
-              : Theme.of(
-                  context,
-                ).primaryColor,
-          child: const Icon(Icons.add),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: store.increment,
+        tooltip: 'Increment',
+        backgroundColor: Colors.grey,
+        child: const Icon(Icons.add),
       ),
     );
   }

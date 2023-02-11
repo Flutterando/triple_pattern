@@ -9,9 +9,7 @@ void main() {
   test('increment count', () async {
     final counter = Counter();
     final completer = Completer();
-    final list = <dynamic>[
-      0
-    ];
+    final list = <dynamic>[0];
     counter.observer(
       onState: (state) {
         list.add(state);
@@ -34,15 +32,7 @@ void main() {
     );
     await counter.increment();
     await completer.future;
-    expect(list, [
-      0,
-      true,
-      1,
-      false,
-      true,
-      2,
-      false
-    ]);
+    expect(list, [0, true, 1, false, true, 2, false]);
   });
 
   test('force update', () async {
@@ -63,13 +53,11 @@ void main() {
     );
     counter.update(0, force: true);
     await completer.future;
-    expect(list, [
-      0
-    ]);
+    expect(list, [0]);
   });
 }
 
-class Counter extends StreamStore<Exception, int> with MementoMixin {
+class Counter extends NotifierStore<Exception, int> with MementoMixin {
   Counter() : super(0);
 
   Future<void> increment() async {
