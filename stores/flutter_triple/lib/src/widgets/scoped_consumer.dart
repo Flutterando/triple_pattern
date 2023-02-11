@@ -56,13 +56,13 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
     this.onErrorBuilder,
     this.onLoadingBuilder,
   })  : assert(
-          onStateListener != null ||
-              onErrorListener != null ||
-              onLoadingListener != null ||
-              onStateBuilder != null ||
-              onErrorBuilder != null ||
-              onLoadingBuilder != null,
-          'Define at least one listener (onStateListener, onErrorListener or onLoadingListener)',
+          (onStateListener != null ||
+                  onErrorListener != null ||
+                  onLoadingListener != null) &&
+              (onStateBuilder != null ||
+                  onErrorBuilder != null ||
+                  onLoadingBuilder != null),
+          'Define at least one listener (onStateListener, onErrorListener, onLoadingListener) or one builder (onStateBuilder, onErrorBuilder, onLoadingBuilder)',
         ),
         assert(
           distinct == null ? true : onStateListener != null,
@@ -211,6 +211,7 @@ class _ScopedConsumerState<TStore extends Store<TError, TState>,
             isLoading &&
             mounted) {
           setState(() {
+            widget.onLoadingListener?.call(context, isLoading);
             _tripleEvent = TripleEvent.loading;
           });
         }

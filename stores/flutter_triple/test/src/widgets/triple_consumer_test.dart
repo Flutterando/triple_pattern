@@ -37,8 +37,6 @@ void main() {
         (tester) async {
       var called = false;
 
-      store.updateWithError('First');
-
       await tester.pumpWidget(
         MockWidget(
           child: TripleConsumer<MockStore, String, int>(
@@ -48,6 +46,8 @@ void main() {
           ),
         ),
       );
+
+      store.updateWithError('First');
 
       await tester.pump();
 
@@ -59,18 +59,17 @@ void main() {
         (tester) async {
       var called = false;
 
-      store.enableLoading();
-
       await tester.pumpWidget(
         MockWidget(
           child: TripleConsumer<MockStore, String, int>(
             store: store,
-            builder: (context, triple) => Text('Loading: ${triple.isLoading}'),
             listener: (context, triple) => called = true,
+            builder: (context, triple) => Text('Loading: ${triple.isLoading}'),
           ),
         ),
       );
-
+      store.enableLoading();
+      await tester.pump();
       expect(find.text('Loading: true'), findsOneWidget);
       expect(called, true);
     });

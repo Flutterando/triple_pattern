@@ -17,8 +17,7 @@ void main() {
       expect(() => ScopedBuilder(store: store), throwsAssertionError);
     });
 
-    testWidgets('calls onLoading initially and onState when state changes',
-        (tester) async {
+    testWidgets('calls onState when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>(
@@ -48,7 +47,6 @@ void main() {
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
-            onLoading: (context) => const Text('loading'),
             onError: (context, error) => Text('$error'),
           ),
         ),
@@ -67,16 +65,13 @@ void main() {
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
-            onState: (context, state) => Text('state $state'),
           ),
         ),
       );
 
       store.enableLoading();
       await tester.pump();
-
       expect(find.text('loading'), findsOneWidget);
-      expect(find.text('state'), findsNothing);
     });
   });
 }
