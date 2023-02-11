@@ -43,8 +43,9 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
       _TripleBuilderState<TStore, TError, TState>();
 }
 
-class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends State<TripleBuilder<TStore, TError, TState>> {
+class _TripleBuilderState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<TripleBuilder<TStore, TError, TState>> {
   Widget? child;
 
   var _distinct;
@@ -94,9 +95,9 @@ class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends O
 
   @override
   void dispose() {
+    disposer?.call();
     isDisposed = true;
     super.dispose();
-    disposer?.call();
   }
 
   @override

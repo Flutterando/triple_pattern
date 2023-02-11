@@ -12,6 +12,19 @@ void main() {
       store = MockStore();
     });
 
+    testWidgets('should render child widget', (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onState: (context, state) {},
+            child: Container(),
+          ),
+        ),
+      );
+      expect(find.byType(Container), findsOneWidget);
+    });
+
     testWidgets('should throw an error if no listeners are defined',
         (tester) async {
       expect(
@@ -54,23 +67,6 @@ void main() {
       );
     });
 
-    testWidgets('should render child widget', (tester) async {
-      var count = 0;
-
-      await tester.pumpWidget(
-        MockWidget(
-          child: ScopedListener<MockStore, String, int>(
-            store: store,
-            onState: (context, state) {
-              count++;
-            },
-            child: Container(),
-          ),
-        ),
-      );
-      expect(find.byType(Container), findsOneWidget);
-    });
-
     testWidgets('should trigger onState when state changes', (tester) async {
       var count = 0;
       await tester.pumpWidget(
@@ -85,7 +81,7 @@ void main() {
         ),
       );
 
-      store.updateWithState(1);
+      store.updateWithValue(1);
       await tester.pump();
 
       expect(count, equals(1));
@@ -106,7 +102,7 @@ void main() {
         ),
       );
 
-      store.updateWithState(1);
+      store.updateWithValue(1);
       await tester.pump();
 
       expect(count, equals(0));

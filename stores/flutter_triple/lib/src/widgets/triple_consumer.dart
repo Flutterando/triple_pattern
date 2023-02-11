@@ -105,17 +105,16 @@ class _TripleConsumerState<TStore extends Store<TError, TState>,
 
   @override
   void dispose() {
+    disposer?.call();
     isDisposed = true;
     super.dispose();
-    disposer?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (child == null) {
-      child = widget.builder(context, store.triple);
-      _distinct = widget.distinct?.call(store.triple);
-    }
+    child = widget.builder(context, store.triple);
+    _distinct = widget.distinct?.call(store.triple);
+    widget.listener(context, store.triple);
     return child!;
   }
 }

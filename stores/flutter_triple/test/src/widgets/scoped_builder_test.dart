@@ -30,13 +30,13 @@ void main() {
         ),
       );
 
-      store.updateWithState(1);
+      store.updateWithValue(1);
       await tester.pump();
 
       expect(find.text('loading'), findsNothing);
       expect(find.text('state 1'), findsOneWidget);
 
-      store.updateWithState(2);
+      store.updateWithValue(2);
       await tester.pump();
 
       expect(find.text('loading'), findsNothing);

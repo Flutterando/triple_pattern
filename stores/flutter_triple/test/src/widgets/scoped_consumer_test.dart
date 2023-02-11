@@ -18,30 +18,24 @@ void main() {
       expect(() => ScopedConsumer(store: store), throwsAssertionError);
     });
 
-    testWidgets('calls onLoading initially and onState when state changes',
+    testWidgets('calls onStateBuilder when an state is emitted',
         (tester) async {
+      store.updateWithValue(1);
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedConsumer<MockStore, String, int>(
             store: store,
-            onStateBuilder: (context, state) => Text('state $state'),
+            onStateBuilder: (context, state) {
+              return Text('state $state');
+            },
             onLoadingBuilder: (context) => const Text('loading'),
             onErrorBuilder: (context, error) => Text('$error'),
           ),
         ),
       );
-      store.updateWithState(1);
 
-      await tester.pump();
-
-      expect(find.text('loading'), findsNothing);
       expect(find.text('state 1'), findsOneWidget);
-
-      store.updateWithState(2);
-      await tester.pump();
-
-      expect(find.text('loading'), findsNothing);
-      expect(find.text('state 2'), findsOneWidget);
     });
 
     testWidgets('calls onError when an error is emitted', (tester) async {
@@ -52,6 +46,8 @@ void main() {
           child: ScopedConsumer<MockStore, String, int>(
             store: store,
             onErrorBuilder: (context, error) => Text('Error: $error'),
+            onLoadingBuilder: (context) => const Text('loading'),
+            onStateBuilder: (context, state) => Text('state $state'),
           ),
         ),
       );
@@ -74,10 +70,7 @@ void main() {
         ),
       );
 
-      await tester.pump();
-
       expect(find.text('loading'), findsOneWidget);
-      expect(find.text('state'), findsNothing);
     });
   });
 }

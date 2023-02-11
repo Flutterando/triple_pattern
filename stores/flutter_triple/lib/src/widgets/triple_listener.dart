@@ -95,9 +95,9 @@ class _TripleListenerState<TStore extends Store<TError, TState>,
 
   @override
   void dispose() {
+    disposer?.call();
     isDisposed = true;
     super.dispose();
-    disposer?.call();
   }
 
   @override
