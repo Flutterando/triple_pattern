@@ -81,19 +81,25 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
     dynamic Function(TState)? distinct,
     bool Function(TState)? filter,
     TransitionCallback? transition,
-    Widget Function(BuildContext, TError?)? onError,
-    Widget Function(BuildContext)? onLoading,
-    Widget Function(BuildContext, TState)? onState,
+    Widget Function(BuildContext, TError?)? onErrorBuilder,
+    Widget Function(BuildContext)? onLoadingBuilder,
+    Widget Function(BuildContext, TState)? onStateBuilder,
+    void Function(BuildContext, TError?)? onErrorListener,
+    void Function(BuildContext, bool)? onLoadingListener,
+    void Function(BuildContext, TState)? onStateListener,
   }) {
     return ScopedConsumer(
       key: key,
       store: store,
       distinct: distinct,
       filter: filter,
-      onStateBuilder: onState == null
+      onStateListener: onStateListener,
+      onErrorListener: onErrorListener,
+      onLoadingListener: onLoadingListener,
+      onStateBuilder: onStateBuilder == null
           ? null
           : (context, state) {
-              final child = onState.call(context, state);
+              final child = onStateBuilder.call(context, state);
               if (transition != null) {
                 return transition(context, child);
               } else {
@@ -105,10 +111,10 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
                 );
               }
             },
-      onLoadingBuilder: onLoading == null
+      onLoadingBuilder: onLoadingBuilder == null
           ? null
           : (context) {
-              final child = onLoading.call(context);
+              final child = onLoadingBuilder.call(context);
               if (transition != null) {
                 return transition(context, child);
               } else {
@@ -120,10 +126,10 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
                 );
               }
             },
-      onErrorBuilder: onError == null
+      onErrorBuilder: onErrorBuilder == null
           ? null
           : (context, error) {
-              final child = onError.call(context, error);
+              final child = onErrorBuilder.call(context, error);
               if (transition != null) {
                 return transition(context, child);
               } else {

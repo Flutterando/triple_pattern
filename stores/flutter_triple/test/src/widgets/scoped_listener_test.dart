@@ -107,6 +107,27 @@ void main() {
 
       expect(count, equals(0));
     });
+    testWidgets(
+        'should not trigger onState when state changes but filter and  returns false',
+        (tester) async {
+      var count = 0;
+      await tester.pumpWidget(
+        ScopedListener<MockStore, String, int>(
+          store: store,
+          onState: (context, state) {
+            count++;
+          },
+          distinct: (state) => false,
+          filter: (state) => false,
+          child: Container(),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(count, equals(0));
+    });
 
     testWidgets('should trigger onError when error is thrown', (tester) async {
       var count = 0;

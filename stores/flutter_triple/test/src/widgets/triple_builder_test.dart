@@ -64,5 +64,45 @@ void main() {
 
       expect(find.text('loading'), findsOneWidget);
     });
+
+    testWidgets('calls builder when state is emitted with filter',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: TripleBuilder<MockStore, String, int>(
+            store: store,
+            builder: (context, triple) => Text(triple.state.toString()),
+            filter: (triple) => triple.state <= 1,
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(2);
+      await tester.pump();
+
+      expect(find.text('1'), findsOneWidget);
+    });
+
+    testWidgets('calls builder when state is emitted with distincted',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: TripleBuilder<MockStore, String, int>(
+            store: store,
+            builder: (context, triple) => Text(triple.state.toString()),
+            distinct: (triple) => triple.state < 1,
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(2);
+      await tester.pump();
+
+      expect(find.text('1'), findsOneWidget);
+    });
   });
 }

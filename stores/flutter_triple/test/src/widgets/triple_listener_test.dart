@@ -68,6 +68,29 @@ void main() {
       expect(called, equals(true));
     });
 
+    testWidgets(
+        'should not trigger listener when state changes but distinct returns false',
+        (tester) async {
+      var called = false;
+      await tester.pumpWidget(
+        MockWidget(
+          child: TripleListener<MockStore, String, int>(
+            store: store,
+            listener: (context, triple) {
+              called = true;
+            },
+            distinct: (state) => true,
+            child: Container(),
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(called, equals(true));
+    });
+
     testWidgets('should trigger listener when error is thrown', (tester) async {
       var called = false;
       await tester.pumpWidget(

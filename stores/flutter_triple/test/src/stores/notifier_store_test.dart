@@ -48,7 +48,7 @@ void main() {
     );
     await Future.delayed(
       const Duration(
-        milliseconds: 1000,
+        milliseconds: 10,
       ),
     );
     counter.update(0, force: true);
@@ -64,7 +64,7 @@ class Counter extends NotifierStore<Exception, int> with MementoMixin {
     setLoading(true);
     await Future.delayed(
       const Duration(
-        milliseconds: 1000,
+        milliseconds: 10,
       ),
     );
     update(state + 1);

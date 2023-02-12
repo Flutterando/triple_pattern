@@ -93,9 +93,7 @@ class _TripleConsumerState<TStore extends Store<TError, TState>,
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (disposer != null) {
-      disposer!.call();
-    }
+    disposer?.call();
     disposer = store.observer(
       onState: _listener,
       onError: _listener,
