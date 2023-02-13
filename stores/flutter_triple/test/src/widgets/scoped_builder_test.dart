@@ -23,6 +23,23 @@ void main() {
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(find.text('state 1'), findsOneWidget);
+    });
+
+    testWidgets('calls onState and onLoading when state changes',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
             onError: (context, error) => Text('$error'),
           ),
@@ -42,6 +59,72 @@ void main() {
       expect(find.text('state 2'), findsOneWidget);
     });
 
+    testWidgets('calls onState, onLoading and onError when state changes',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onState: (context, state) => Text('state $state'),
+            onLoading: (context) => const Text('loading'),
+            onError: (context, error) => Text('$error'),
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(find.text('loading'), findsNothing);
+      expect(find.text('state 1'), findsOneWidget);
+
+      store.updateWithValue(2);
+      await tester.pump();
+
+      expect(find.text('loading'), findsNothing);
+      expect(find.text('state 2'), findsOneWidget);
+
+      store.updateWithError('error');
+      await tester.pump();
+
+      expect(find.text('loading'), findsNothing);
+      expect(find.text('error'), findsOneWidget);
+    });
+
+    testWidgets('calls onState when filter is true and an state is emitted',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onState: (context, state) => Text('state $state'),
+            filter: (state) => true,
+          ),
+        ),
+      );
+      store.updateWithValue(1);
+
+      await tester.pump();
+      expect(find.text('state 1'), findsOneWidget);
+    });
+
+    testWidgets('calls onState when filter is false and an state is emitted',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onState: (context, state) => Text('state $state'),
+            filter: (state) => false,
+          ),
+        ),
+      );
+      store.updateWithValue(1);
+
+      await tester.pump();
+      expect(find.text('state 1'), findsNothing);
+    });
+
     testWidgets('calls onState when filter is true and an state is emitted',
         (tester) async {
       await tester.pumpWidget(
@@ -55,6 +138,10 @@ void main() {
           ),
         ),
       );
+      store.updateWithValue(1);
+
+      await tester.pump();
+      expect(find.text('state 1'), findsOneWidget);
       store.updateWithValue(1);
 
       await tester.pump();
@@ -132,14 +219,12 @@ void main() {
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
             onError: (context, error) => Text('$error'),
-            onState: (context, state) => const Text('state'),
           ),
         ),
       );
 
       store.updateWithError('error');
       await tester.pump();
-      expect(find.text('state'), findsNothing);
       expect(find.text('error'), findsOneWidget);
     });
 
@@ -172,7 +257,6 @@ void main() {
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
-            onState: (context, state) => const Text('state'),
           ),
         ),
       );
@@ -182,7 +266,8 @@ void main() {
       expect(find.text('loading'), findsOneWidget);
     });
 
-    testWidgets('not calls onLoading when loading is emitted', (tester) async {
+    testWidgets('calls onLoading and onState when an load and state is emitted',
+        (tester) async {
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>(
@@ -198,26 +283,51 @@ void main() {
       expect(find.text('loading'), findsOneWidget);
 
       store.updateWithValue(1);
+      await tester.pump();
+      expect(find.text('state'), findsOneWidget);
+    });
+
+    testWidgets('calls onLoading and onError when an load and error is emitted',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onLoading: (context) => const Text('loading'),
+            onError: (context, error) => Text('$error'),
+          ),
+        ),
+      );
+
+      store.enableLoading();
+      await tester.pump();
+      expect(find.text('loading'), findsOneWidget);
+
+      store.updateWithError('error');
+      await tester.pump();
+      expect(find.text('error'), findsOneWidget);
+    });
+
+    testWidgets(
+        'not calls onLoading and onState when an load and state is emitted',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onLoading: (context) => const Text('loading'),
+            onState: (context, state) => const Text('state'),
+          ),
+        ),
+      );
+
+      store.disableLoading();
       await tester.pump();
       expect(find.text('loading'), findsNothing);
-    });
 
-    testWidgets('calls onLoading when loading is emitted', (tester) async {
       store.updateWithValue(1);
-
-      await tester.pumpWidget(
-        MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
-            store: store,
-            onLoading: (context) => const Text('loading'),
-            onState: (context, state) => Text('state $state'),
-          ),
-        ),
-      );
-      store.enableLoading();
       await tester.pump();
-      expect(find.text('loading'), findsOneWidget);
-      expect(find.text('state 1'), findsNothing);
+      expect(find.text('state'), findsOneWidget);
     });
 
     testWidgets(

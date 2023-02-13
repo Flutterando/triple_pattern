@@ -5,6 +5,7 @@
 TripleListener(
     store: counter,
     listener: (context, triple) => print(triple.state),
+    child: Container()
 ),
 ```
 
@@ -14,7 +15,8 @@ ScopedListener(
     store: counter,
     onState: (context, state) => print(state),
     onError: (context, error) => print(error.toString()),
-    onLoading: (context, isLoading) => print(isLoading),,
+    onLoading: (context, isLoading) => print(isLoading),
+    child: Container()
 ),
 ```
 
