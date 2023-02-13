@@ -87,8 +87,8 @@ void main() {
       expect(count, equals(1));
     });
 
-    testWidgets(
-        'should not trigger onState when state changes but filter returns false',
+    testWidgets('''
+should not trigger onState when state changes but filter returns false''',
         (tester) async {
       var count = 0;
       await tester.pumpWidget(
@@ -107,8 +107,8 @@ void main() {
 
       expect(count, equals(0));
     });
-    testWidgets(
-        'should not trigger onState when state changes but filter and  returns false',
+    testWidgets('''
+should not trigger onState when state changes but filter and  returns false''',
         (tester) async {
       var count = 0;
       await tester.pumpWidget(

@@ -45,8 +45,8 @@ void main() {
       expect(called, equals(true));
     });
 
-    testWidgets(
-        'should not trigger listener when state changes but filter returns false',
+    testWidgets('''
+should not trigger listener when state changes but filter returns false''',
         (tester) async {
       var called = false;
       await tester.pumpWidget(
@@ -68,8 +68,8 @@ void main() {
       expect(called, equals(true));
     });
 
-    testWidgets(
-        'should not trigger listener when state changes but distinct returns false',
+    testWidgets('''
+should not trigger listener when state changes but distinct returns false''',
         (tester) async {
       var called = false;
       await tester.pumpWidget(

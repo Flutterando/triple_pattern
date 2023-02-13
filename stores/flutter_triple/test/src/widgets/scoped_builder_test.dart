@@ -12,7 +12,7 @@ void main() {
     });
 
     testWidgets(
-        'throws AssertionError if either onState, onError, or onLoading is not provided',
+        '''throws AssertionError if either onState, onError, or onLoading is not provided''',
         (tester) async {
       expect(() => ScopedBuilder(store: store), throwsAssertionError);
     });
@@ -31,6 +31,32 @@ void main() {
       await tester.pump();
 
       expect(find.text('state 1'), findsOneWidget);
+    });
+
+    testWidgets('calls onState when states changes', (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            onState: (context, state) => Text('state $state'),
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(find.text('state 1'), findsOneWidget);
+
+      store.updateWithValue(2);
+      await tester.pump();
+
+      expect(find.text('state 2'), findsOneWidget);
+
+      store.updateWithValue(3);
+      await tester.pump();
+
+      expect(find.text('state 3'), findsOneWidget);
     });
 
     testWidgets('calls onState and onLoading when state changes',
@@ -149,7 +175,7 @@ void main() {
     });
 
     testWidgets(
-        'onStateBuilder not called when state is emitted and Notfilter is applied',
+        '''onStateBuilder not called when state is emitted and Notfilter is applied''',
         (tester) async {
       await tester.pumpWidget(
         MockWidget(
@@ -331,7 +357,7 @@ void main() {
     });
 
     testWidgets(
-        'calls onState when value is emitted and calls onLoading when loading is emitted',
+        '''calls onState when value is emitted and calls onLoading when loading is emitted''',
         (tester) async {
       store.updateWithValue(1);
 
