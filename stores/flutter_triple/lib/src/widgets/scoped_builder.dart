@@ -127,8 +127,9 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
       _ScopedBuilderState<TStore, TError, TState>();
 }
 
-class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends State<ScopedBuilder<TStore, TError, TState>> {
+class _ScopedBuilderState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<ScopedBuilder<TStore, TError, TState>> {
   Disposer? disposer;
 
   var _distinct;
@@ -149,8 +150,8 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     disposer?.call();
+    super.didChangeDependencies();
 
     disposer = store.observer(
       onState: (state) {
@@ -162,7 +163,11 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
         _distinct = value;
 
         final filter = widget.filter?.call(state) ?? true;
-        if (widget.onState != null && !isDisposed && isReload && filter && mounted) {
+        if (widget.onState != null &&
+            !isDisposed &&
+            isReload &&
+            filter &&
+            mounted) {
           setState(() {
             _tripleEvent = TripleEvent.state;
           });
@@ -173,7 +178,9 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>, TError extends O
           setState(() {
             _tripleEvent = TripleEvent.error;
           });
-        } else if (widget.onError == null && widget.onState != null && !isDisposed) {
+        } else if (widget.onError == null &&
+            widget.onState != null &&
+            !isDisposed) {
           setState(() {
             _tripleEvent = TripleEvent.error;
           });

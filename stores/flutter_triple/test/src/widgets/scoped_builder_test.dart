@@ -59,6 +59,64 @@ void main() {
       expect(find.text('state 3'), findsOneWidget);
     });
 
+    testWidgets('calls onState when states changes with distincted',
+        (tester) async {
+      final states = <int>[];
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            distinct: (state) => state,
+            onState: (context, state) {
+              states.add(state);
+              return Column(
+                children: states.map((e) => Text('$e')).toList(),
+              );
+            },
+          ),
+        ),
+      );
+
+      store
+        ..updateWithValue(1)
+        ..updateWithValue(1)
+        ..updateWithValue(1);
+      await tester.pump();
+
+      expect(states.length, equals(3));
+      //expect(find.text('1'), findsAtLeastNWidgets(3));
+    });
+
+    testWidgets('should trigger onState when states changes with distincted',
+        (tester) async {
+      final states = <int>[];
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedBuilder<MockStore, String, int>(
+            store: store,
+            distinct: (state) => state,
+            onState: (context, state) {
+              states.add(state);
+              return Column(
+                children: states.map((e) => Text('$e')).toList(),
+              );
+            },
+          ),
+        ),
+      );
+
+      store
+        ..updateWithValue(1)
+        ..updateWithValue(1)
+        ..updateWithValue(1);
+      await tester.pump();
+
+      expect(states.length, equals(3));
+      //expect(find.text('1'), findsAtLeastNWidgets(3));
+    });
+
     testWidgets('calls onState and onLoading when state changes',
         (tester) async {
       await tester.pumpWidget(

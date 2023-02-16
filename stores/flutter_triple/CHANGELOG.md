@@ -39,7 +39,6 @@ ScopedConsumer(
     onState: (context, state) => Text('${triple.state}'),
     onError: (context, error) => Text('${triple.state}',
     onLoading: (context, isLoading) => Text('${triple.state}',
-
 ),
 ```
 

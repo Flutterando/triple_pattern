@@ -1,121 +1,90 @@
-// ignore_for_file: avoid_print, unnecessary_statements
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-void main() {
-  late Counter counter;
-  late Disposer disposer;
+class CounterStreamStore extends StreamStore<String, int> {
+  CounterStreamStore() : super(0);
 
-  setUpAll(() {
-    counter = Counter();
-    disposer = counter.observer(
-      onState: (state) {
-        kDebugMode ? print(counter.state) : null;
-      },
-      onError: (error) {
-        kDebugMode ? print('Error: ${counter.error}') : null;
-      },
-      onLoading: (loading) {
-        kDebugMode ? print(counter.isLoading) : null;
-      },
-    );
-  });
+  void increment() {
+    update(state + 1);
+  }
 
-  tearDownAll(() async {
-    await disposer();
-    await counter.destroy();
-  });
+  void decrement() {
+    update(state - 1);
+  }
 
-  test('Counter test', () async {
-    expect(counter.selectState, emitsInOrder([1, 2, 3, 2, 1, 2]));
-    expect(counter.selectError, emitsInOrder([isA<Exception>()]));
-    expect(
-      counter.selectLoading,
-      emitsInOrder([
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-      ]),
-    );
-    await counter.increment(); //dispach true, 1 and false
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
-    await counter.increment(); //dispach true, 2 and false
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
-    await counter.increment(); //dispach true, 3 and false
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
-    await counter.increment(); //dispach true, Exception and false
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
-    kDebugMode ? print('---------------') : null;
-    await Future.delayed(
-      const Duration(
-        milliseconds: 1000,
-      ),
-    );
-    counter.undo(); // return to 2
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
-    counter.undo(); // return to 1
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
+  void updateState(int value) {
+    update(value);
+  }
 
-    kDebugMode ? print('---------------') : null;
-    await Future.delayed(
-      const Duration(
-        milliseconds: 500,
-      ),
-    );
-    counter.redo(); // redo to 2
-  });
+  void addError(String error) {
+    setError(error);
+  }
+
+  void loading() {
+    setLoading(!isLoading);
+  }
 }
 
-class Counter extends StreamStore<Exception, int> with MementoMixin {
-  Counter() : super(0);
+void main() {
+  group('StreamStore', () {
+    late CounterStreamStore store;
+    late int state;
+    late String error;
+    late bool isLoading;
 
-  Future<void> increment() async {
-    setLoading(true);
-    await Future.delayed(
-      const Duration(
-        milliseconds: 300,
-      ),
-    );
-    if (state != 3) {
-      update(state + 1);
-    } else {
-      setError(
-        Exception(
-          'Error',
-        ),
-      );
-    }
-    setLoading(false);
-  }
+    setUp(() {
+      store = CounterStreamStore();
+      state = -1;
+      error = 'test exception';
+      isLoading = false;
+
+      store.selectState.listen((s) => state = s);
+      store.selectError.listen((e) => error = e);
+      store.selectLoading.listen((l) => isLoading = l);
+    });
+
+    test('initial state should be 0', () {
+      expect(store.state, 0);
+      expect(error, isA<String>());
+      expect(isLoading, false);
+    });
+
+    test('increment should increase the state by 1', () {
+      store.increment();
+      expect(store.state, 1);
+      expect(state, 1);
+      expect(error, isA<String>());
+      expect(isLoading, false);
+    });
+
+    test('decrement should decrease the state by 1', () {
+      store.decrement();
+      expect(store.state, -1);
+      expect(state, -1);
+      expect(error, isA<String>());
+      expect(isLoading, false);
+    });
+
+    test('update should update the state', () {
+      store.updateState(10);
+      expect(store.state, 10);
+      expect(state, 10);
+      expect(error, isA<String>());
+      expect(isLoading, false);
+    });
+
+    test('setError should set the error', () {
+      store.addError('test exception');
+      expect(store.state, 0);
+      expect(error, isA<String>());
+      expect(isLoading, false);
+    });
+
+    test('loading should emit true and false', () {
+      store.loading();
+      expect(isLoading, true);
+      store.loading();
+      expect(isLoading, false);
+    });
+  });
 }

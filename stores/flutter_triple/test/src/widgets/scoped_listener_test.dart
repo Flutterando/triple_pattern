@@ -38,6 +38,58 @@ void main() {
       );
     });
 
+    testWidgets('should trigger onState when state changes with distinct',
+        (tester) async {
+      final states = [];
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onState: (context, state) {
+              states.add(state);
+            },
+            distinct: (state) => state,
+            child: Container(),
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(states.length, equals(1));
+    });
+
+    testWidgets('should trigger onState when states changes', (tester) async {
+      final states = [];
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onState: (context, state) {
+              states.add(state);
+            },
+            child: Container(),
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(2);
+      await tester.pump();
+      store.updateWithValue(3);
+      await tester.pump();
+
+      expect(states.length, equals(3));
+    });
+
     testWidgets(
         'should throw an error if distinct is defined but onState is not',
         (tester) async {

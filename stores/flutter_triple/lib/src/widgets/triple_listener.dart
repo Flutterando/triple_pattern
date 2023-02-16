@@ -82,15 +82,13 @@ class _TripleListenerState<TStore extends Store<TError, TState>,
 
   @override
   void didChangeDependencies() {
-    if (disposer != null) {
-      disposer!.call();
-    }
+    disposer?.call();
+    super.didChangeDependencies();
     disposer = store.observer(
       onState: _listener,
       onError: _listener,
       onLoading: _listener,
     );
-    super.didChangeDependencies();
   }
 
   @override

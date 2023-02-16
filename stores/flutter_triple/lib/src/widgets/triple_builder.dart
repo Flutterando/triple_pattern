@@ -115,8 +115,9 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     disposer?.call();
+    super.didChangeDependencies();
+
     disposer = store.observer(
       onState: _onStatelistener,
       onError: onErrorlistener,

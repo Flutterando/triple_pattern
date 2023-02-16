@@ -81,8 +81,8 @@ class _ScopedListenerState<TStore extends Store<TError, TState>,
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     disposer?.call();
+    super.didChangeDependencies();
 
     disposer = store.observer(
       onState: (state) {
