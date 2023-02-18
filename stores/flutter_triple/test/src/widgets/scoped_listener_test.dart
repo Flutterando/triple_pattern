@@ -89,6 +89,38 @@ void main() {
 
       expect(states.length, equals(3));
     });
+    testWidgets(
+        'should trigger onState and onLoading when states and load changes',
+        (tester) async {
+      final states = [];
+      var onLoadingisCalled = false;
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: ScopedListener<MockStore, String, int>(
+            store: store,
+            onState: (context, state) {
+              states.add(state);
+            },
+            onLoading: (context, isLoading) {
+              onLoadingisCalled = isLoading;
+            },
+            child: Container(),
+          ),
+        ),
+      );
+      store.enableLoading();
+      await tester.pump();
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(2);
+      await tester.pump();
+      store.updateWithValue(3);
+      await tester.pump();
+
+      expect(states.length, equals(3));
+      expect(onLoadingisCalled, true);
+    });
 
     testWidgets(
         'should throw an error if distinct is defined but onState is not',

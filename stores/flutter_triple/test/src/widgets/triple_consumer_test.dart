@@ -33,6 +33,29 @@ void main() {
       expect(called, true);
     });
 
+    testWidgets(
+        'calls listener and builder when an state is emitted with distinct',
+        (tester) async {
+      var called = false;
+
+      await tester.pumpWidget(
+        MockWidget(
+          child: TripleConsumer<MockStore, String, int>(
+            store: store,
+            distinct: (state) => state,
+            builder: (context, triple) => Text('State: ${triple.state}'),
+            listener: (context, triple) => called = true,
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(find.text('State: 1'), findsOneWidget);
+      expect(called, true);
+    });
+
     testWidgets('calls listener and builder when an error is emitted',
         (tester) async {
       var called = false;

@@ -81,15 +81,8 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
   }
 
   void onErrorlistener(TError value) {
-    final value = widget.distinct?.call(store.triple);
-    var isReload = true;
-    if (value != null) {
-      isReload = value is List ? !eq(value, _distinct) : value != _distinct;
-    }
-    _distinct = value;
-
     final filter = widget.filter?.call(store.triple) ?? true;
-    if (!isDisposed && isReload && filter) {
+    if (!isDisposed && filter) {
       setState(() {
         child = widget.builder(context, store.triple);
       });
@@ -98,15 +91,8 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
 
   // ignore: avoid_positional_boolean_parameters
   void onLoadinglistener(bool value) {
-    final value = widget.distinct?.call(store.triple);
-    var isReload = true;
-    if (value != null) {
-      isReload = value is List ? !eq(value, _distinct) : value != _distinct;
-    }
-    _distinct = value;
-
     final filter = widget.filter?.call(store.triple) ?? true;
-    if (!isDisposed && isReload && filter) {
+    if (!isDisposed && filter) {
       setState(() {
         child = widget.builder(context, store.triple);
       });

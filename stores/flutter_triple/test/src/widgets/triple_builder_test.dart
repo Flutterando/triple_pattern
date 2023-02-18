@@ -104,5 +104,53 @@ void main() {
 
       expect(find.text('1'), findsOneWidget);
     });
+
+    testWidgets('calls builder when state is emitted with distincted',
+        (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: TripleBuilder<MockStore, String, int>(
+            store: store,
+            builder: (context, triple) => Text(triple.state.toString()),
+            // ignore: avoid_redundant_argument_values
+            distinct: null,
+          ),
+        ),
+      );
+
+      store.updateWithValue(1);
+      await tester.pump();
+      store.updateWithValue(2);
+      await tester.pump();
+
+      expect(find.text('2'), findsOneWidget);
+    });
+
+    testWidgets('calls builder when load and state changes', (tester) async {
+      await tester.pumpWidget(
+        MockWidget(
+          child: TripleBuilder<MockStore, String, int>(
+            store: store,
+            builder: (context, triple) => Text('state ${triple.state}'),
+          ),
+        ),
+      );
+
+      store.enableLoading();
+
+      await tester.pump();
+
+      store.updateWithValue(1);
+      await tester.pump();
+
+      expect(find.text('state 1'), findsOneWidget);
+
+      store.updateWithValue(2);
+      await tester.pump();
+      store.disableLoading();
+      await tester.pump();
+
+      expect(find.text('state 2'), findsOneWidget);
+    });
   });
 }
