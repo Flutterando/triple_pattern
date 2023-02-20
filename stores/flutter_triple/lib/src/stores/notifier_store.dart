@@ -1,7 +1,13 @@
 // ignore_for_file: empty_catches, prefer_function_declarations_over_variables, lines_longer_than_80_chars
 
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:triple/triple.dart';
+
+class _MutableIsDispose {
+  bool value = false;
+}
 
 ///[NotifierStore] it's an abstract class that
 ///implements Selectors<ValueListenable<Error?>, ValueListenable<State>, ValueListenable<bool>>
@@ -29,6 +35,8 @@ abstract class NotifierStore<Error extends Object, State extends Object>
 
   @override
   bool get isLoading => selectLoading.value;
+
+  final _MutableIsDispose _disposeValue = _MutableIsDispose();
 
   ///[NotifierStore] constructor class
   NotifierStore(State initialState) : super(initialState);
@@ -88,10 +96,20 @@ abstract class NotifierStore<Error extends Object, State extends Object>
             funcError,
           );
         }
-      } catch (ex) {}
+      } catch (ex) {
+        log(ex.toString());
+      }
     };
   }
 
   @override
-  Future destroy() async {}
+  Future destroy() async {
+    if (_disposeValue.value) {
+      return;
+    }
+    _disposeValue.value = true;
+    _selectState.dispose();
+    _selectError.dispose();
+    _selectLoading.dispose();
+  }
 }
