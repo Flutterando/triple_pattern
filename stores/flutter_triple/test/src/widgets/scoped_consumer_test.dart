@@ -300,6 +300,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
             onLoadingListener: (context, isLoading) =>
                 onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -326,6 +332,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
             onLoadingListener: (context, isLoading) =>
                 onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -354,6 +366,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
                 onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -383,6 +401,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
                 onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -412,6 +436,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
                 onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => false,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -438,6 +468,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
             onStateListener: (context, state) => onStateListenerCalled = true,
             onLoadingListener: (context, isLoading) =>
                 onLoadingListenerCalled = true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -464,6 +500,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
                 onLoadingListenerCalled = isLoading,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             onStateListener: (context, state) => onStateListenerCalled = true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );

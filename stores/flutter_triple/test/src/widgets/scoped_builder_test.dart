@@ -39,6 +39,7 @@ void main() {
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
+            onLoading: (context) => const Text('loading'),
           ),
         ),
       );
@@ -269,16 +270,21 @@ void main() {
     });
 
     testWidgets('calls onError when an error is emitted', (tester) async {
+      store.updateWithError('error');
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>(
             store: store,
-            onError: (context, error) => Text(error ?? ''),
+            onError: (context, error) {
+              if (error != null) {
+                return Text(error);
+              } else {
+                return const Text('no error');
+              }
+            },
           ),
         ),
       );
-
-      store.updateWithError('error');
       await tester.pump();
       expect(find.text('error'), findsOneWidget);
     });
@@ -307,6 +313,7 @@ void main() {
     });
 
     testWidgets('calls onLoading when loading is emitted', (tester) async {
+      store.enableLoading();
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>(
@@ -316,7 +323,6 @@ void main() {
         ),
       );
 
-      store.enableLoading();
       await tester.pump();
       expect(find.text('loading'), findsOneWidget);
     });
@@ -344,6 +350,8 @@ void main() {
 
     testWidgets('calls onLoading and onError when an load and error is emitted',
         (tester) async {
+      store.enableLoading();
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>(
@@ -354,7 +362,6 @@ void main() {
         ),
       );
 
-      store.enableLoading();
       await tester.pump();
       expect(find.text('loading'), findsOneWidget);
 
@@ -451,6 +458,12 @@ void main() {
           child: ScopedBuilder<MockStore, String, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -556,6 +569,12 @@ void main() {
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
             onError: (context, error) => Text('$error'),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -582,6 +601,12 @@ void main() {
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
             onError: (context, error) => Text('$error'),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -613,6 +638,12 @@ void main() {
             store: store,
             onState: (context, state) => Text('state $state'),
             filter: (state) => true,
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -683,16 +714,23 @@ void main() {
     });
 
     testWidgets('calls onError when an error is emitted', (tester) async {
+      store.updateWithError('error');
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>.transition(
             store: store,
             onError: (context, error) => Text(error ?? ''),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
 
-      store.updateWithError('error');
       await tester.pump();
       expect(find.text('error'), findsOneWidget);
     });
@@ -705,6 +743,12 @@ void main() {
             store: store,
             onError: (context, error) => Text('$error'),
             onState: (context, state) => const Text('state'),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -721,16 +765,23 @@ void main() {
     });
 
     testWidgets('calls onLoading when loading is emitted', (tester) async {
+      store.enableLoading();
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>.transition(
             store: store,
             onLoading: (context) => const Text('loading'),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
 
-      store.enableLoading();
       await tester.pump();
       expect(find.text('loading'), findsOneWidget);
     });
@@ -743,6 +794,12 @@ void main() {
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => const Text('state'),
+            transition: (context, child) => AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds: 100,
+              ),
+              child: child,
+            ),
           ),
         ),
       );
@@ -758,6 +815,8 @@ void main() {
 
     testWidgets('calls onLoading and onError when an load and error is emitted',
         (tester) async {
+      store.enableLoading();
+
       await tester.pumpWidget(
         MockWidget(
           child: ScopedBuilder<MockStore, String, int>.transition(
@@ -768,7 +827,6 @@ void main() {
         ),
       );
 
-      store.enableLoading();
       await tester.pump();
       expect(find.text('loading'), findsOneWidget);
 
@@ -822,6 +880,8 @@ void main() {
       expect(find.text('loading'), findsOneWidget);
 
       store.updateWithValue(2);
+      await tester.pump();
+      store.disableLoading();
       await tester.pump();
       expect(find.text('loading'), findsNothing);
       expect(find.text('state 2'), findsOneWidget);
