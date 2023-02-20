@@ -96,8 +96,8 @@ abstract class NotifierStore<Error extends Object, State extends Object>
             funcError,
           );
         }
-      } catch (ex) {
-        log(ex.toString());
+      } catch (e, s) {
+        log('NotifierStore:', error: e, stackTrace: s);
       }
     };
   }

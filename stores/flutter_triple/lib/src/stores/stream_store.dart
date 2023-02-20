@@ -84,8 +84,8 @@ abstract class StreamStore<Error extends Object, State extends Object>
     return () async {
       try {
         await _sub.cancel();
-      } catch (ex) {
-        log(ex.toString());
+      } catch (e, s) {
+        log('StreamStoreError:', error: e, stackTrace: s);
       }
     };
   }
