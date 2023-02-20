@@ -1,7 +1,11 @@
 ## [1.3.0] - 
 
 - Added TripleListener.
+Use TripleListener to listen all segment modifications and reflect them in the listener callback.
+
+exemple:
 ```dart
+
 TripleListener(
     store: counter,
     listener: (context, triple) => print(triple.state),
@@ -10,7 +14,11 @@ TripleListener(
 ```
 
 - Added ScopedListener.
+Use ScopedListener to listen all segment modifications and reflect them in the recpective segment listener callbacks.
+
+exemple:
 ```dart
+
 ScopedListener(
     store: counter,
     onState: (context, state) => print(state),
@@ -21,7 +29,11 @@ ScopedListener(
 ```
 
 - Added TripleConsumer.
+Use TripleConsumer to listen all segment modifications and reflect them in the Widgets tree and listener callback.
+
+exemple:
 ```dart
+
 TripleConsumer(
     store: counter,
     listener: (context, triple) => print(triple.state),
@@ -30,7 +42,11 @@ TripleConsumer(
 ```
 
 - Added ScopedConsumer.
+Use ScopedListener to listen all segment modifications and reflect them in the recpective segment Widgets tree and listener callbacks.
+
+exemple:
 ```dart
+
 ScopedConsumer(
     store: counter,
     onStateListener: (context, state) => print(state),
