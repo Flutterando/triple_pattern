@@ -19,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutterando_analysis: ^0.0.2
+  flutterando_analysis: 0.0.2
   equatable: ^2.0.5
   
 
