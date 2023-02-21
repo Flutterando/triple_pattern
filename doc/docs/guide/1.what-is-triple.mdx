@@ -1,0 +1,58 @@
+---
+sidebar_position: 1
+---
+
+# What is Triple?
+
+Triple is a nickname to SSP (Segmented State Standard).
+Some packages were created to make it easier for developers to start using the standard. We'll call it an extension.
+
+
+## Observers
+
+We can observe the segments separately or together by using **store.observer()**;
+
+```dart
+counter.observer(
+    onState: (state) => print(state),
+    onError: (error) => print(error),
+    onLoading: (loading) => print(loading),
+);
+```
+On Widgets we can observe on a Builder with ScopedBuilder or observe all changes with TripleBuilder.
+
+### Distinct
+
+By default, the Store's observer does not react to repeated objects. This behavior is beneficial as it avoids state reconstructions and notifications if the segment has not been changed.
+
+It is good practice to overwrite the **operation==** of the state value and error. A good tip is also to use the package [equatable](https://pub.dev/packages/equatable) to simplify this type of comparison.
+
+### Selectors
+
+We can recover the reactivity of the segments individually for transformations or combinations. We have then 3 selectors that can be retrieved as Store properties: **store.selectState**, **store.selectError** and **store.selectLoading**.
+
+The type of selectors changes depending on the reactive tool you are using in the Stores. For example, if you are using **StreamStore** then your selectors will be Streams, however,  if you are using **NotifierStore** then your selectors will be ValueListenable;
+
+```dart
+//StreamStore
+Stream<int> myState$ = counter.selectState;
+Stream<Exception> myError$ = counter.selectError;
+Stream<bool> myLoading$ = counter.selectLoading;
+
+//NotifierStore
+ValueListenable<int> myState$ = counter.selectState;
+ValueListenable<Exception?> myError$ = counter.selectError;
+ValueListenable<bool> myLoading$ = counter.selectLoading;
+
+```
+
+## Extension (Dart)
+
+As we have seen, the purpose of the Segmented State Standard (Triple) is to help normalizing state management logic. We are working on abstractions (packages) based on reactivities developed by the community and Flutter natives ones such as ValueNotifier and Streams.
+
+- [triple](https://pub.dev/packages/triple) (Abstraction to Dart)
+- [flutter_triple](https://pub.dev/packages/flutter_triple) (Implements **triple** building Stores based on Stream and ValueNotifier)
+- [mobx_triple](https://pub.dev/packages/mobx_triple) (MobXStore)
+
+
+

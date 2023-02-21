@@ -13,7 +13,7 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'flutterando', // Usually your GitHub org/user name.
   projectName: 'triple_pattern', // Usually your repo name.
-  
+
   themeConfig: {
     navbar: {
       title: 'Triple',
@@ -24,14 +24,14 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          docId: 'intro',
-          position: 'left',
-          label: 'SSP',
+          docId: 'intro/introduction',
+          position: 'right',
+          label: 'Introduction',
         },
         {
           type: 'doc',
-          docId: 'getting-started/what-is-triple',
-          position: 'left',
+          docId: 'guide/what-is-triple',
+          position: 'right',
           label: 'Getting Started',
         },
         {
@@ -48,12 +48,15 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Segmented State Pattern (SSP)',
-              to: '/docs/intro',
+              label: 'Introduction',
+              to: 'intro/introduction',
             },
             {
               label: 'Getting Started',
-              to: '/docs/getting-started/what-is-triple',
+              to: '/docs/guide/what-is-triple',
+            }, {
+              label: 'Tutorial',
+              to: '/docs/guide/what-is-triple',
             },
           ],
         },
@@ -88,7 +91,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © 2022 Flutterando, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © 2023 Flutterando, Inc. Built with Docusaurus.`,
     },
     prism: {
       theme: lightCodeTheme,

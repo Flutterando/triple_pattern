@@ -24,50 +24,13 @@ dependencies:
 
 The package **flutter_triple** implements the SSP using two reactivities: Streams and ValueNotifier, where we have the StreamNotifier(for Streams) and NotifierStore(for ValueNotifier).
 
-## Observers
-
-We can observe the segments separately or together by using **store.observer()**;
-
-```dart
-counter.observer(
-    onState: (state) => print(state),
-    onError: (error) => print(error),
-    onLoading: (loading) => print(loading),
-);
-```
-On Widgets we can observe on a Builder with ScopedBuilder or observe all changes with TripleBuilder.
-
-### Distinct
-
-By default, the Store's observer does not react to repeated objects. This behavior is beneficial as it avoids state reconstructions and notifications if the segment has not been changed.
-
-It is good practice to overwrite the **operation==** of the state value and error. A good tip is also to use the package [equatable](https://pub.dev/packages/equatable) to simplify this type of comparison.
-
-### Selectors
-
-We can recover the reactivity of the segments individually for transformations or combinations. We have then 3 selectors that can be retrieved as Store properties: **store.selectState**, **store.selectError** and **store.selectLoading**.
-
-The type of selectors changes depending on the reactive tool you are using in the Stores. For example, if you are using **StreamStore** then your selectors will be Streams, however,  if you are using **NotifierStore** then your selectors will be ValueListenable;
-
-```dart
-//StreamStore
-Stream<int> myState$ = counter.selectState;
-Stream<Exception> myError$ = counter.selectError;
-Stream<bool> myLoading$ = counter.selectLoading;
-
-//NotifierStore
-ValueListenable<int> myState$ = counter.selectState;
-ValueListenable<Exception?> myError$ = counter.selectError;
-ValueListenable<bool> myLoading$ = counter.selectLoading;
-
-```
 ## Listeners, Builders and Consumers
 
-### Listeners
+### TripleListener
 
 Use TripleListener to listen all segment modifications and reflect them in the listener callback.
 
-exemple:
+Exemple:
 ```dart
 
 TripleListener(
@@ -79,7 +42,7 @@ TripleListener(
 
 Use ScopedListener to listen all segment modifications and reflect them in the recpective segment listener callbacks.
 
-exemple:
+Exemple:
 ```dart
 
 ScopedListener(
@@ -143,7 +106,7 @@ TripleBuilder(
 
 Use TripleConsumer to listen all segment modifications and reflect them in the Widgets tree and listener callback.
 
-exemple:
+Exemple:
 ```dart
 
 TripleConsumer(
@@ -155,7 +118,7 @@ TripleConsumer(
 
 Use ScopedConsumer to listen all segment modifications and reflect them in the recpective segment Widgets tree and listener callbacks.
 
-exemple:
+Exemple:
 ```dart
 
 ScopedConsumer(
