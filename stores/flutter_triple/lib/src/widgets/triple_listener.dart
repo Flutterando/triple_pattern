@@ -4,18 +4,18 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:triple/triple.dart';
 
-///[TripleBuilder] class it's the type <TStore extends Store<TError, TState>,
+///[TripleListener] class it's the type <TStore extends Store<TError, TState>,
 ///TError extends Object, TState extends Object>
-class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends StatefulWidget {
-  ///The Function [builder] it's the type [Widget] and receive
+class TripleListener<TStore extends Store<TError, TState>,
+    TError extends Object, TState extends Object> extends StatefulWidget {
+  ///The Function [listener] it's the type [Widget] and receive
   ///the params context it`s the type [BuildContext] and triple it's
   ///the type Triple<TError, TState>
 
-  final Widget Function(
+  final void Function(
     BuildContext context,
     Triple<TError, TState> triple,
-  ) builder;
+  ) listener;
 
   ///The Function [filter] it's the type [bool] and receive the
   ///param triple it`s the type Triple<TError, TState>
@@ -29,24 +29,27 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
   ///[store] it's the type [TStore]
   final TStore? store;
 
-  ///[TripleBuilder] constructor class
-  const TripleBuilder({
+  ///[store] it's the type [TStore]
+  final Widget child;
+
+  ///[TripleListener] constructor class
+  const TripleListener({
     Key? key,
     this.store,
-    required this.builder,
+    required this.listener,
+    required this.child,
     this.filter,
     this.distinct,
   }) : super(key: key);
 
   @override
-  _TripleBuilderState<TStore, TError, TState> createState() =>
-      _TripleBuilderState<TStore, TError, TState>();
+  _TripleListenerState<TStore, TError, TState> createState() =>
+      _TripleListenerState<TStore, TError, TState>();
 }
 
-class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends State<TripleBuilder<TStore, TError, TState>> {
-  Widget? child;
-
+class _TripleListenerState<TStore extends Store<TError, TState>,
+        TError extends Object, TState extends Object>
+    extends State<TripleListener<TStore, TError, TState>> {
   var _distinct;
 
   bool isDisposed = false;
@@ -73,18 +76,14 @@ class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends O
 
     final filter = widget.filter?.call(store.triple) ?? true;
     if (!isDisposed && isReload && filter) {
-      setState(() {
-        child = widget.builder(context, store.triple);
-      });
+      widget.listener(context, store.triple);
     }
   }
 
   @override
   void didChangeDependencies() {
+    disposer?.call();
     super.didChangeDependencies();
-    if (disposer != null) {
-      disposer!.call();
-    }
     disposer = store.observer(
       onState: _listener,
       onError: _listener,
@@ -94,17 +93,13 @@ class _TripleBuilderState<TStore extends Store<TError, TState>, TError extends O
 
   @override
   void dispose() {
+    disposer?.call();
     isDisposed = true;
     super.dispose();
-    disposer?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (child == null) {
-      child = widget.builder(context, store.triple);
-      _distinct = widget.distinct?.call(store.triple);
-    }
-    return child!;
+    return widget.child;
   }
 }

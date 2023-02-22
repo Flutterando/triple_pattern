@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 4
 ---
 
 # Testing
@@ -7,7 +7,7 @@ sidebar_position: 7
 For a pattern to be concrete, we must test.
 There is a library with elements that help test a Triple Store.
 
-## Installation 
+## Installation {#-installation}
 
 ```yaml
 dev_dependencies:
@@ -17,7 +17,7 @@ dev_dependencies:
 
 Use [triple_test](https://pub.dev/packages/triple_test) for Unity Test.
 
-## Create a Mock
+## Create a Mock {#-create-a-mock}
 
 ```dart
 import 'package:bloc_test/bloc_test.dart';
@@ -45,7 +45,7 @@ whenObserve<MyException, int>(
 >NOTE: You can use Triple Matchers: **tripleState**, **tripleLoading** e **tripleError**;
 
 
-## Testing Stores
+## Testing Stores {#-testing-stores}
 
 The `flutter_test` gives us the [test()](https://api.flutter.dev/flutter/flutter_test/test.html) function to describe what will be tested in a prepared scope. `triple_test` makes it easier to test Triple Stores using [storeTest()](https://pub.dev/documentation/triple_test/latest/triple_test/storeTest.html).
 

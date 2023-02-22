@@ -1,6 +1,7 @@
 // ignore_for_file: empty_catches, lines_longer_than_80_chars
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:triple/triple.dart';
@@ -11,7 +12,8 @@ class _MutableIsDispose {
 
 ///[StreamStore] it's an abstract class that
 ///implements Selectors<Stream<Error>, Stream<State>, Stream<bool>>
-abstract class StreamStore<Error extends Object, State extends Object> extends Store<Error, State>
+abstract class StreamStore<Error extends Object, State extends Object>
+    extends Store<Error, State>
     implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
   final _tripleController = StreamController<Triple<Error, State>>.broadcast(
     sync: true,
@@ -82,7 +84,9 @@ abstract class StreamStore<Error extends Object, State extends Object> extends S
     return () async {
       try {
         await _sub.cancel();
-      } catch (ex) {}
+      } catch (e, s) {
+        log('StreamStoreError:', error: e, stackTrace: s);
+      }
     };
   }
 }

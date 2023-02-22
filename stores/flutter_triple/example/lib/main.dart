@@ -8,7 +8,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,16 +23,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -41,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final counter = Counter();
+  final counter = CounterStore();
 
   @override
   Widget build(BuildContext context) {
@@ -60,30 +49,39 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child: ScopedBuilder(
+        child: ScopedConsumer<CounterStore, Exception, int>(
           store: counter,
-          onLoading: (_) => Text('Carregando...'),
-          onState: (_, state) {
+          onLoadingListener: (context, isLoading) {},
+          onErrorListener: (context, error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error.toString()),
+              ),
+            );
+          },
+          onLoadingBuilder: (context) => Text('Carregando...'),
+          onStateBuilder: (context, state) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('You have pushed the button 399 this many times:'),
                 Text(
                   '$state',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
             );
           },
         ),
       ),
-      floatingActionButton: TripleBuilder<Counter, Exception, int>(
+      floatingActionButton: TripleBuilder<CounterStore, Exception, int>(
         store: counter,
-        builder: (_, triple) {
+        builder: (context, triple) {
           return FloatingActionButton(
             onPressed: triple.isLoading ? null : counter.increment,
             tooltip: triple.isLoading ? 'no-active' : 'Increment',
-            backgroundColor: triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
+            backgroundColor:
+                triple.isLoading ? Colors.grey : Theme.of(context).primaryColor,
             child: Icon(Icons.add),
           );
         },
