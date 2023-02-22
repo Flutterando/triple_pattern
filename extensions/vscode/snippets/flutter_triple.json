@@ -1,0 +1,53 @@
+{
+	"Import package:flutter_triple": {
+		"prefix": "importtriple",
+		"body": "import 'package:flutter_triple/flutter_triple.dart';",
+		"description": "import package:flutter_triple/flutter_triple.dart;"
+	  },
+	"Triple Stream Store": {
+		"prefix": "triplestreamstore",
+		"body": [
+			"import 'package:flutter_triple/flutter_triple.dart';",
+			"",
+			"class $1Store extends StreamStore<${2:Error}, ${3:State}> {",
+			"\t$1Store() : super(${4:State});",
+			"",
+			"\t${0}",
+			"}"
+		],
+		"description": "Create Triple Stream Store"
+	},
+	"Triple Notifier Store": {
+		"prefix": "triplenotifierstore",
+		"body": [
+			"import 'package:flutter_triple/flutter_triple.dart';",
+			"",
+			"class $1Store extends NotifierStore<${2:Error}, ${3:State}> {",
+			"\t$1Store() : super(${4:State});",
+			"",
+			"\t${0}",
+			"}"
+		],
+		"description": "Create Triple Stream Store"
+	},
+	"Triple Store Observer": {
+		"prefix": "triplestoreobserver",
+		"body": [
+			"${1:store}.observer(",
+			"onState: (state) { $4 },",
+			"${2:onError: (error) {\\},}",
+			"${3:onLoading: (loading) {\\},}",
+			");"
+		],
+		"description": "Create Triple Store Observer"
+	},
+	"Triple Observer": {
+		"prefix": "tripleobserver",
+		"body": [
+			"TripleObserver.addListener((triple){",
+			"\t//TODO: implement listener",
+			"});"
+		],
+		"description": "Create Triple Observer"
+	}
+}
