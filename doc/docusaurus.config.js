@@ -14,26 +14,16 @@ module.exports = {
   organizationName: 'flutterando', // Usually your GitHub org/user name.
   projectName: 'triple_pattern', // Usually your repo name.
 
+
   themeConfig: {
     navbar: {
       title: 'Triple',
       logo: {
-        alt: 'Triple Pattern',
+        alt: 'Triple Logo',
         src: 'img/logo.svg',
       },
       items: [
-        {
-          type: 'doc',
-          docId: 'intro/introduction',
-          position: 'right',
-          label: 'Introduction',
-        },
-        {
-          type: 'doc',
-          docId: 'guide/what-is-triple',
-          position: 'right',
-          label: 'Getting Started',
-        },
+       
         {
           href: 'https://github.com/Flutterando/triple_pattern',
           label: 'GitHub',
@@ -49,15 +39,15 @@ module.exports = {
           items: [
             {
               label: 'Introduction',
-              to: 'intro/introduction',
+              to: 'docs/intro/overview',
             },
             {
               label: 'Getting Started',
-              to: '/docs/guide/what-is-triple',
-            }, {
-              label: 'Tutorial',
-              to: '/docs/guide/what-is-triple',
+              to: 'docs/intro/getting-started',
             },
+
+            
+            
           ],
         },
         {

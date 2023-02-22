@@ -1,0 +1,101 @@
+---
+sidebar_position: 2
+---
+
+# Getting Started
+
+## What is Flutter Triple?
+
+Triple is a nickname to SSP (Segmented State Standard).
+Some packages were created to make it easier for developers to start using the standard. We'll call it an extension.
+
+
+## Installation
+
+### Dependencies
+
+add the following dependencies to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  flutter_triple: ^1.3.0
+```
+
+### Import
+
+Import the package in your code with:
+```dart
+import 'package:flutter_triple/flutter_triple.dart';
+```
+
+## How to use?
+
+### Create a Store
+
+Create a class that extends `NotifierStore<Error, State>`.
+The first type is the type of the error, the second is the type of the state.
+
+
+```dart
+class CounterStore extends NotifierStore<Exception, int> {
+  CounterStore() : super(0);
+
+  void increment() => update(state + 1);
+  void decrement() => update(state - 1);
+}
+```
+
+### Consume with Listeners, Builders and Consumers
+
+Consume the store with scopes `ScopedBuilder`, `ScopedListener` and `ScopedConsumer`.
+
+```dart
+
+class CounterPage extends StatefulWidget {
+  @override
+  _CounterPageState createState() => _CounterPageState();
+}
+
+class _CounterPageState extends State<CounterPage> {
+  final store = CounterStore();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Counter'),
+      ),
+      body: ScopedBuilder<CounterStore, Exception, int>(
+        store: store,
+        onLoading: (context) => Center(child: CircularProgressIndicator()),
+        onError: (context, error) => Center(child: Text(error.toString())),
+        onState: (context, state) => Center(
+          child: Text(
+            '$state',
+            style: Theme.of(context).textTheme.headline4,
+          ),
+        ),
+      ),
+      floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: store.decrement,
+              tooltip: 'Decrement',
+              child: Icon(Icons.remove),
+            ),
+            SizedBox(width: 5),
+            FloatingActionButton(
+              onPressed: store.increment,
+              tooltip: 'Increment',
+              child: Icon(Icons.add),
+            ),
+          ],
+        ),
+    );
+  }
+}
+
+```
+
+

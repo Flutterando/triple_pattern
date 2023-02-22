@@ -2,7 +2,15 @@
 sidebar_position: 1
 ---
 
-# Segmented State Pattern (SSP)
+# Overview
+
+## What is Triple? {#-what-is-triple}
+
+Triple is a nickname to SSP (Segmented State Standard).
+Some packages were created to make it easier for developers to start using the standard. We'll call it an extension.
+
+
+## Segmented State Pattern (SSP) {#-segmented-state-pattern-ssp}
 
 When we talk about a single flow state, we end up solving architecture problems early, as we will have only one data flow for each state.
 
@@ -13,7 +21,7 @@ A beautiful example of a pattern with a single flow is BLoC, giving reactivity t
 There are other ways to promote reactivity in a property instead of the entire object, such as MobX's Observable and Flutter's ValueNotifier, and that gives us a lot of choices. However, we lose some important architecture limits, which can put in check the project maintenance in the future. Therefore, it needs a standard to force limits on the individual reactivity of each property and thereby improve the maintainability of the components responsible for managing the states of the application.
 
 
-## Single Flow Pattern (BLoC and Flux/Redux)
+## Single Flow Pattern (BLoC and Flux/Redux) {#-single-flow-pattern-bloc-and-fluxredux}
 .
 ![schema](./bloc.png)
 
@@ -62,7 +70,7 @@ Thanks OOP :)
 
 > **IMPORTANT:** BLoC is an acronym for Business Logic Component.
 
-## Targeting the state in State, Error, Loading
+## Targeting the state in State, Error, Loading {#-targeting-the-state-in-state-error-loading}
 .
 ![schema](schema.png)
 
@@ -97,7 +105,7 @@ As the movement of the state is always around the trio State, Error, and Loading
 
 > **IMPORTANT:** An object called **Store** is responsible for storing the Logic for the state of a component.
 
-## Seeing the Flows
+## Seeing the Flows {#-seeing-the-flows}
 
 Having 3 separate flows we can have 3 different listeners, for example, we can hear the error and launch it in the form of "SnackBar" and when there are Loadings we can launch a Dialog, but if we need to add to this state a pattern like "memento" we will have to put the 3 properties in a generic object.
 To close the pattern of the 3 Flows we can create a generic object, its properties can be reactive as well as the object itself. Let's look at an example with MobX.

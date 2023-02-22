@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Executors
@@ -35,24 +35,24 @@ You can use the ** execute **method** and pass on Future to perform the same ste
 The executors work like a switchMap, that is, if called again, the previous execution will be canceled. It is also possible to set a debounce time.
 
 
-## Execute Either (**EitherAdapter**)
+## Execute Either (**EitherAdapter**) {#-execute-either-eitheradapter}
 
 For users using **dartz** using Clean Architecture for example, they can also run the Either class using the **executeEither** method:
 
 
-### Step 1 - Create Adapter:
+### Step 1 - Create Adapter: {#-step-1---create-adapter}
 
 ```dart
 class CustomEitherAdapter implements EitherAdapter {}
 ```
 
-### Step 2 - Add Left and Right type:
+### Step 2 - Add Left and Right type: {#-step-2---add-left-and-right-type}
 
 ```dart
 class CustomEitherAdapter<R, L> implements EitherAdapter<R, L> {}
 ```
 
-### Step 3 - Implement fold method (Using dartz or any other functional package):
+### Step 3 - Implement fold method (Using dartz or any other functional package): {#-step-3---implement-fold-method-using-dartz-or-any-other-functional-package}
 
 ```dart
 class CustomEitherAdapter<R, L> implements EitherAdapter<R, L> {
@@ -74,7 +74,7 @@ class CustomEitherAdapter<R, L> implements EitherAdapter<R, L> {
 }
 ```
 
-### Step 4 - Just use:
+### Step 4 - Just use: {#-step-4---just-use}
 
 ```dart
  @override
