@@ -66,6 +66,35 @@
     ],
     "description": "Create a Triple builder"
   },
+  "Triple Scoped Builder": {
+    "prefix": "tripleScopedBuilder",
+    "body": [
+      "ScopedBuilder(",
+      "    store: store,",
+      "    onState: (context, state) => Text('$state'),",
+      "    onError: (context, error) => Text(error.toString()),",
+      "    onLoading: (context) => CircularProgressIndicator(),",
+      ");"
+    ],
+    "description": "Create a Triple Scoped Builder"
+  },
+  "Triple Scoped Transition Builder": {
+    "prefix": "tripleTransitionScopedBuilder",
+    "body": [
+      "ScopedBuilder.transition(",
+      "    store: store,",
+      "    transition: (_, child) {",
+      "    return AnimatedSwitcher(",
+      "        duration: Duration(milliseconds: 400),",
+      "        child: child,",
+      "      );",
+      "    },",
+      "    onLoading: (_) => Text('Loading...'),",
+      "    onState: (_, state) => Text('$state'),",
+      "  ),"
+    ],
+    "description": "Create a Triple Transition Scoped Builder"
+  },
   "Triple Stream Selector": {
     "prefix": "tripleStreamSelector",
     "body": [
