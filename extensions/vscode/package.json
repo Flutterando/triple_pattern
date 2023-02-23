@@ -1,0 +1,98 @@
+{
+  "name": "flutter-triple",
+  "displayName": "flutter_triple",
+  "description": "A extension for using Triple in Flutter",
+  "version": "0.0.1",
+  "publisher": "Flutterando",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Flutterando/triple_pattern/extensions/vscode"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Snippets",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "flutter_triple",
+    "triple",
+    "flutter",
+    "dart",
+    "SSP",
+    "state-management"
+  ],
+  "icon": "assets/logo.png",
+  "activationEvents": [
+    "workspaceContains:**/pubspec.yaml"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.wrap-scopedbuilder",
+        "title": "Wrap with ScopedBuilder"
+      },
+      {
+        "command": "extension.wrap-scopedbuildertransition",
+        "title": "Wrap with ScopedBuilder.transition"
+      },
+      {
+        "command": "extension.wrap-triplebuilder",
+        "title": "Wrap with TripleBuilder"
+      }
+    ],
+    "menus": {
+      "explorer/context": [],
+      "commandPalette": [
+        {
+          "command": "extension.wrap-scopedbuilder",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "extension.wrap-scopedbuildertransition",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "extension.wrap-triplebuilder",
+          "when": "editorLangId == dart"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "dart",
+        "path": "./snippets/flutter_triple.json"
+      },
+      {
+        "language": "dart",
+        "path": "./snippets/triple_test.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3",
+    "ts-loader": "^9.4.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0",
+    "@vscode/test-electron": "^2.2.0"
+  }
+}
