@@ -132,7 +132,6 @@
     "body": ["", "   execute(() => repository.fetch());", ""],
     "description": "Create a Triple Simple Executor"
   },
-
   "Mobx triple class": {
     "prefix": "mobxStoreClass",
     "body": [
@@ -155,5 +154,56 @@
       "}"
     ],
     "description": "Mobx triple class"
+  },
+  "Triple Listener": {
+    "prefix": "tripleListener",
+    "body": [
+      "TripleListener(",
+      "    store: store,",
+      "    listener: (context, triple) => print(triple.state),",
+      "    child: Container()",
+      ")"
+    ],
+    "description": "Creates a Triple Listener"
+  },
+  "Triple Scoped Listener": {
+    "prefix": "tripleScopedListener",
+    "body": [
+      "ScopedListener(",
+      "    store: store,",
+      "    onState: (context, state) => print(state),",
+      "    onError: (context, error) => print(error.toString()),",
+      "    onLoading: (context, isLoading) => print(isLoading),",
+      "    child: Container()",
+      ")"
+    ],
+    "description": "Triple Scoped Listener"
+  },
+  "Triple Consumer": {
+    "prefix": "tripleConsumer",
+    "body": [
+      "TripleConsumer(",
+      "    store: store,",
+      "    listener: (context, triple) => print(triple.state),",
+      "    builder: (context, triple) => Text('${triple.state}'),",
+      ")"
+    ],
+    "description": "Creates a Triple Consumer"
+  },
+  "Triple Scoped Consumer": {
+    "prefix": "tripleScopedConsumer",
+    "body": [
+      "ScopedConsumer(",
+      "    store: store,",
+      "    onStateListener: (context, state) => print(state),",
+      "    onErrorListener: (context, error) => print(error.toString()),",
+      "    onLoadingListener: (context, isLoading) => print(isLoading),",
+      "    onState: (context, state) => Text('${triple.state}'),",
+      "    onError: (context, error) => Text('${triple.state}',",
+      "    onLoading: (context, isLoading) => Text('${triple.state}',",
+      "",
+      ")"
+    ],
+    "description": "Triple Scoped Consumer"
   }
 }
