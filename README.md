@@ -43,24 +43,29 @@ If it's for the Flutterando version of the template just send a message to us (o
 
 
 <!-- TABLE OF CONTENTS -->
+
 <details>
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#Usage">Usage</a></li>
-    <li><a href="#Contributing">Contributing</a></li>
+    <li><a href="#usage">Usage</a></li>     
+    <ol>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#how-to-use?">How to use?</a></li>
+    </ol>
+  </li>     
+    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#Contributors">Contributors</a></li>
+    <li><a href="#contributors">Contributors</a></li>
   </ol>
 </details>
-
 
 ---
 
 <br>
 
 <!-- ABOUT THE PROJECT -->
-## :memo: About The Project
+## <div id="about-the-project">:memo: About The Project</div>
 
 ### What is Triple?
 
@@ -86,13 +91,13 @@ Triple is a nickname to SSP (Segmented State Standard). Some packages were creat
 
 <br>
 
-## ✨ Usage
+## <div id="usage">✨ Usage</div>
 
 The SSP segments the state into 3 reactive parts, the state value (state), the error object (error), and the state loading action (loading).
 
 These segments are observed in a listener or separate listeners. They can also be combined to obtain a new segment, always starting from the 3 main segments.
 
-## Installation
+## <div id="installation">Installation</div>
 
 ### Dependencies
 
@@ -110,7 +115,7 @@ Import the package in your code with:
 import 'package:flutter_triple/flutter_triple.dart';
 ```
 
-## How to use?
+## <div id="how-to-use?">How to use?</div>
 
 ### Create a Store
 
@@ -180,7 +185,7 @@ class _CounterPageState extends State<CounterPage> {
 
 ```
 <!-- CONTRIBUTING -->
-## 🧑‍💻 Contributing
+## <div id="contributing">🧑‍💻 Contributing</div>
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. Just create a pull request with your suggestions and changes or be in contact with us through Discord or any other of the links below. 
 
@@ -202,7 +207,7 @@ Here's a quick guide to help you contribute to Flutterando.
 <br>
 
 <!-- CONTACT -->
-## 💬 Contact
+## <div id="contact">💬 Contact</div>
 
 Flutterando Community
 - [Discord](https://discord.gg/qNBDHNARja)
@@ -217,7 +222,7 @@ Flutterando Community
 <br>
 
 <!-- CONTRIBUTORS -->
-## 👥 Contributors
+## <div id="contributors">👥 Contributors</div>
 
 <a href="https://github.com/Flutterando/triple_pattern/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=flutterando/triple_pattern" />
