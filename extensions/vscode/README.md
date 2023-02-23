@@ -33,6 +33,7 @@ Flutter Triple can be installed from the [VSCode Marketplace](https://marketplac
 | Shortcut                        | Description                                    |
 | ------------------------------- | ---------------------------------------------- |
 | `impTriple`                     | import package:flutter_triple                  |
+| `impTripleTest`                 | import package:triple_test/triple_test.dart    |
 | `tripleStreamstore`             | Create Triple Stream Store                     |
 | `tripleNotifierstore`           | Create Triple Notifier Store                   |
 | `tripleStoreObserver`           | Create Triple Store Observer                   |
@@ -45,6 +46,9 @@ Flutter Triple can be installed from the [VSCode Marketplace](https://marketplac
 | `tripleMiddlewareInterceptor`   | Create a Triple Middleware Interceptor         |
 | `tripleSimpleExecutor`          | Create a Triple Simple Executor                |
 | `mobxStoreClass`                | Mobx triple class                              |
+| `mockStore`                     | Create a mock store                            |
+| `tripleWhenObserveTest`         | Create a new store test \"whenObserve\"        |
+| `tripleStoreTest`               | Create a new store test                        |
 | `tripleListener`                | Creates a Triple Listener                      |
 | `tripleScopedListener`          | Triple Scoped Listener                         |
 | `tripleConsumer`                | Creates a Triple Consumer                      |
