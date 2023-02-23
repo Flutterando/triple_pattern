@@ -7,10 +7,11 @@
 </p>
 
 ---
+
 ## Overview
 
-
 [VSCode](https://code.visualstudio.com/) support for the [Triple Library](https://triple.flutterando.com.br/) and provides tools for effectively creating Stores for [Flutter](https://flutter.dev/) apps.
+
 ## Installation
 
 Flutter Triple can be installed from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Flutterando.flutter-triple) or by [searching within VSCode](https://code.visualstudio.com/docs/editor/extension-gallery#_search-for-an-extension).
@@ -27,18 +28,26 @@ Flutter Triple can be installed from the [VSCode Marketplace](https://marketplac
 
 ## Snippets
 
-### Triple
+### Flutter Triple and Mobx_triple
 
-| Shortcut                | Description                            |
-| ----------------------- | -------------------------------------- |
-| `importfluttertriple`   | Imports `package:flutter_triple`.      |
-| `importtripletest`      | Imports `package:triple_test`          |
-| `triplenotifierstore`   | Creates a `NotifierStore` class        |
-| `tripleobserver`        | Creates a `TripleObserver.addListener` |
-| `triplestoreobserver`   | Creates a `store.observer`             |
-| `triplestreamstore`     | Creates a `StreamStore` class          |
-| `mockstore`             | Creates a class extending `MockStore`  |
-| `tripletestwhenobserve` | Creates a `whenObserve`                |
-| `tripleteststore`       | Creates a `storeTest`                  |
+| Shortcut                        | Description                                    |
+| ------------------------------- | ---------------------------------------------- |
+| `impTriple`                     | import package:flutter_triple                  |
+| `tripleStreamstore`             | Create Triple Stream Store                     |
+| `tripleNotifierstore`           | Create Triple Notifier Store                   |
+| `tripleStoreObserver`           | Create Triple Store Observer                   |
+| `tripleTrackingObserver`        | Create Triple Observer                         |
+| `tripleBuilder`                 | Create a Triple builder                        |
+| `tripleScopedBuilder`           | Create a Triple Scoped Builder                 |
+| `tripleTransitionScopedBuilder` | Create a Triple Transition Scoped Builder      |
+| `tripleStreamSelector`          | Creates three main Triple Stream Selectors     |
+| `tripleListenableSelector`      | Creates three main Triple Listenable Selectors |
+| `tripleMiddlewareInterceptor`   | Create a Triple Middleware Interceptor         |
+| `tripleSimpleExecutor`          | Create a Triple Simple Executor                |
+| `mobxStoreClass`                | Mobx triple class                              |
+| `tripleListener`                | Creates a Triple Listener                      |
+| `tripleScopedListener`          | Triple Scoped Listener                         |
+| `tripleConsumer`                | Creates a Triple Consumer                      |
+| `tripleScopedConsumer`          | Triple Scoped Consumer                         |
 
 > **LET'S BE REFERENCES TOGETHER 💙**
