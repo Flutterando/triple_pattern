@@ -49,6 +49,8 @@ If it's for the Flutterando version of the template just send a message to us (o
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#Usage">Usage</a></li>
     <li><a href="#Contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#Contributors">Contributors</a></li>
   </ol>
 </details>
 
