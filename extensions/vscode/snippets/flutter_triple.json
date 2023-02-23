@@ -1,53 +1,130 @@
 {
-	"Import package:flutter_triple": {
-		"prefix": "importtriple",
-		"body": "import 'package:flutter_triple/flutter_triple.dart';",
-		"description": "import package:flutter_triple/flutter_triple.dart;"
-	  },
-	"Triple Stream Store": {
-		"prefix": "triplestreamstore",
-		"body": [
-			"import 'package:flutter_triple/flutter_triple.dart';",
-			"",
-			"class $1Store extends StreamStore<${2:Error}, ${3:State}> {",
-			"\t$1Store() : super(${4:State});",
-			"",
-			"\t${0}",
-			"}"
-		],
-		"description": "Create Triple Stream Store"
-	},
-	"Triple Notifier Store": {
-		"prefix": "triplenotifierstore",
-		"body": [
-			"import 'package:flutter_triple/flutter_triple.dart';",
-			"",
-			"class $1Store extends NotifierStore<${2:Error}, ${3:State}> {",
-			"\t$1Store() : super(${4:State});",
-			"",
-			"\t${0}",
-			"}"
-		],
-		"description": "Create Triple Stream Store"
-	},
-	"Triple Store Observer": {
-		"prefix": "triplestoreobserver",
-		"body": [
-			"${1:store}.observer(",
-			"onState: (state) { $4 },",
-			"${2:onError: (error) {\\},}",
-			"${3:onLoading: (loading) {\\},}",
-			");"
-		],
-		"description": "Create Triple Store Observer"
-	},
-	"Triple Observer": {
-		"prefix": "tripleobserver",
-		"body": [
-			"TripleObserver.addListener((triple){",
-			"\t//TODO: implement listener",
-			"});"
-		],
-		"description": "Create Triple Observer"
-	}
+  "Import package:flutter_triple": {
+    "prefix": "impTriple",
+    "body": "import 'package:flutter_triple/flutter_triple.dart';",
+    "description": "import package:flutter_triple/flutter_triple.dart;"
+  },
+  "Triple Stream Store": {
+    "prefix": "tripleStreamstore",
+    "body": [
+      "import 'package:flutter_triple/flutter_triple.dart';",
+      "",
+      "class $1Store extends StreamStore<${2:Error}, ${3:State}> {",
+      "\t$1Store() : super(${4:State});",
+      "",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Create Triple Stream Store"
+  },
+  "Triple Notifier Store": {
+    "prefix": "tripleNotifierstore",
+    "body": [
+      "import 'package:flutter_triple/flutter_triple.dart';",
+      "",
+      "class $1Store extends NotifierStore<${2:Error}, ${3:State}> {",
+      "\t$1Store() : super(${4:State});",
+      "",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Create Triple Stream Store"
+  },
+  "Triple Store Observer": {
+    "prefix": "tripleStoreObserver",
+    "body": [
+      "${1:store}.observer(",
+      "onState: (state) { $4 },",
+      "${2:onError: (error) {\\},}",
+      "${3:onLoading: (loading) {\\},}",
+      ");"
+    ],
+    "description": "Create Triple Store Observer"
+  },
+  "Triple Tracking Observer": {
+    "prefix": "tripleTrackingObserver",
+    "body": [
+      "TripleObserver.addListener((triple){",
+      "\t//TODO: implement listener",
+      "});"
+    ],
+    "description": "Create Triple Observer"
+  },
+  "Triple builder": {
+    "prefix": "tripleBuilder",
+    "body": [
+      "import 'package:flutter_triple/flutter_triple.dart';",
+      "",
+      "TripleBuilder<$1T>(",
+      "    store: store,",
+      "    builder: (context, triple) {",
+      "  \\t//TODO: implement triple builder",
+      "  },",
+      "    ",
+      "  );",
+      ""
+    ],
+    "description": "Create a Triple builder"
+  },
+  "Triple Stream Selector": {
+    "prefix": "tripleStreamSelector",
+    "body": [
+      "Stream<State> myState$ = counter.selectState;",
+      "Stream<Exception> myError$ = counter.selectError;",
+      "Stream<bool> myLoading$ = counter.selectLoading;"
+    ],
+    "description": "Create three main Triple Stream Selectors"
+  },
+  "Triple Listenable Selector": {
+    "prefix": "tripleListenableSelector",
+    "body": [
+      "ValueListenable<State> myState$ = counter.selectState;",
+      "ValueListenable<Exception?> myError$ = counter.selectError;",
+      "ValueListenable<bool> myLoading$ = counter.selectLoading;"
+    ],
+    "description": "Create three main Triple Listenable Selector"
+  },
+  "Triple Middleware Interceptor": {
+    "prefix": "tripleMiddlewareInterceptor",
+    "body": [
+      "@override",
+      "  Triple<Exception, $1State> middleware(triple){",
+      "    if(triple.event == TripleEvent.state){",
+      "      return ;",
+      "    }",
+      "",
+      "    return triple;",
+      "  }"
+    ],
+    "description": "Create a Triple Middleware Interceptor"
+  },
+  "Triple Simple Executor": {
+    "prefix": "tripleSimpleExecutor",
+    "body": ["", "   execute(() => repository.fetch());", ""],
+    "description": "Create a Triple Simple Executor"
+  },
+
+  "Mobx triple class": {
+    "prefix": "mobxStoreClass",
+    "body": [
+      "",
+      "",
+      "class $1StoreName extends MobXStore<${2:Exception}, ${3:State}> {",
+      "",
+      "    Counter() : super(initialState);",
+      "",
+      "    Future<void> funcionName() async {",
+      "        setLoading(true);",
+      "",
+      "        if() {",
+      "            update(value);",
+      "        } else {",
+      "            setError(Exception('Erro text'));",
+      "        }",
+      "        setLoading(false);",
+      "    }",
+      "}"
+    ],
+    "description": "Mobx triple class"
+  }
 }

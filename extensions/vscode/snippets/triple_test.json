@@ -1,18 +1,18 @@
 {
   "Triple MockStore": {
-    "prefix": "mockstore",
+    "prefix": "mockStore",
     "body": [
       "class Mock$1Store extends MockStore<${2:Error}, ${3:State}> implements $1Store {}"
     ],
     "description": "Create a mock store"
   },
   "Import package:triple_test": {
-    "prefix": "importtripletest",
+    "prefix": "impTripleTest",
     "body": "import 'package:triple_test/triple_test.dart';",
     "description": "import package:triple_test/triple_test.dart;"
   },
   "Triple Test whenObserve": {
-    "prefix": "tripletestwhenobserve",
+    "prefix": "tripleWhenObserveTest",
     "body": [
       "whenObserve<${1:Error}, ${2:State}>(",
       "\t${3:mock},",
@@ -26,7 +26,7 @@
     "description": "Create a new store test \"whenObserve\""
   },
   "Triple Teste storeTest": {
-    "prefix": "tripleteststore",
+    "prefix": "tripleStoreTest",
     "body": [
       "storeTest<${1:Store}>(",
       "\t'Testing triple',",
