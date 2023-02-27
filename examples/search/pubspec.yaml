@@ -1,6 +1,6 @@
 name: search
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -23,7 +23,7 @@ dependencies:
 dependency_overrydes:
   flutter_modular:
     path: /Users/jacobmoura/Projects/modular/flutter_modular
-    
+
 dev_dependencies:
   flutter_modular_test: ^1.0.4
   mocktail: ^0.3.0
