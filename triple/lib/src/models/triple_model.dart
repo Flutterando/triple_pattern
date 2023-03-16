@@ -1,12 +1,12 @@
 ///[Triple] class
 // ignore_for_file: public_member_api_docs
 
-class Triple<Error extends Object, State extends Object> {
+class Triple<State> {
   ///The variable [state] it's the type [State]
   final State state;
 
   ///The variable [error] it's the type [Error]
-  final Error? error;
+  final dynamic error;
 
   ///The variable [isLoading] it's the type [bool]
   final bool isLoading;
@@ -22,14 +22,14 @@ class Triple<Error extends Object, State extends Object> {
     this.event = TripleEvent.state,
   });
 
-  Triple<Error, State> copyWith({
+  Triple<State> copyWith({
     State? state,
-    Error? error,
+    dynamic error,
     bool? isLoading,
     int? index,
     TripleEvent? event,
   }) {
-    return Triple<Error, State>(
+    return Triple<State>(
       state: state ?? this.state,
       error: error ?? this.error,
       isLoading: isLoading ?? this.isLoading,
@@ -37,8 +37,8 @@ class Triple<Error extends Object, State extends Object> {
     );
   }
 
-  Triple<Error, State> clearError() {
-    return Triple<Error, State>(
+  Triple<State> clearError() {
+    return Triple<State>(
       state: state,
       isLoading: isLoading,
       event: event,

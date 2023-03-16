@@ -15,7 +15,7 @@ void main() {
     testWidgets('should render child widget', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: TripleListener<MockStore, String, int>(
+          child: TripleListener<MockStore, int>(
             store: store,
             listener: (context, triple) {},
             child: Container(),
@@ -29,7 +29,7 @@ void main() {
       var called = false;
       await tester.pumpWidget(
         MockWidget(
-          child: TripleListener<MockStore, String, int>(
+          child: TripleListener<MockStore, int>(
             store: store,
             listener: (context, triple) {
               called = true;
@@ -46,12 +46,11 @@ void main() {
     });
 
     testWidgets('''
-should not trigger listener when state changes but filter returns false''',
-        (tester) async {
+should not trigger listener when state changes but filter returns false''', (tester) async {
       var called = false;
       await tester.pumpWidget(
         MockWidget(
-          child: TripleListener<MockStore, String, int>(
+          child: TripleListener<MockStore, int>(
             store: store,
             listener: (context, triple) {
               called = true;
@@ -69,12 +68,11 @@ should not trigger listener when state changes but filter returns false''',
     });
 
     testWidgets('''
-should not trigger listener when state changes but distinct returns false''',
-        (tester) async {
+should not trigger listener when state changes but distinct returns false''', (tester) async {
       var called = false;
       await tester.pumpWidget(
         MockWidget(
-          child: TripleListener<MockStore, String, int>(
+          child: TripleListener<MockStore, int>(
             store: store,
             listener: (context, triple) {
               called = true;
@@ -95,7 +93,7 @@ should not trigger listener when state changes but distinct returns false''',
       var called = false;
       await tester.pumpWidget(
         MockWidget(
-          child: TripleListener<MockStore, String, int>(
+          child: TripleListener<MockStore, int>(
             store: store,
             listener: (context, triple) {
               called = true;

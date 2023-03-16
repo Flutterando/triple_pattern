@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import 'package:triple/triple.dart';
 
 void main() {
-  late TestImplements<MyException, int> store;
+  late TestImplements<int> store;
 
   TripleObserver.addListener(print);
 
@@ -17,7 +17,7 @@ void main() {
     store.update(1);
     expect(
       store.propagated.toString(),
-      Triple<MyException, int>(state: 1).toString(),
+      Triple<int>(state: 1).toString(),
     );
   });
 
@@ -25,7 +25,7 @@ void main() {
     store.setLoading(true);
     expect(
       store.propagated.toString(),
-      Triple<MyException, int>(
+      Triple<int>(
         state: 0,
         isLoading: true,
         event: TripleEvent.loading,
@@ -37,7 +37,7 @@ void main() {
     store.setError(const MyException('error'));
     expect(
       store.propagated.toString(),
-      Triple<MyException, int>(
+      Triple<int>(
         state: 0,
         error: const MyException('error'),
         event: TripleEvent.error,
@@ -82,12 +82,10 @@ void main() {
 }
 
 // ignore: must_be_immutable
-class TestImplements<Error extends Object, State extends Object> extends Store<Error, State>
-    with MementoMixin
-    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
+class TestImplements<State extends Object> extends BaseStore<State> with MementoMixin implements Selectors<Stream, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
-  late Triple<Error, State> propagated = triple;
+  late Triple<State> propagated = triple;
 
   @override
   Future destroy() async {}
@@ -103,7 +101,7 @@ class TestImplements<Error extends Object, State extends Object> extends Store<E
 
   @protected
   @override
-  void propagate(Triple<Error, State> triple) {
+  void propagate(Triple<State> triple) {
     super.propagate(triple);
     propagated = triple;
   }

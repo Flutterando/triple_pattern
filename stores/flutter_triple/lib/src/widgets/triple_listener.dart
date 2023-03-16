@@ -6,25 +6,24 @@ import 'package:triple/triple.dart';
 
 ///[TripleListener] class it's the type <TStore extends Store<TError, TState>,
 ///TError extends Object, TState extends Object>
-class TripleListener<TStore extends Store<TError, TState>,
-    TError extends Object, TState extends Object> extends StatefulWidget {
+class TripleListener<TStore extends BaseStore<TState>, TState> extends StatefulWidget {
   ///The Function [listener] it's the type [Widget] and receive
   ///the params context it`s the type [BuildContext] and triple it's
   ///the type Triple<TError, TState>
 
   final void Function(
     BuildContext context,
-    Triple<TError, TState> triple,
+    Triple<TState> triple,
   ) listener;
 
   ///The Function [filter] it's the type [bool] and receive the
   ///param triple it`s the type Triple<TError, TState>
 
-  final bool Function(Triple<TError, TState> triple)? filter;
+  final bool Function(Triple<TState> triple)? filter;
 
   ///The Function [distinct] it's the type [dynamic] and receive the
   ///param state it`s the type Triple<TError, TState>
-  final dynamic Function(Triple<TError, TState> state)? distinct;
+  final dynamic Function(Triple<TState> state)? distinct;
 
   ///[store] it's the type [TStore]
   final TStore? store;
@@ -43,13 +42,10 @@ class TripleListener<TStore extends Store<TError, TState>,
   }) : super(key: key);
 
   @override
-  _TripleListenerState<TStore, TError, TState> createState() =>
-      _TripleListenerState<TStore, TError, TState>();
+  _TripleListenerState<TStore, TState> createState() => _TripleListenerState<TStore, TState>();
 }
 
-class _TripleListenerState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<TripleListener<TStore, TError, TState>> {
+class _TripleListenerState<TStore extends BaseStore<TState>, TState> extends State<TripleListener<TStore, TState>> {
   var _distinct;
 
   bool isDisposed = false;

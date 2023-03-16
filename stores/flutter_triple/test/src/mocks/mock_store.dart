@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_triple/src/stores/notifier_store.dart';
+import 'package:flutter_triple/flutter_triple.dart';
 
-class MockStore extends NotifierStore<String, int> {
+class MockStore extends Store<int> {
   MockStore() : super(0);
 
   void updateWithValue(int state) => update(state);
@@ -13,7 +13,7 @@ class MockStore extends NotifierStore<String, int> {
   void disableLoading() => setLoading(false);
 }
 
-class MockDistinctStore extends NotifierStore<String, CountState> {
+class MockDistinctStore extends Store<CountState> {
   MockDistinctStore() : super(CountState(1));
 
   void updateWithIncrement() => update(CountState(state.value + 1));

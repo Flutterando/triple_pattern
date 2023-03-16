@@ -13,13 +13,11 @@ void main() {
     });
 
     testWidgets('''
-throws AssertionError if either onState, onError, or onLoading is not provided''',
-        (tester) async {
+throws AssertionError if either onState, onError, or onLoading is not provided''', (tester) async {
       expect(() => ScopedConsumer(store: store), throwsAssertionError);
     });
 
-    testWidgets('throws AssertionError if either builder is not provided',
-        (tester) async {
+    testWidgets('throws AssertionError if either builder is not provided', (tester) async {
       expect(
         () => ScopedConsumer(
           store: store,
@@ -29,20 +27,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       );
     });
 
-    testWidgets('calls onStateBuilder when an state is emitted',
-        (tester) async {
+    testWidgets('calls onStateBuilder when an state is emitted', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
           ),
         ),
@@ -56,20 +52,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets('calls onStateBuilder when filted and an state is emitted',
-        (tester) async {
+    testWidgets('calls onStateBuilder when filted and an state is emitted', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => true,
           ),
@@ -84,21 +78,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets(
-        'onStateBuilder not called when state is filtered and emitted is true',
-        (tester) async {
+    testWidgets('onStateBuilder not called when state is filtered and emitted is true', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => true,
           ),
@@ -113,21 +104,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets(
-        'onStateBuilder called when state is distinct and emitted is true',
-        (tester) async {
+    testWidgets('onStateBuilder called when state is distinct and emitted is true', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             distinct: (state) => state,
           ),
@@ -142,21 +130,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets(
-        'onStateBuilder not called when state is filtered and emitted is false',
-        (tester) async {
+    testWidgets('onStateBuilder not called when state is filtered and emitted is false', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => false,
           ),
@@ -178,13 +163,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onErrorBuilder: (context, error) => Text('Error: $error'),
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
           ),
         ),
       );
@@ -204,11 +188,10 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       var onStateListenerCalled = false;
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onLoadingBuilder: (context) => const Text('loading'),
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = isLoading,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = isLoading,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             onStateListener: (context, state) => onStateListenerCalled = true,
           ),
@@ -223,20 +206,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
     });
 
     testWidgets('''
-calls onStateBuilder, onErrorListener and onLoadingListener when an state, load and error is emitted''',
-        (tester) async {
+calls onStateBuilder, onErrorListener and onLoadingListener when an state, load and error is emitted''', (tester) async {
       var onStateListenerCalled = false;
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>(
+          child: ScopedConsumer<MockStore, int>(
             store: store,
             onStateListener: (context, state) => onStateListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onStateBuilder: (context, state) => Text('State: $state'),
             onErrorBuilder: (context, error) => Text('Error: $error'),
             onLoadingBuilder: (context) => const Text('Loading'),
@@ -266,16 +247,14 @@ calls onStateBuilder, onErrorListener and onLoadingListener when an state, load 
     });
 
     testWidgets('''
-throws AssertionError if either onState, onError, or onLoading is not provided''',
-        (tester) async {
+throws AssertionError if either onState, onError, or onLoading is not provided''', (tester) async {
       expect(
         () => ScopedConsumer.transition(store: store),
         throwsAssertionError,
       );
     });
 
-    testWidgets('throws AssertionError if either builder is not provided',
-        (tester) async {
+    testWidgets('throws AssertionError if either builder is not provided', (tester) async {
       expect(
         () => ScopedConsumer.transition(
           store: store,
@@ -285,20 +264,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       );
     });
 
-    testWidgets('calls onStateBuilder when an state is emitted',
-        (tester) async {
+    testWidgets('calls onStateBuilder when an state is emitted', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             transition: (context, child) => AnimatedSwitcher(
               duration: const Duration(
@@ -317,20 +294,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onErrorListenerCalled, false);
       expect(onLoadingListenerCalled, false);
     });
-    testWidgets('calls onStateBuilder with transition when an state is emitted',
-        (tester) async {
+    testWidgets('calls onStateBuilder with transition when an state is emitted', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             transition: (context, child) => AnimatedSwitcher(
               duration: const Duration(
@@ -350,20 +325,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets('calls onStateBuilder when filted and an state is emitted',
-        (tester) async {
+    testWidgets('calls onStateBuilder when filted and an state is emitted', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => true,
             transition: (context, child) => AnimatedSwitcher(
@@ -384,21 +357,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets(
-        'onStateBuilder not called when state is filtered and emitted is true',
-        (tester) async {
+    testWidgets('onStateBuilder not called when state is filtered and emitted is true', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => true,
             transition: (context, child) => AnimatedSwitcher(
@@ -419,21 +389,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       expect(onLoadingListenerCalled, false);
     });
 
-    testWidgets(
-        'onStateBuilder not called when state is filtered and emitted is false',
-        (tester) async {
+    testWidgets('onStateBuilder not called when state is filtered and emitted is false', (tester) async {
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
       var onStateListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onStateBuilder: (context, state) => Text('state $state'),
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             filter: (state) => false,
             transition: (context, child) => AnimatedSwitcher(
@@ -461,13 +428,12 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onErrorBuilder: (context, error) => Text('Error: $error'),
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             onStateListener: (context, state) => onStateListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             transition: (context, child) => AnimatedSwitcher(
               duration: const Duration(
                 milliseconds: 100,
@@ -493,11 +459,10 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
       var onStateListenerCalled = false;
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onLoadingBuilder: (context) => const Text('loading'),
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = isLoading,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = isLoading,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
             onStateListener: (context, state) => onStateListenerCalled = true,
             transition: (context, child) => AnimatedSwitcher(
@@ -518,20 +483,18 @@ throws AssertionError if either onState, onError, or onLoading is not provided''
     });
 
     testWidgets('''
-calls onStateBuilder, onErrorListener and onLoadingListener when an state, load and error is emitted''',
-        (tester) async {
+calls onStateBuilder, onErrorListener and onLoadingListener when an state, load and error is emitted''', (tester) async {
       var onStateListenerCalled = false;
       var onLoadingListenerCalled = false;
       var onErrorListenerCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedConsumer<MockStore, String, int>.transition(
+          child: ScopedConsumer<MockStore, int>.transition(
             store: store,
             onStateListener: (context, state) => onStateListenerCalled = true,
             onErrorListener: (context, error) => onErrorListenerCalled = true,
-            onLoadingListener: (context, isLoading) =>
-                onLoadingListenerCalled = true,
+            onLoadingListener: (context, isLoading) => onLoadingListenerCalled = true,
             onStateBuilder: (context, state) => Text('State: $state'),
             onErrorBuilder: (context, error) => Text('Error: $error'),
             onLoadingBuilder: (context) => const Text('Loading'),

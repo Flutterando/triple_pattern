@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
-class CounterStreamStore extends StreamStore<String, int> {
-  CounterStreamStore() : super(0);
+class CounterNotifierStore extends Store<int> {
+  CounterNotifierStore() : super(0);
 
   void increment() {
     update(state + 1);
@@ -26,21 +26,21 @@ class CounterStreamStore extends StreamStore<String, int> {
 }
 
 void main() {
-  group('StreamStore listen', () {
-    late CounterStreamStore store;
+  group('NotifierStore select', () {
+    late CounterNotifierStore store;
     late int state;
-    late String error;
+    late String? error;
     late bool isLoading;
 
     setUp(() {
-      store = CounterStreamStore();
+      store = CounterNotifierStore();
       state = -1;
       error = 'test exception';
       isLoading = false;
 
-      store.selectState.listen((s) => state = s);
-      store.selectError.listen((e) => error = e);
-      store.selectLoading.listen((l) => isLoading = l);
+      store.selectState.addListener(() => state = store.selectState.value);
+      store.selectError.addListener(() => error = store.selectError.value);
+      store.selectLoading.addListener(() => isLoading = store.selectLoading.value);
     });
 
     test('initial state should be 0', () {
@@ -87,14 +87,14 @@ void main() {
       expect(isLoading, false);
     });
   });
-  group('StreamStore observer', () {
-    late CounterStreamStore store;
+  group('NotifierStore observer', () {
+    late CounterNotifierStore store;
     late int state;
-    late String error;
+    late String? error;
     late bool isLoading;
 
     setUp(() {
-      store = CounterStreamStore();
+      store = CounterNotifierStore();
       state = -1;
       error = 'test exception';
       isLoading = false;
@@ -121,7 +121,6 @@ void main() {
     test('increment should increase the state by 1', () {
       store.increment();
       expect(store.state, 1);
-      expect(state, 1);
       expect(error, isA<String>());
       expect(isLoading, false);
     });

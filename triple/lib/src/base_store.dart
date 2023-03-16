@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:meta/meta.dart';
 
-import 'either_adapter.dart';
 import 'models/dispatched_triple.dart';
 import 'models/triple_model.dart';
 
@@ -57,12 +56,12 @@ void setTripleResolver(
 ) =>
     _tripleResolver = tripleResolver;
 
-///The function [getTripleResolver] it's the type [TStore]
-TStore getTripleResolver<TStore extends Store>() {
+///The function [getTripleResolver] it's the type [TBaseStore]
+TBaseStore getTripleResolver<TBaseStore extends BaseStore>() {
   try {
     if (_tripleResolver != null) {
-      final store = _tripleResolver?.call<TStore>();
-      if (store is! Store) {
+      final store = _tripleResolver?.call<TBaseStore>();
+      if (store is! BaseStore) {
         throw TripleException(
           ''' 
       TRIPLE ERROR!
@@ -94,9 +93,9 @@ TStore getTripleResolver<TStore extends Store>() {
   }
 }
 
-class _MutableObjects<Error extends Object, State extends Object> {
-  late Triple<Error, State> triple;
-  late Triple<Error, State> lastState;
+class _MutableObjects<State> {
+  late Triple<State> triple;
+  late Triple<State> lastState;
   CancelableOperation? completerExecution;
   DateTime lastExecution = DateTime.now();
 
@@ -106,16 +105,15 @@ class _MutableObjects<Error extends Object, State extends Object> {
   }
 }
 
-///[Store] abstract class
-@immutable
-abstract class Store<Error extends Object, State extends Object> {
-  late final _MutableObjects<Error, State> _mutableObjects;
+///[BaseStore] abstract class
+abstract class BaseStore<State> {
+  late final _MutableObjects<State> _mutableObjects;
 
   ///Get the complete triple value;
-  Triple<Error, State> get triple => _mutableObjects.triple;
+  Triple<State> get triple => _mutableObjects.triple;
 
   ///[lastState] it's a get
-  Triple<Error, State> get lastState => _mutableObjects.lastState;
+  Triple<State> get lastState => _mutableObjects.lastState;
 
   ///Get the [state] value;
   State get state => _mutableObjects.triple.state;
@@ -124,11 +122,11 @@ abstract class Store<Error extends Object, State extends Object> {
   bool get isLoading => _mutableObjects.triple.isLoading;
 
   ///Get [error] value;
-  Error? get error => _mutableObjects.triple.error;
+  dynamic get error => _mutableObjects.triple.error;
 
   ///[initialState] Start this store with a value defalt.
-  Store(State initialState) {
-    _mutableObjects = _MutableObjects<Error, State>(initialState);
+  BaseStore(State initialState) {
+    _mutableObjects = _MutableObjects<State>(initialState);
     initStore();
   }
 
@@ -138,7 +136,7 @@ abstract class Store<Error extends Object, State extends Object> {
   ///IMPORTANT!!!
   ///THIS METHOD TO BE VISIBLE FOR OVERRIDING ONLY!!!
   @visibleForOverriding
-  void propagate(Triple<Error, State> triple) {
+  void propagate(Triple<State> triple) {
     _mutableObjects.triple = triple;
     _execTripleObserver(triple, runtimeType);
   }
@@ -178,7 +176,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
   ///Change the error value.
   @protected
-  void setError(Error newError, {bool force = false}) {
+  void setError(dynamic newError, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(error: newError, event: TripleEvent.error);
     candidate = middleware(candidate);
     if (force || (candidate.error != _mutableObjects.triple.error)) {
@@ -189,7 +187,7 @@ abstract class Store<Error extends Object, State extends Object> {
 
   ///called when dispacher [update], [setLoading] or [setError]
   ///overriding to change triple before the propagation;
-  Triple<Error, State> middleware(Triple<Error, State> newTriple) {
+  Triple<State> middleware(Triple<State> newTriple) {
     return newTriple;
   }
 
@@ -223,63 +221,12 @@ abstract class Store<Error extends Object, State extends Object> {
       (value) {
         if (value is State) {
           update(value, force: true);
-          setLoading(false);
+          setLoading(false, force: true);
         }
       },
       onError: (error, __) {
-        if (error is Error) {
-          setError(error, force: true);
-          setLoading(false);
-        } else {
-          throw Exception(
-            '''is expected a ${Error.toString()} type, and receipt ${error.runtimeType}''',
-          );
-        }
-      },
-    ).valueOrCancellation();
-  }
-
-  ///Execute a Future Either dartz.
-  ///
-  ///This function is a sugar code used to run a Future in a simple way,
-  ///executing [setLoading] and adding to [setError] if an error
-  ///occurs in Either
-  Future<void> executeEither(
-    Future<EitherAdapter<Error, State>> Function() func, {
-    Duration delay = const Duration(
-      milliseconds: 50,
-    ),
-  }) async {
-    final localTime = DateTime.now();
-    _mutableObjects.lastExecution = localTime;
-    await Future.delayed(delay);
-    if (localTime != _mutableObjects.lastExecution) {
-      return;
-    }
-
-    setLoading(true);
-
-    await _mutableObjects.completerExecution?.cancel();
-
-    _mutableObjects.completerExecution = CancelableOperation.fromFuture(
-      func(),
-    );
-
-    await _mutableObjects.completerExecution!.then(
-      (value) {
-        if (value is EitherAdapter<Error, State>) {
-          value.fold(
-            (e) => setError(
-              e,
-              force: true,
-            ),
-            (s) => update(
-              s,
-              force: true,
-            ),
-          );
-          setLoading(false);
-        }
+        setError(error, force: true);
+        setLoading(false, force: true);
       },
     ).valueOrCancellation();
   }
@@ -292,7 +239,7 @@ abstract class Store<Error extends Object, State extends Object> {
   StreamSubscription executeStream(Stream<State> stream) {
     final StreamSubscription sub = stream.listen(
       update,
-      onError: (error) => setError(error, force: true),
+      onError: (e) => setError(e, force: true),
       onDone: () => setLoading(false),
     );
     return sub;
@@ -316,7 +263,7 @@ abstract class Store<Error extends Object, State extends Object> {
   Disposer observer({
     void Function(State state)? onState,
     void Function(bool isLoading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(dynamic error)? onError,
   });
 
   ///Represents a value of one of three mapped possibilities.
@@ -332,12 +279,12 @@ abstract class Store<Error extends Object, State extends Object> {
   TReturn when<TReturn>({
     required TReturn Function(State state) onState,
     TReturn Function(bool isLoading)? onLoading,
-    TReturn Function(Error error)? onError,
+    TReturn Function(dynamic error)? onError,
   }) {
     if (triple.event == TripleEvent.loading && onLoading != null && triple.isLoading) {
       return onLoading(triple.isLoading);
     } else if (triple.event == TripleEvent.error && onError != null) {
-      return onError(triple.error!);
+      return onError(triple.error);
     } else {
       return onState(triple.state);
     }

@@ -46,15 +46,10 @@ We can recover the reactivity of the segments individually for transformations o
 The type of selectors changes depending on the reactive tool you are using in the Stores. For example, if you are using **StreamStore** then your selectors will be Streams, however,  if you are using **NotifierStore** then your selectors will be ValueListenable;
 
 ```dart
-//StreamStore
-Stream<int> myState$ = counter.selectState;
-Stream<Exception> myError$ = counter.selectError;
-Stream<bool> myLoading$ = counter.selectLoading;
 
-//NotifierStore
-ValueListenable<int> myState$ = counter.selectState;
-ValueListenable<Exception?> myError$ = counter.selectError;
-ValueListenable<bool> myLoading$ = counter.selectLoading;
+RxValueListenable<int> myState$ = counter.selectState;
+RxValueListenable<dynamic> myError$ = counter.selectError;
+RxValueListenable<bool> myLoading$ = counter.selectLoading;
 
 ```
 

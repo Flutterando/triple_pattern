@@ -1,3 +1,28 @@
+  ## [2.0.0] - 2023-03-16
+
+  - **[BREAKING CHANGES]**: `StreamStore` and `NotifierStore` will now just be called `Store`. 
+  - **[BREAKING CHANGES]**: It is no longer necessary to declare the exception value in `Stores`, this value will be dynamic by default.
+  ```dart
+  // before
+  class MyStore extends NotifierStore<Exception, Data> {}
+
+  // now
+  class MyStore extends Store<Data> {}
+  ```
+  - **[feat]**: All `RxNotifier` features will be available for `Triple`.
+
+  ```dart
+  Widget build(BuildContext context){
+    context.select(() => [store.state, store.error, store.loading]);
+    ...
+  }
+  ```
+  - **[feat]**: New Widgets! (**ScopedConsumer**, **ScopedListener**, **TripleConsumer** and **TripleListener**);
+
+  - **[BREAKING CHANGES]**: `Store.executeEither` removed.
+
+
+
   ## [1.5.0+1] - 2022-02-24
   - Added `MementoMixin.clearHistory` method.
   - Remove @protected of `MementoMixin.undo` and `MementoMixin.redo` methods.

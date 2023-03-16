@@ -6,25 +6,24 @@ import 'package:triple/triple.dart';
 
 ///[TripleBuilder] class it's the type <TStore extends Store<TError, TState>,
 ///TError extends Object, TState extends Object>
-class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends StatefulWidget {
+class TripleBuilder<TStore extends BaseStore<TState>, TState> extends StatefulWidget {
   ///The Function [builder] it's the type [Widget] and receive
   ///the params context it`s the type [BuildContext] and triple it's
   ///the type Triple<TError, TState>
 
   final Widget Function(
     BuildContext context,
-    Triple<TError, TState> triple,
+    Triple<TState> triple,
   ) builder;
 
   ///The Function [filter] it's the type [bool] and receive the
   ///param triple it`s the type Triple<TError, TState>
 
-  final bool Function(Triple<TError, TState> triple)? filter;
+  final bool Function(Triple<TState> triple)? filter;
 
   ///The Function [distinct] it's the type [dynamic] and receive the
   ///param state it`s the type Triple<TError, TState>
-  final dynamic Function(Triple<TError, TState> state)? distinct;
+  final dynamic Function(Triple<TState> state)? distinct;
 
   ///[store] it's the type [TStore]
   final TStore? store;
@@ -39,13 +38,10 @@ class TripleBuilder<TStore extends Store<TError, TState>, TError extends Object,
   }) : super(key: key);
 
   @override
-  _TripleBuilderState<TStore, TError, TState> createState() =>
-      _TripleBuilderState<TStore, TError, TState>();
+  _TripleBuilderState<TStore, TState> createState() => _TripleBuilderState<TStore, TState>();
 }
 
-class _TripleBuilderState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<TripleBuilder<TStore, TError, TState>> {
+class _TripleBuilderState<TStore extends BaseStore<TState>, TState> extends State<TripleBuilder<TStore, TState>> {
   Widget? child;
 
   var _distinct;
@@ -80,7 +76,7 @@ class _TripleBuilderState<TStore extends Store<TError, TState>,
     }
   }
 
-  void onErrorlistener(TError value) {
+  void onErrorlistener(dynamic value) {
     final filter = widget.filter?.call(store.triple) ?? true;
     if (!isDisposed && filter) {
       setState(() {

@@ -1,7 +1,6 @@
 // ignore_for_file: unused_import
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:flutter_triple/src/stores/notifier_store.dart';
-import 'package:flutter_triple/src/stores/stream_store.dart';
+import 'package:flutter_triple/src/stores/store.dart';
 import 'package:flutter_triple/src/widgets/scoped_builder.dart';
 import 'package:flutter_triple/src/widgets/scoped_consumer.dart';
 import 'package:flutter_triple/src/widgets/scoped_listener.dart';

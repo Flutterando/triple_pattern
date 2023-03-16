@@ -60,7 +60,7 @@ import 'package:triple/triple.dart';
 /// );
 /// ```
 @isTest
-FutureOr<void> storeTest<T extends Store>(
+FutureOr<void> storeTest<T extends BaseStore>(
   String description, {
   required FutureOr<T> Function() build,
   Function(T store)? act,
@@ -75,11 +75,7 @@ FutureOr<void> storeTest<T extends Store>(
     final _list = expect();
     final actualList = <String>[];
     Disposer disposer;
-    final expectList = _list is List
-        ? _list
-        : List.from(
-            [_list],
-          );
+    final expectList = _list is List ? _list : List.from([_list]);
     var isFinished = false;
     await runZonedGuarded(() async {
       void testTriple(Triple triple, dynamic value) {
@@ -105,8 +101,6 @@ FutureOr<void> storeTest<T extends Store>(
           completer.complete(true);
         }
       }
-
-      // testTriple(store.triple, store.triple.state);
 
       disposer = store.observer(
         onState: (value) => testTriple(store.triple, value),

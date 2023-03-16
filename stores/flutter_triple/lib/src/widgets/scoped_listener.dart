@@ -6,8 +6,7 @@ import 'package:triple/triple.dart';
 
 ///[ScopedListener] it's the type <TStore extends Store<TError, TState>, TError extends Object,
 ///TState extends Object>
-class ScopedListener<TStore extends Store<TError, TState>,
-    TError extends Object, TState extends Object> extends StatefulWidget {
+class ScopedListener<TStore extends BaseStore<TState>, TState> extends StatefulWidget {
   ///The Function [distinct] it's the type [dynamic] and receive the param state it`s the type [TState]
   final dynamic Function(TState state)? distinct;
 
@@ -19,8 +18,8 @@ class ScopedListener<TStore extends Store<TError, TState>,
   final void Function(BuildContext context, TState state)? onState;
 
   ///The Function [onError] it's the type [Widget] and receive the params context it's the type [BuildContext] and
-  ///error it`s the type [TError]
-  final void Function(BuildContext context, TError? error)? onError;
+  ///error it`s the type [dynamic]
+  final void Function(BuildContext context, dynamic error)? onError;
 
   ///The Function [onLoading] it's the type [Widget] and receive the param context it`s the type [BuildContext]
   final void Function(BuildContext context, bool isLoadding)? onLoading;
@@ -56,13 +55,10 @@ class ScopedListener<TStore extends Store<TError, TState>,
         super(key: key);
 
   @override
-  _ScopedListenerState<TStore, TError, TState> createState() =>
-      _ScopedListenerState<TStore, TError, TState>();
+  _ScopedListenerState<TStore, TState> createState() => _ScopedListenerState<TStore, TState>();
 }
 
-class _ScopedListenerState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<ScopedListener<TStore, TError, TState>> {
+class _ScopedListenerState<TStore extends BaseStore<TState>, TState> extends State<ScopedListener<TStore, TState>> {
   Disposer? disposer;
 
   var _distinct;
@@ -94,20 +90,14 @@ class _ScopedListenerState<TStore extends Store<TError, TState>,
         _distinct = value;
 
         final filter = widget.filter?.call(state) ?? true;
-        if (widget.onState != null &&
-            !isDisposed &&
-            isReload &&
-            filter &&
-            mounted) {
+        if (widget.onState != null && !isDisposed && isReload && filter && mounted) {
           widget.onState!(context, state);
         }
       },
       onError: (error) {
         if (widget.onError != null && !isDisposed && mounted) {
           widget.onError!(context, error);
-        } else if (widget.onError == null &&
-            widget.onState != null &&
-            !isDisposed) {
+        } else if (widget.onError == null && widget.onState != null && !isDisposed) {
           widget.onError!(context, error);
         }
       },

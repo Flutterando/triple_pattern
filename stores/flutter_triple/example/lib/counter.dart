@@ -1,6 +1,6 @@
 import 'package:flutter_triple/flutter_triple.dart';
 
-class CounterStore extends NotifierStore<Exception, int> with MementoMixin {
+class CounterStore extends Store<int> with MementoMixin {
   CounterStore() : super(0);
 
   Future<void> increment() async {

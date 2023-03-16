@@ -1,0 +1,9 @@
+name: triple
+
+packages:
+  - triple/*
+  - triple_test/*
+  - triple_test/*
+  - hydrated_triple/*
+  - stores/*
+  - stores/flutter_triple/example/*

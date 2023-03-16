@@ -6,15 +6,7 @@ sidebar_position: 1
 
 Stores are the heart of the Triple. They are responsible for maintaining the state of the application.
 
-
-## Stream and Notifier Store differences {#-stream-and-notifier-store-differences}
-
-- Streams work without distinct value, so you can dispatcher the same state as many times as you want. In StreamStore you can force an update, 
-setLoading or setError;
-- ValueNotifier is same ChangeNotifier implementation(Listenable class). The **flutter_triple** package also uses RxNotifier (rx_notifier package). 
-One of its standard features is to prevent the same state from being fired (distinct); NotifierStore don't support force update, setLoading or setError.
-
-## Maintaining the State with ValueNotifier {#-maintaining-the-state-with-valuenotifier}
+## Maintaining the State with RxNotifier {#-maintaining-the-state-with-rxnotifier}
 
 [ValueNotifier](https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html) is an implementation of [ChangeNotifier](https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html) and is present in the entire ecosystem of Flutter, from ScrollController to TabController.
 
@@ -22,10 +14,9 @@ Using the *ChangeNotifier* API means reusing everything that already exists on F
 
 The ValueNotifier used in this Store is extended by the library [rx_notifier](https://pub.dev/packages/rx_notifier) which brings the possibility of applying **functional reactive programming (TFRP)**, listening to changes on their values ​​in such a transparent way as [MobX](https://pub.dev/packages/mobx) does.
 
-A Store based on **ValueNotifier** is called **NotifierStore**:
 
 ```dart
-class Counter extends NotifierStore<Exception, int> {
+class Counter extends Store<int> {
 
     Counter() : super(0);
 
@@ -66,10 +57,16 @@ Or listen to reactions transparently using the **rxObserver** or in the widget t
 
 ```dart
 
+/// Code
 rxObserver(() => print(store.state));
 
-...
+/// Widget 
+Widget builder(BuildContext context){
+    context.select(() => store.state);
+    ...
+}
 
+/// Builders
 Widget builder(BuildContext context){
     return RxBuilder(
         builder: (_) => Text(store.state),
@@ -82,75 +79,3 @@ For more information about the extension read the documentation for [rx_notifier
 
 > **IMPORTANT**: You can also continue to use the **Triple** (**observer**, **ScopedBuilder** and **TripleBuilder**);
 
-
-
-
-
-
-
-
-## Maintaining the State with Streams {#-maintaining-the-state-with-streams}
-
-To create a Store that will be responsible for the State Logic, create a class and inherit it from **StreamStore**:
-
-```dart
-class Counter extends StreamStore {}
-```
-
-You can also put types into the state value and into the exception object that will be working on this Store:
-
-```dart
-class Counter extends StreamStore<Exception, int> {}
-```
-
-We finish by assigning an initial value for the state of this Store by invoking the constructor of the parent class (super):
-
-```dart
-class Counter extends StreamStore<Exception, int> {
-
-    Counter() : super(0);
-}
-```
-
-It is available in the Store the 3 methods to change the segments **(update, setError, and setLoading)**. 
-Let's start by incrementing the state:
-
-```dart
-class Counter extends StreamStore<Exception, int> {
-
-    Counter() : super(0);
-
-    void increment(){
-        update(state + 1);
-    }
-}
-```
-
-This code is enough to make the counter work.
-Let's add a little bit of asynchronous code to introduce the methods **setError** and **setLoading**
-
-```dart
-class Counter extends StreamStore<Exception, int> {
-
-    Counter() : super(0);
-
-    Future<void> increment() async {
-        setLoading(true);
-
-        await Future.delayed(Duration(seconds: 1));
-
-        int value = state + 1;
-        if(value < 5) {
-            update(value);
-        } else {
-            setError(Exception('Error: state can\'t be > 4'));
-        }
-        setLoading(false);
-    }
-}
-```
-
-Here we experience the change of states and the other segments of loading and error. 
-> **NOTE**: To use **NotifierStore** it is the same process as we saw on **StreamStore**.
-
-The 3 segments operate separately but can be "heard" together. Now we will see how to observe this store.

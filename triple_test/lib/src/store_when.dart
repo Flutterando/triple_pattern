@@ -4,16 +4,16 @@ import 'package:mocktail/mocktail.dart';
 import 'package:triple/triple.dart';
 import 'package:triple_test/src/store_mock.dart';
 
-void whenObserve<Error extends Object, State extends Object>(
-  MockStore<Error, State> store, {
+void whenObserve<State>(
+  MockStore<State> store, {
   required Function() input,
   Duration delay = const Duration(),
-  List<Triple<Error, State>> triples = const [],
+  List<Triple<State>> triples = const [],
   State? initialState,
 }) {
   if (initialState != null) {
     when(() => store.triple).thenReturn(
-      Triple<Error, State>(
+      Triple<State>(
         state: initialState,
       ),
     );

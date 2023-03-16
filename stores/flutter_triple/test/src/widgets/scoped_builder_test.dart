@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+
 import '../mocks/mocks.dart';
 
 void main() {
@@ -11,16 +12,14 @@ void main() {
       store = MockStore();
     });
 
-    testWidgets(
-        '''throws AssertionError if either onState, onError, or onLoading is not provided''',
-        (tester) async {
+    testWidgets('''throws AssertionError if either onState, onError, or onLoading is not provided''', (tester) async {
       expect(() => ScopedBuilder(store: store), throwsAssertionError);
     });
 
     testWidgets('calls onState when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
           ),
@@ -36,7 +35,7 @@ void main() {
     testWidgets('calls onState when states changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -60,14 +59,13 @@ void main() {
       expect(find.text('state 3'), findsOneWidget);
     });
 
-    testWidgets('calls onState when states changes with distincted',
-        (tester) async {
+    testWidgets('calls onState when states changes with distincted', (tester) async {
       var rebuildCount = 0;
       final _store = MockDistinctStore();
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockDistinctStore, String, CountState>(
+          child: ScopedBuilder<MockDistinctStore, CountState>(
             store: _store,
             onState: (context, state) {
               rebuildCount++;
@@ -101,14 +99,13 @@ void main() {
       expect(find.text('7'), findsOneWidget);
     });
 
-    testWidgets('should trigger onState when states changes with distincted',
-        (tester) async {
+    testWidgets('should trigger onState when states changes with distincted', (tester) async {
       var rebuildCount = 0;
       final _store = MockDistinctStore();
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockDistinctStore, String, CountState>(
+          child: ScopedBuilder<MockDistinctStore, CountState>(
             store: _store,
             distinct: (state) => state.id,
             onState: (context, state) {
@@ -134,11 +131,10 @@ void main() {
       expect(find.text('2'), findsOneWidget);
     });
 
-    testWidgets('calls onState and onLoading when state changes',
-        (tester) async {
+    testWidgets('calls onState and onLoading when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -160,11 +156,10 @@ void main() {
       expect(find.text('state 2'), findsOneWidget);
     });
 
-    testWidgets('calls onState, onLoading and onError when state changes',
-        (tester) async {
+    testWidgets('calls onState, onLoading and onError when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -192,11 +187,10 @@ void main() {
       expect(find.text('error'), findsOneWidget);
     });
 
-    testWidgets('calls onState when filter is true and an state is emitted',
-        (tester) async {
+    testWidgets('calls onState when filter is true and an state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             filter: (state) => true,
@@ -209,11 +203,10 @@ void main() {
       expect(find.text('state 1'), findsOneWidget);
     });
 
-    testWidgets('calls onState when filter is false and an state is emitted',
-        (tester) async {
+    testWidgets('calls onState when filter is false and an state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             filter: (state) => false,
@@ -226,11 +219,10 @@ void main() {
       expect(find.text('state 1'), findsNothing);
     });
 
-    testWidgets('calls onState when filter is true and an state is emitted',
-        (tester) async {
+    testWidgets('calls onState when filter is true and an state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -249,12 +241,10 @@ void main() {
       expect(find.text('state 1'), findsOneWidget);
     });
 
-    testWidgets(
-        '''onStateBuilder not called when state is emitted and Notfilter is applied''',
-        (tester) async {
+    testWidgets('''onStateBuilder not called when state is emitted and Notfilter is applied''', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -273,7 +263,7 @@ void main() {
       store.updateWithError('error');
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onError: (context, error) {
               if (error != null) {
@@ -289,11 +279,10 @@ void main() {
       expect(find.text('error'), findsOneWidget);
     });
 
-    testWidgets('calls onError and onState when an error and state is emitted',
-        (tester) async {
+    testWidgets('calls onError and onState when an error and state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onError: (context, error) => Text('$error'),
             onState: (context, state) => const Text('state'),
@@ -316,7 +305,7 @@ void main() {
       store.enableLoading();
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
           ),
@@ -327,11 +316,10 @@ void main() {
       expect(find.text('loading'), findsOneWidget);
     });
 
-    testWidgets('calls onLoading and onState when an load and state is emitted',
-        (tester) async {
+    testWidgets('calls onLoading and onState when an load and state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => const Text('state'),
@@ -348,13 +336,12 @@ void main() {
       expect(find.text('state'), findsOneWidget);
     });
 
-    testWidgets('calls onLoading and onError when an load and error is emitted',
-        (tester) async {
+    testWidgets('calls onLoading and onError when an load and error is emitted', (tester) async {
       store.enableLoading();
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
             onError: (context, error) => Text('$error'),
@@ -370,12 +357,10 @@ void main() {
       expect(find.text('error'), findsOneWidget);
     });
 
-    testWidgets(
-        'not calls onLoading and onState when an load and state is emitted',
-        (tester) async {
+    testWidgets('not calls onLoading and onState when an load and state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => const Text('state'),
@@ -392,14 +377,12 @@ void main() {
       expect(find.text('state'), findsOneWidget);
     });
 
-    testWidgets(
-        '''calls onState when value is emitted and calls onLoading when loading is emitted''',
-        (tester) async {
+    testWidgets('''calls onState when value is emitted and calls onLoading when loading is emitted''', (tester) async {
       store.updateWithValue(1);
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>(
+          child: ScopedBuilder<MockStore, int>(
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => Text('state $state'),
@@ -427,9 +410,7 @@ void main() {
       store = MockStore();
     });
 
-    testWidgets(
-        '''throws AssertionError if either onState, onError, or onLoading is not provided''',
-        (tester) async {
+    testWidgets('''throws AssertionError if either onState, onError, or onLoading is not provided''', (tester) async {
       expect(
         () => ScopedBuilder.transition(store: store),
         throwsAssertionError,
@@ -439,7 +420,7 @@ void main() {
     testWidgets('calls onState when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
           ),
@@ -455,7 +436,7 @@ void main() {
     testWidgets('calls onState when states changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             transition: (context, child) => AnimatedSwitcher(
@@ -484,15 +465,13 @@ void main() {
       expect(find.text('state 3'), findsOneWidget);
     });
 
-    testWidgets('calls onState when states changes with distincted',
-        (tester) async {
+    testWidgets('calls onState when states changes with distincted', (tester) async {
       var rebuildCount = 0;
       final _store = MockDistinctStore();
 
       await tester.pumpWidget(
         MockWidget(
-          child:
-              ScopedBuilder<MockDistinctStore, String, CountState>.transition(
+          child: ScopedBuilder<MockDistinctStore, CountState>.transition(
             store: _store,
             onState: (context, state) {
               rebuildCount++;
@@ -526,15 +505,13 @@ void main() {
       expect(find.text('7'), findsOneWidget);
     });
 
-    testWidgets('should trigger onState when states changes with distincted',
-        (tester) async {
+    testWidgets('should trigger onState when states changes with distincted', (tester) async {
       var rebuildCount = 0;
       final _store = MockDistinctStore();
 
       await tester.pumpWidget(
         MockWidget(
-          child:
-              ScopedBuilder<MockDistinctStore, String, CountState>.transition(
+          child: ScopedBuilder<MockDistinctStore, CountState>.transition(
             store: _store,
             distinct: (state) => state.id,
             onState: (context, state) {
@@ -560,11 +537,10 @@ void main() {
       expect(find.text('2'), findsOneWidget);
     });
 
-    testWidgets('calls onState and onLoading when state changes',
-        (tester) async {
+    testWidgets('calls onState and onLoading when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -592,11 +568,10 @@ void main() {
       expect(find.text('state 2'), findsOneWidget);
     });
 
-    testWidgets('calls onState, onLoading and onError when state changes',
-        (tester) async {
+    testWidgets('calls onState, onLoading and onError when state changes', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -630,11 +605,10 @@ void main() {
       expect(find.text('error'), findsOneWidget);
     });
 
-    testWidgets('calls onState when filter is true and an state is emitted',
-        (tester) async {
+    testWidgets('calls onState when filter is true and an state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             filter: (state) => true,
@@ -653,11 +627,10 @@ void main() {
       expect(find.text('state 1'), findsOneWidget);
     });
 
-    testWidgets('calls onState when filter is false and an state is emitted',
-        (tester) async {
+    testWidgets('calls onState when filter is false and an state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             filter: (state) => false,
@@ -670,11 +643,10 @@ void main() {
       expect(find.text('state 1'), findsNothing);
     });
 
-    testWidgets('calls onState when filter is true and an state is emitted',
-        (tester) async {
+    testWidgets('calls onState when filter is true and an state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -693,12 +665,10 @@ void main() {
       expect(find.text('state 1'), findsOneWidget);
     });
 
-    testWidgets(
-        '''onStateBuilder not called when state is emitted and Notfilter is applied''',
-        (tester) async {
+    testWidgets('''onStateBuilder not called when state is emitted and Notfilter is applied''', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onState: (context, state) => Text('state $state'),
             onLoading: (context) => const Text('loading'),
@@ -718,7 +688,7 @@ void main() {
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onError: (context, error) => Text(error ?? ''),
             transition: (context, child) => AnimatedSwitcher(
@@ -735,11 +705,10 @@ void main() {
       expect(find.text('error'), findsOneWidget);
     });
 
-    testWidgets('calls onError and onState when an error and state is emitted',
-        (tester) async {
+    testWidgets('calls onError and onState when an error and state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onError: (context, error) => Text('$error'),
             onState: (context, state) => const Text('state'),
@@ -769,7 +738,7 @@ void main() {
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onLoading: (context) => const Text('loading'),
             transition: (context, child) => AnimatedSwitcher(
@@ -786,11 +755,10 @@ void main() {
       expect(find.text('loading'), findsOneWidget);
     });
 
-    testWidgets('calls onLoading and onState when an load and state is emitted',
-        (tester) async {
+    testWidgets('calls onLoading and onState when an load and state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => const Text('state'),
@@ -813,13 +781,12 @@ void main() {
       expect(find.text('state'), findsOneWidget);
     });
 
-    testWidgets('calls onLoading and onError when an load and error is emitted',
-        (tester) async {
+    testWidgets('calls onLoading and onError when an load and error is emitted', (tester) async {
       store.enableLoading();
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onLoading: (context) => const Text('loading'),
             onError: (context, error) => Text('$error'),
@@ -835,12 +802,10 @@ void main() {
       expect(find.text('error'), findsOneWidget);
     });
 
-    testWidgets(
-        'not calls onLoading and onState when an load and state is emitted',
-        (tester) async {
+    testWidgets('not calls onLoading and onState when an load and state is emitted', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => const Text('state'),
@@ -857,14 +822,12 @@ void main() {
       expect(find.text('state'), findsOneWidget);
     });
 
-    testWidgets(
-        '''calls onState when value is emitted and calls onLoading when loading is emitted''',
-        (tester) async {
+    testWidgets('''calls onState when value is emitted and calls onLoading when loading is emitted''', (tester) async {
       store.updateWithValue(1);
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedBuilder<MockStore, String, int>.transition(
+          child: ScopedBuilder<MockStore, int>.transition(
             store: store,
             onLoading: (context) => const Text('loading'),
             onState: (context, state) => Text('state $state'),

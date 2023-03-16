@@ -15,7 +15,7 @@ void main() {
     testWidgets('should render child widget', (tester) async {
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             onState: (context, state) {},
             child: Container(),
@@ -25,11 +25,10 @@ void main() {
       expect(find.byType(Container), findsOneWidget);
     });
 
-    testWidgets('should throw an error if no listeners are defined',
-        (tester) async {
+    testWidgets('should throw an error if no listeners are defined', (tester) async {
       expect(
         () => MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             child: Container(),
           ),
@@ -38,13 +37,12 @@ void main() {
       );
     });
 
-    testWidgets('should trigger onState when state changes with distinct',
-        (tester) async {
+    testWidgets('should trigger onState when state changes with distinct', (tester) async {
       final states = [];
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             onState: (context, state) {
               states.add(state);
@@ -70,7 +68,7 @@ void main() {
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             onState: (context, state) {
               states.add(state);
@@ -89,15 +87,13 @@ void main() {
 
       expect(states.length, equals(3));
     });
-    testWidgets(
-        'should trigger onState and onLoading when states and load changes',
-        (tester) async {
+    testWidgets('should trigger onState and onLoading when states and load changes', (tester) async {
       final states = [];
       var onLoadingisCalled = false;
 
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             onState: (context, state) {
               states.add(state);
@@ -122,12 +118,10 @@ void main() {
       expect(onLoadingisCalled, true);
     });
 
-    testWidgets(
-        'should throw an error if distinct is defined but onState is not',
-        (tester) async {
+    testWidgets('should throw an error if distinct is defined but onState is not', (tester) async {
       expect(
         () => MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             distinct: (state) => state,
             child: Container(),
@@ -137,11 +131,10 @@ void main() {
       );
     });
 
-    testWidgets('should throw an error if filter is defined but onState is not',
-        (tester) async {
+    testWidgets('should throw an error if filter is defined but onState is not', (tester) async {
       expect(
         () => MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             filter: (state) => true,
             child: Container(),
@@ -155,7 +148,7 @@ void main() {
       var count = 0;
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             onState: (context, state) {
               count++;
@@ -172,11 +165,10 @@ void main() {
     });
 
     testWidgets('''
-should not trigger onState when state changes but filter returns false''',
-        (tester) async {
+should not trigger onState when state changes but filter returns false''', (tester) async {
       var count = 0;
       await tester.pumpWidget(
-        ScopedListener<MockStore, String, int>(
+        ScopedListener<MockStore, int>(
           store: store,
           onState: (context, state) {
             count++;
@@ -192,11 +184,10 @@ should not trigger onState when state changes but filter returns false''',
       expect(count, equals(0));
     });
     testWidgets('''
-should not trigger onState when state changes but filter and  returns false''',
-        (tester) async {
+should not trigger onState when state changes but filter and  returns false''', (tester) async {
       var count = 0;
       await tester.pumpWidget(
-        ScopedListener<MockStore, String, int>(
+        ScopedListener<MockStore, int>(
           store: store,
           onState: (context, state) {
             count++;
@@ -217,7 +208,7 @@ should not trigger onState when state changes but filter and  returns false''',
       var count = 0;
       await tester.pumpWidget(
         MockWidget(
-          child: ScopedListener<MockStore, String, int>(
+          child: ScopedListener<MockStore, int>(
             store: store,
             onError: (context, error) {
               count++;

@@ -22,7 +22,7 @@ Use [triple_test](https://pub.dev/packages/triple_test) for Unity Test.
 ```dart
 import 'package:bloc_test/bloc_test.dart';
 
-class MockCounterStore extends MockStore<Exception, int> implements CounterStore {}
+class MockCounterStore extends MockStore<int> implements CounterStore {}
 ...
 
 final mock = MockCounterStore();
@@ -31,7 +31,7 @@ final mock = MockCounterStore();
 Now creates a stud for the method on Triple Store.
 
 ```dart
-whenObserve<MyException, int>(
+whenObserve<int>(
     mock,
     input: () => mock.testAdd(),
     initialState: 0,

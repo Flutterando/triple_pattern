@@ -2,47 +2,43 @@
 
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
+import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
 
 class _MutableIsDispose {
   bool value = false;
 }
 
-///[NotifierStore] it's an abstract class that
+///[Store] it's an abstract class that
 ///implements Selectors<ValueListenable<Error?>, ValueListenable<State>, ValueListenable<bool>>
-abstract class NotifierStore<Error extends Object, State extends Object>
-    extends Store<Error, State>
-    implements
-        Selectors<ValueListenable<Error?>, ValueListenable<State>,
-            ValueListenable<bool>> {
-  late final _selectState = ValueNotifier<State>(triple.state);
-  late final _selectError = ValueNotifier<Error?>(triple.error);
-  late final _selectLoading = ValueNotifier<bool>(triple.isLoading);
+abstract class Store<State> extends BaseStore<State> implements Selectors<RxValueListenable<dynamic>, RxValueListenable<State>, RxValueListenable<bool>> {
+  late final _selectState = RxNotifier<State>(triple.state);
+  late final _selectError = RxNotifier<dynamic>(triple.error);
+  late final _selectLoading = RxNotifier<bool>(triple.isLoading);
 
   @override
-  ValueListenable<State> get selectState => _selectState;
+  RxValueListenable<State> get selectState => _selectState;
   @override
-  ValueListenable<Error?> get selectError => _selectError;
+  RxValueListenable<dynamic> get selectError => _selectError;
   @override
-  ValueListenable<bool> get selectLoading => _selectLoading;
+  RxValueListenable<bool> get selectLoading => _selectLoading;
 
   @override
   State get state => selectState.value;
 
   @override
-  Error? get error => selectError.value;
+  dynamic get error => selectError.value;
 
   @override
   bool get isLoading => selectLoading.value;
 
   final _MutableIsDispose _disposeValue = _MutableIsDispose();
 
-  ///[NotifierStore] constructor class
-  NotifierStore(State initialState) : super(initialState);
+  ///[Store] constructor class
+  Store(State initialState) : super(initialState);
 
   @override
-  void propagate(Triple<Error, State> triple) {
+  void propagate(Triple<State> triple) {
     super.propagate(triple);
     if (triple.event == TripleEvent.state) {
       _selectState.value = triple.state;
@@ -57,11 +53,11 @@ abstract class NotifierStore<Error extends Object, State extends Object>
   Disposer observer({
     void Function(State state)? onState,
     void Function(bool loading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(dynamic error)? onError,
   }) {
     final funcState = () => onState?.call(state);
     final funcLoading = () => onLoading?.call(isLoading);
-    final funcError = () => error != null ? onError?.call(error!) : null;
+    final funcError = () => error != null ? onError?.call(error) : null;
 
     if (onState != null) {
       selectState.addListener(

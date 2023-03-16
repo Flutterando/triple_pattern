@@ -13,8 +13,7 @@ typedef TransitionCallback = Widget Function(
 
 ///[ScopedBuilder] it's the type <TStore extends Store<TError, TState>, TError extends Object,
 ///TState extends Object>
-class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
-    TState extends Object> extends StatefulWidget {
+class ScopedBuilder<TStore extends BaseStore<TState>, TState> extends StatefulWidget {
   ///The Function [distinct] it's the type [dynamic] and receive the param state it`s the type [TState]
   final dynamic Function(TState state)? distinct;
 
@@ -26,8 +25,8 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
   final Widget Function(BuildContext context, TState state)? onState;
 
   ///The Function [onError] it's the type [Widget] and receive the params context it's the type [BuildContext] and
-  ///error it`s the type [TError]
-  final Widget Function(BuildContext context, TError? error)? onError;
+  ///error it`s the type.
+  final Widget Function(BuildContext context, dynamic error)? onError;
 
   ///The Function [onLoading] it's the type [Widget] and receive the param context it`s the type [BuildContext]
   final Widget Function(BuildContext context)? onLoading;
@@ -65,7 +64,7 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
     dynamic Function(TState)? distinct,
     bool Function(TState)? filter,
     TransitionCallback? transition,
-    Widget Function(BuildContext, TError?)? onError,
+    Widget Function(BuildContext, dynamic)? onError,
     Widget Function(BuildContext)? onLoading,
     Widget Function(BuildContext, TState)? onState,
   }) {
@@ -123,13 +122,10 @@ class ScopedBuilder<TStore extends Store<TError, TState>, TError extends Object,
   }
 
   @override
-  _ScopedBuilderState<TStore, TError, TState> createState() =>
-      _ScopedBuilderState<TStore, TError, TState>();
+  _ScopedBuilderState<TStore, TState> createState() => _ScopedBuilderState<TStore, TState>();
 }
 
-class _ScopedBuilderState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<ScopedBuilder<TStore, TError, TState>> {
+class _ScopedBuilderState<TStore extends BaseStore<TState>, TState> extends State<ScopedBuilder<TStore, TState>> {
   Disposer? disposer;
 
   var _distinct;
@@ -163,11 +159,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
         _distinct = value;
 
         final filter = widget.filter?.call(state) ?? true;
-        if (widget.onState != null &&
-            !isDisposed &&
-            isReload &&
-            filter &&
-            mounted) {
+        if (widget.onState != null && !isDisposed && isReload && filter && mounted) {
           setState(() {
             _tripleEvent = TripleEvent.state;
           });
@@ -178,9 +170,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
           setState(() {
             _tripleEvent = TripleEvent.error;
           });
-        } else if (widget.onError == null &&
-            widget.onState != null &&
-            !isDisposed) {
+        } else if (widget.onError == null && widget.onState != null && !isDisposed) {
           setState(() {
             _tripleEvent = TripleEvent.error;
           });
@@ -209,9 +199,7 @@ class _ScopedBuilderState<TStore extends Store<TError, TState>,
 
     switch (_tripleEvent) {
       case TripleEvent.loading:
-        child = store.triple.isLoading
-            ? widget.onLoading?.call(context)
-            : widget.onState?.call(context, store.state);
+        child = store.triple.isLoading ? widget.onLoading?.call(context) : widget.onState?.call(context, store.state);
         break;
       case TripleEvent.error:
         child = widget.onError?.call(context, store.error);

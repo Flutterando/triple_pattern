@@ -1,0 +1,18 @@
+# Generated file - do not commit this file.
+{
+  "name": "triple",
+  "version": "1.5.0+1",
+  "homepage": "https://github.com/Flutterando/triple_pattern",
+  "environment": {
+    "sdk": ">=2.12.0 <3.0.0"
+  },
+  "description": "Abstraction for the Segmented State Pattern. Use to create Triple Store.",
+  "dependencies": {
+    "meta": ">=1.3.0 <2.0.0",
+    "async": ">=2.6.1 <3.0.0"
+  },
+  "dev_dependencies": {
+    "test": "^1.16.5",
+    "flutterando_analysis": "^0.0.1"
+  }
+}

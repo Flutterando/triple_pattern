@@ -8,10 +8,9 @@ import 'package:triple/triple.dart';
 ///The typedef [TransitionCallback]
 ///receive Widget Function(BuildContext context, Widget child,)
 
-///[ScopedConsumer] it's the type <TStore extends Store<TError, TState>, TError extends Object,
-///TState extends Object>
-class ScopedConsumer<TStore extends Store<TError, TState>,
-    TError extends Object, TState extends Object> extends StatefulWidget {
+///[ScopedConsumer] it's the type Store<TState>
+///TState >
+class ScopedConsumer<TStore extends BaseStore<TState>, TState> extends StatefulWidget {
   ///The Function [distinct] it's the type [dynamic] and receive the param state it`s the type [TState]
   final dynamic Function(TState state)? distinct;
 
@@ -23,8 +22,8 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
   final Widget Function(BuildContext context, TState state)? onStateBuilder;
 
   ///The Function [onErrorListener] it's the type [Widget] and receive the params context it's the type [BuildContext] and
-  ///error it`s the type [TError]
-  final Widget Function(BuildContext context, TError? error)? onErrorBuilder;
+  ///error it`s the type.
+  final Widget Function(BuildContext context, dynamic error)? onErrorBuilder;
 
   ///The Function [onLoadingListener] it's the type [Widget] and receive the param context it`s the type [BuildContext]
   final Widget Function(BuildContext context)? onLoadingBuilder;
@@ -34,8 +33,8 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
   final void Function(BuildContext context, TState state)? onStateListener;
 
   ///The Function [onErrorListener] it's the type [Widget] and receive the params context it's the type [BuildContext] and
-  ///error it`s the type [TError]
-  final void Function(BuildContext context, TError? error)? onErrorListener;
+  ///error it`s the type [dynamic]
+  final void Function(BuildContext context, dynamic error)? onErrorListener;
 
   ///The Function [onLoadingListener] it's the type [Widget] and receive the param context it`s the type [BuildContext]
   final void Function(BuildContext context, bool isLoading)? onLoadingListener;
@@ -56,12 +55,7 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
     this.onErrorBuilder,
     this.onLoadingBuilder,
   })  : assert(
-          (onStateListener != null ||
-                  onErrorListener != null ||
-                  onLoadingListener != null) &&
-              (onStateBuilder != null ||
-                  onErrorBuilder != null ||
-                  onLoadingBuilder != null),
+          (onStateListener != null || onErrorListener != null || onLoadingListener != null) && (onStateBuilder != null || onErrorBuilder != null || onLoadingBuilder != null),
           'Define at least one listener (onStateListener, onErrorListener, onLoadingListener) or one builder (onStateBuilder, onErrorBuilder, onLoadingBuilder)',
         ),
         assert(
@@ -81,10 +75,10 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
     dynamic Function(TState)? distinct,
     bool Function(TState)? filter,
     TransitionCallback? transition,
-    Widget Function(BuildContext, TError?)? onErrorBuilder,
+    Widget Function(BuildContext, dynamic)? onErrorBuilder,
     Widget Function(BuildContext)? onLoadingBuilder,
     Widget Function(BuildContext, TState)? onStateBuilder,
-    void Function(BuildContext, TError?)? onErrorListener,
+    void Function(BuildContext, dynamic)? onErrorListener,
     void Function(BuildContext, bool)? onLoadingListener,
     void Function(BuildContext, TState)? onStateListener,
   }) {
@@ -145,13 +139,10 @@ class ScopedConsumer<TStore extends Store<TError, TState>,
   }
 
   @override
-  _ScopedConsumerState<TStore, TError, TState> createState() =>
-      _ScopedConsumerState<TStore, TError, TState>();
+  _ScopedConsumerState<TStore, TState> createState() => _ScopedConsumerState<TStore, TState>();
 }
 
-class _ScopedConsumerState<TStore extends Store<TError, TState>,
-        TError extends Object, TState extends Object>
-    extends State<ScopedConsumer<TStore, TError, TState>> {
+class _ScopedConsumerState<TStore extends BaseStore<TState>, TState> extends State<ScopedConsumer<TStore, TState>> {
   Disposer? disposer;
 
   var _distinct;
@@ -160,14 +151,14 @@ class _ScopedConsumerState<TStore extends Store<TError, TState>,
 
   final Function eq = const ListEquality().equals;
 
-  var _tripleEvent = TripleEvent.state;
   late TStore store;
+
+  TripleEvent get _tripleEvent => store.triple.event;
 
   @override
   void initState() {
     super.initState();
     store = widget.store ?? getTripleResolver<TStore>();
-    _tripleEvent = store.triple.event;
   }
 
   @override
@@ -185,40 +176,34 @@ class _ScopedConsumerState<TStore extends Store<TError, TState>,
         _distinct = value;
 
         final filter = widget.filter?.call(state) ?? true;
-        if (widget.onStateListener != null &&
-            !isDisposed &&
-            isReload &&
-            filter &&
-            mounted) {
+        if (widget.onStateListener != null && !isDisposed && isReload && filter && mounted) {
+          widget.onStateListener?.call(context, state);
+        }
+
+        if (widget.onStateBuilder != null && !isDisposed && isReload && filter && mounted) {
           setState(() {
-            widget.onStateListener?.call(context, state);
-            _tripleEvent = TripleEvent.state;
+            widget.onStateBuilder?.call(context, state);
           });
         }
       },
       onError: (error) {
         if (widget.onErrorListener != null && !isDisposed && mounted) {
+          widget.onErrorListener?.call(context, error);
+        }
+
+        if (widget.onErrorBuilder != null && !isDisposed && mounted) {
           setState(() {
-            widget.onErrorListener?.call(context, error);
-            _tripleEvent = TripleEvent.error;
-          });
-        } else if (widget.onErrorListener == null &&
-            widget.onStateListener != null &&
-            !isDisposed) {
-          setState(() {
-            widget.onErrorListener?.call(context, error);
-            _tripleEvent = TripleEvent.error;
+            widget.onErrorBuilder?.call(context, error);
           });
         }
       },
       onLoading: (isLoading) {
-        if (widget.onLoadingListener != null &&
-            !isDisposed &&
-            isLoading &&
-            mounted) {
+        if (widget.onLoadingListener != null && !isDisposed && isLoading && mounted) {
+          widget.onLoadingListener?.call(context, isLoading);
+        }
+        if (widget.onLoadingBuilder != null && !isDisposed && isLoading && mounted) {
           setState(() {
-            widget.onLoadingListener?.call(context, isLoading);
-            _tripleEvent = TripleEvent.loading;
+            widget.onLoadingBuilder?.call(context);
           });
         }
       },
@@ -238,9 +223,7 @@ class _ScopedConsumerState<TStore extends Store<TError, TState>,
 
     switch (_tripleEvent) {
       case TripleEvent.loading:
-        child = store.triple.isLoading
-            ? widget.onLoadingBuilder?.call(context)
-            : widget.onStateBuilder?.call(context, store.state);
+        child = store.triple.isLoading ? widget.onLoadingBuilder?.call(context) : widget.onStateBuilder?.call(context, store.state);
         break;
       case TripleEvent.error:
         child = widget.onErrorBuilder?.call(context, store.error);

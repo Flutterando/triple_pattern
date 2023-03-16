@@ -3,17 +3,17 @@ library mobx_triple;
 import 'package:meta/meta.dart';
 import 'package:mobx/mobx.dart' hide Store;
 import 'package:triple/triple.dart';
+
+export 'package:flutter_triple/flutter_triple.dart';
+export 'package:rx_notifier/rx_notifier.dart';
 export 'package:triple/triple.dart';
 
-abstract class MobXStore<Error extends Object, State extends Object>
-    extends Store<Error, State>
-    implements
-        Selectors<Observable<Error?>, Observable<State>, Observable<bool>> {
+abstract class MobXStore<State> extends BaseStore<State> implements Selectors<Observable<dynamic>, Observable<State>, Observable<bool>> {
   @override
   late final selectState = Observable<State>(triple.state);
 
   @override
-  final selectError = Observable<Error?>(null);
+  final selectError = Observable<dynamic>(null);
 
   @override
   final selectLoading = Observable<bool>(false);
@@ -41,16 +41,13 @@ abstract class MobXStore<Error extends Object, State extends Object>
 
   @protected
   @override
-  void propagate(Triple<Error, State> triple) {
+  void propagate(Triple<State> triple) {
     super.propagate(triple);
     _propagateAction();
   }
 
   @override
-  Disposer observer(
-      {void Function(State state)? onState,
-      void Function(bool loading)? onLoading,
-      void Function(Error error)? onError}) {
+  Disposer observer({void Function(State state)? onState, void Function(bool loading)? onLoading, void Function(Error error)? onError}) {
     final disposers = <void Function()>[];
 
     if (onState != null) {
