@@ -145,7 +145,6 @@ abstract class BaseStore<State> {
   ///
   ///This also stores the state value to be retrieved using the [undo()]
   ///method when using MementoMixin
-  @protected
   void update(State newState, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(
       state: newState,
@@ -161,7 +160,6 @@ abstract class BaseStore<State> {
   }
 
   ///Change the loading value.
-  @protected
   void setLoading(bool newloading, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(
       isLoading: newloading,
@@ -175,7 +173,6 @@ abstract class BaseStore<State> {
   }
 
   ///Change the error value.
-  @protected
   void setError(dynamic newError, {bool force = false}) {
     var candidate = _mutableObjects.triple.copyWith(error: newError, event: TripleEvent.error);
     candidate = middleware(candidate);
