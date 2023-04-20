@@ -1,4 +1,7 @@
-  ## [2.0.0] - 2023-03-16
+## [2.0.1] - 2023-04-20
+  - fix: Remove @protect on `update`, `setLoading` and `setError` method.
+
+## [2.0.0] - 2023-03-16
 
   - **[BREAKING CHANGES]**: `StreamStore` and `NotifierStore` will now just be called `Store`. 
   - **[BREAKING CHANGES]**: It is no longer necessary to declare the exception value in `Stores`, this value will be dynamic by default.
