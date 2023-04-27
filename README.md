@@ -29,7 +29,7 @@ If it's for the Flutterando version of the template just send a message to us (o
     Design Pattern for State Management. 
     <br>
     <br>
-    <a href="https://triple.flutterando.com.br/docs/getting-started/example">View Example</a>
+   <!--  <a href="https://triple.flutterando.com.br/docs/getting-started/example">View Example</a> -->
     ·
     <a href="https://github.com/Flutterando/triple_pattern/issues">Report Bug</a>
     ·
