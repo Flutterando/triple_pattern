@@ -30,7 +30,7 @@ void main() {
         ),
       );
       expect(counter.state, 1);
-      expect(listLoading, [true, true, true, false]);
+      expect(listLoading, [true, false]);
     });
   });
 

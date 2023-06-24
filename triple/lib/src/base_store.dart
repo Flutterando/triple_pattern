@@ -149,11 +149,12 @@ abstract class BaseStore<State> {
     var candidate = _mutableObjects.triple.copyWith(
       state: newState,
       event: TripleEvent.state,
+      isLoading: false,
     );
     candidate = candidate.clearError();
     candidate = middleware(candidate);
     if (force || (candidate.state != _mutableObjects.triple.state)) {
-      _mutableObjects.lastState = candidate.copyWith(isLoading: false);
+      _mutableObjects.lastState = candidate;
       _mutableObjects.triple = candidate;
       propagate(_mutableObjects.triple);
     }
@@ -174,7 +175,11 @@ abstract class BaseStore<State> {
 
   ///Change the error value.
   void setError(dynamic newError, {bool force = false}) {
-    var candidate = _mutableObjects.triple.copyWith(error: newError, event: TripleEvent.error);
+    var candidate = _mutableObjects.triple.copyWith(
+      error: newError,
+      event: TripleEvent.error,
+      isLoading: false,
+    );
     candidate = middleware(candidate);
     if (force || (candidate.error != _mutableObjects.triple.error)) {
       _mutableObjects.triple = candidate;
