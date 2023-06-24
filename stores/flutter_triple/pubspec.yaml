@@ -1,6 +1,6 @@
 name: flutter_triple
 description: Implementation of the Segmented State Pattern (SSP) nicknamed Triple.
-version: 2.0.0
+version: 2.1.0
 
 repository: https://github.com/Flutterando/triple_pattern/tree/master/stores/flutter_triple
 issue_tracker: https://github.com/Flutterando/triple_pattern/issues
@@ -8,7 +8,7 @@ homepage: https://triple.flutterando.com.br/
 documentation: https://triple.flutterando.com.br/
 
 environment:
-  sdk: ">=2.18.0 <3.0.0"
+  sdk: ">=2.18.0 <4.0.0"
 
 dependencies:
   triple: ">=2.0.0 <3.0.0"

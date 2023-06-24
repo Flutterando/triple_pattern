@@ -1,3 +1,6 @@
+  ## [2.1.0] - 2023-06-24
+  - feat: Automatic setLoading after call update or setError method.
+  
   ## [2.0.0] - 2023-03-16
 
   - **[BREAKING CHANGES]**: `StreamStore` and `NotifierStore` will now just be called `Store`. 
