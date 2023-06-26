@@ -42,12 +42,12 @@ abstract class Store<State> extends BaseStore<State> implements Selectors<RxValu
     super.propagate(triple);
     if (triple.event == TripleEvent.state) {
       if (_selectLoading.value != triple.isLoading) {
-        _selectLoading.value = triple.isLoading;
+        _selectLoading.setValueWithoutReaction(triple.isLoading);
       }
       _selectState.value = triple.state;
     } else if (triple.event == TripleEvent.error) {
       if (_selectLoading.value != triple.isLoading) {
-        _selectLoading.value = triple.isLoading;
+        _selectLoading.setValueWithoutReaction(triple.isLoading);
       }
       _selectError.value = triple.error;
     } else if (triple.event == TripleEvent.loading) {

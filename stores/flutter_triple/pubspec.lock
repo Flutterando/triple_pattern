@@ -119,10 +119,10 @@ packages:
     dependency: "direct main"
     description:
       name: rx_notifier
-      sha256: "680dee9c12d44dbe758e1ef5664f9350216bf63c4e842736f39b86d82c53ca4f"
+      sha256: "08201324c0a2c6987c13798277f9bab592fcc2dfde362d21789f60eed8bd9ea2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0+2"
+    version: "2.3.0"
   rx_notifier_annotation:
     dependency: transitive
     description:

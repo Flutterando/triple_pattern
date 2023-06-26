@@ -1,5 +1,6 @@
-  ## [2.1.2] - 2023-06-26
+  ## [2.1.3] - 2023-06-26
   - fix: Fix state and error.
+  
   ## [2.1.0] - 2023-06-24
   - feat: Automatic setLoading after call update or setError method.
   
