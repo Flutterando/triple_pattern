@@ -1,3 +1,6 @@
+  ## [2.1.0] - 2023-06-24
+  - feat: Automatic setLoading after call update or setError method.
+
   ## [2.0.1] - 2023-04-20
   - fix: Remove @protect on `update`, `setLoading` and `setError` method.
   
