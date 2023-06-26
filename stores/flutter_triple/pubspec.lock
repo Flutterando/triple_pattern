@@ -188,10 +188,10 @@ packages:
     dependency: "direct main"
     description:
       name: triple
-      sha256: "1f168ec9234c1e6f80f27f7cc3affee601181ad0573d3e6286e52fbee80e364c"
+      sha256: "0d049c7d44fbe093432c72ec059a958b1b22e0748b3b90e806383ef2376f34cb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   vector_math:
     dependency: transitive
     description:
