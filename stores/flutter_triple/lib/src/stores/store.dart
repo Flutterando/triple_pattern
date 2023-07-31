@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
 
@@ -22,6 +23,9 @@ abstract class Store<State> extends BaseStore<State> implements Selectors<RxValu
   RxValueListenable<dynamic> get selectError => _selectError;
   @override
   RxValueListenable<bool> get selectLoading => _selectLoading;
+
+  /// Return a Listenable with all triple changes.
+  Listenable get selectAll => Listenable.merge([_selectState, _selectError, _selectLoading]);
 
   @override
   State get state => selectState.value;

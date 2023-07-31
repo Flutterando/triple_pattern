@@ -7,5 +7,6 @@
     // Remove from file watching
     "files.watcherExclude": {
       "**/.fvm": true
-    }
+    },
+    "cmake.sourceDirectory": "D:/Projects/triple_pattern/stores/flutter_triple/example/windows/runner"
   }

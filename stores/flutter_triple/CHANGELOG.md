@@ -1,3 +1,6 @@
+  ## [2.2.0] - 2023-07-31
+  - add: Store.selectAll
+
   ## [2.1.4] - 2023-06-26
   - fix: Fix state and error.
   
