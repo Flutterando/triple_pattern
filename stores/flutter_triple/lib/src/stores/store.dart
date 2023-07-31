@@ -25,7 +25,7 @@ abstract class Store<State> extends BaseStore<State> implements Selectors<RxValu
   RxValueListenable<bool> get selectLoading => _selectLoading;
 
   /// Return a Listenable with all triple changes.
-  Listenable get selectAll => Listenable.merge([_selectState, _selectError, _selectLoading]);
+  late final Listenable selectAll = Listenable.merge([_selectState, _selectError, _selectLoading]);
 
   @override
   State get state => selectState.value;
