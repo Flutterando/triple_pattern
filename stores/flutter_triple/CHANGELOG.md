@@ -1,3 +1,6 @@
+  ## [3.0.0] - 2023-08-08
+  - BREAKING CHANGE: Change RxNotifier to ASP Package
+
   ## [2.2.0] - 2023-07-31
   - add: Store.selectAll
 

@@ -4,6 +4,8 @@ import 'package:flutter_triple/flutter_triple.dart';
 class MockStore extends Store<int> {
   MockStore() : super(0);
 
+  void reset() => update(0);
+
   void updateWithValue(int state) => update(state);
 
   void updateWithError(String error) => setError(error);

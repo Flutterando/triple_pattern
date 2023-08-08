@@ -6,11 +6,9 @@ import '../mocks/mocks.dart';
 
 void main() {
   group('ScopedBuilder', () {
-    late MockStore store;
+    final store = MockStore();
 
-    setUp(() {
-      store = MockStore();
-    });
+    tearDown(store.reset);
 
     testWidgets('''throws AssertionError if either onState, onError, or onLoading is not provided''', (tester) async {
       expect(() => ScopedBuilder(store: store), throwsAssertionError);
@@ -74,26 +72,29 @@ void main() {
           ),
         ),
       );
+
+      const duration = Duration(seconds: 1);
+
       expect(rebuildCount, equals(1));
       expect(find.text('1'), findsOneWidget);
 
       _store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle(duration);
 
       _store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle(duration);
 
       _store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle(duration);
 
       _store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle(duration);
 
       _store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle(duration);
 
       _store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle(duration);
 
       expect(rebuildCount, equals(7));
       expect(find.text('7'), findsOneWidget);
@@ -144,13 +145,13 @@ void main() {
       );
 
       store.updateWithValue(1);
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.text('loading'), findsNothing);
       expect(find.text('state 1'), findsOneWidget);
 
       store.updateWithValue(2);
-      await tester.pump();
+      await tester.pumpAndSettle(const Duration(seconds: 1));
 
       expect(find.text('loading'), findsNothing);
       expect(find.text('state 2'), findsOneWidget);
@@ -505,7 +506,9 @@ void main() {
       expect(find.text('7'), findsOneWidget);
     });
 
-    testWidgets('should trigger onState when states changes with distincted', (tester) async {
+    testWidgets(
+        'should trigger onState '
+        'when states changes with distincted', (tester) async {
       var rebuildCount = 0;
       final _store = MockDistinctStore();
 

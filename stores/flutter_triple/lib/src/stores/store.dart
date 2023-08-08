@@ -2,8 +2,8 @@
 
 import 'dart:developer';
 
+import 'package:asp/asp.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rx_notifier/rx_notifier.dart';
 import 'package:triple/triple.dart';
 
 class _MutableIsDispose {
@@ -13,9 +13,9 @@ class _MutableIsDispose {
 ///[Store] it's an abstract class that
 ///implements Selectors<ValueListenable<Error?>, ValueListenable<State>, ValueListenable<bool>>
 abstract class Store<State> extends BaseStore<State> implements Selectors<RxValueListenable<dynamic>, RxValueListenable<State>, RxValueListenable<bool>> {
-  late final _selectState = RxNotifier<State>(triple.state);
-  late final _selectError = RxNotifier<dynamic>(triple.error);
-  late final _selectLoading = RxNotifier<bool>(triple.isLoading);
+  late final _selectState = Atom<State>(triple.state);
+  late final _selectError = Atom<dynamic>(triple.error);
+  late final _selectLoading = Atom<bool>(triple.isLoading);
 
   @override
   RxValueListenable<State> get selectState => _selectState;
