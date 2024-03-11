@@ -1,0 +1,183 @@
+---
+sidebar_position: 2
+---
+
+# Observers
+
+The SSP segments the state into 3 reactive parts, the state value (state), the error object (error), and the state loading action (loading).
+
+These segments are observed in a listener or separate listeners. They can also be combined to obtain a new segment, always starting from the 3 main segments.
+
+### Observers {#-observers}
+
+We can observe the segments separately or together by using **store.observer()**;
+
+```dart
+
+//Observer all segments
+var _dispose = counter.observer(
+    onState: (state) => print(state),//called when the state changes
+    onError: (error) => print(error),//called when the error changes
+    onLoading: (loading) => print(loading),//called when the loading changes
+);
+
+
+_dispose(); //cancel the observer
+
+```
+
+On Widgets we can observe on a Builder with ScopedBuilder or observe all changes with TripleBuilder.
+
+### Dispose {#-dispose}
+
+The observer returns a function that can be called to cancel the observation.
+
+
+### Distinct {#-distinct}
+
+By default, the Store's observer does not react to repeated objects. This behavior is beneficial as it avoids state reconstructions and notifications if the segment has not been changed.
+
+It is good practice to overwrite the **operation==** of the state value and error. A good tip is also to use the package [equatable](https://pub.dev/packages/equatable) to simplify this type of comparison.
+
+### Selectors {#-selectors}
+
+We can recover the reactivity of the segments individually for transformations or combinations. We have then 3 selectors that can be retrieved as Store properties: **store.selectState**, **store.selectError** and **store.selectLoading**.
+
+The type of selectors changes depending on the reactive tool you are using in the Stores. For example, if you are using **StreamStore** then your selectors will be Streams, however,  if you are using **NotifierStore** then your selectors will be ValueListenable;
+
+```dart
+
+RxValueListenable<int> myState$ = counter.selectState;
+RxValueListenable<dynamic> myError$ = counter.selectError;
+RxValueListenable<bool> myLoading$ = counter.selectLoading;
+
+```
+
+## Listeners {#-listeners}
+
+The listeners are used to listen to the segments and react to them. They are called when there is any change in the segments.
+
+### TripleListener {#-triplelistener}
+
+Use TripleListener to listen all segment modifications and reflect them in the listener callback.
+
+Exemple:
+```dart
+//Observer all segments
+TripleListener(
+    store: counter,//the store to be observed
+    listener: (context, triple) => print(triple.state),//called when any segment changes
+    child: Container(), //the child to be built
+),
+```
+
+### ScopedListener {#-scopedlistener}
+
+Use ScopedListener to listen all segment modifications and reflect them in the recpective segment listener callbacks.
+
+Exemple:
+```dart
+//Observer all segments
+ScopedListener(
+    store: counter,//the store to be observed
+    onState: (context, state) => print(state),//called when the state changes
+    onError: (context, error) => print(error.toString()),//called when the error changes
+    onLoading: (context, isLoading) => print(isLoading),//called when the loading changes
+    child: Container()//the child to be built
+),
+```
+## Builders {#-builders}
+
+The builders are used to listen to the segments and react to them. They are called when there is any change in the segments.
+
+### ScopedBuilder {#-scopedbuilder}
+
+Use **ScopedBuilder** to listen the segments, likewise the method **store.observer()**;
+
+```dart
+//Observer all segments
+ScopedBuilder(
+    store: counter,//the store to be observed
+    onState: (context, state) => Text('$state'),//called when the state changes
+    onError: (context, error) => Text(error.toString()),//called when the error changes
+    onLoading: (context) => CircularProgressIndicator(),//called when the loading changes
+);
+```
+
+### ScopedBuilder.transition {#-scopedbuildertransition}
+
+Use it for adding a custom transition on state change:
+
+```dart
+//Observer all segments
+ScopedBuilder.transition(
+    store: counter,//the store to be observed
+    transition: (_, child) {//called when the state changes
+    return AnimatedSwitcher(//add a custom transition
+        duration: Duration(milliseconds: 400),
+        child: child,//the child to be built
+      );
+    },
+    onLoading: (_) => Text('Loading...'),//called when the loading changes
+    onState: (_, state) => Text('$state'),//called when the state changes
+  ),
+```
+### TripleBuilder {#-triplebuilder}
+
+Use **TripleBuilder** to listen all segment modifications and reflect them in the Widgets tree.
+
+```dart
+//Observer all segments
+TripleBuilder(
+    store: counter,//the store to be observed
+    builder: (context, triple) => Text('${triple.state}'),//called when any segment changes
+);
+```
+
+> **NOTE**: The **TripleBuilder** builder is called when there is any change in the segments. Its use is recommended only if you are interested in listening to all segments at the same time.
+
+## Consumer {#-consumer}
+
+The consumer is used to listen to the segments and react to them. They are called when there is any change in the segments.
+
+### TripleConsumer {#-tripleconsumer}
+
+Use TripleConsumer to listen all segment modifications and reflect them in the Widgets tree and listener callback.
+
+Exemple:
+```dart
+//Observer all segments
+TripleConsumer(
+    store: counter,//the store to be observed
+    listener: (context, triple) => print(triple.state),//called when any segment changes
+    builder: (context, triple) => Text('${triple.state}'),//called when any segment changes
+),
+```
+
+### ScopedConsumer {#-scopedconsumer}
+
+Use ScopedConsumer to listen all segment modifications and reflect them in the recpective segment Widgets tree and listener callbacks.
+
+Exemple:
+```dart
+//Observer all segments
+ScopedConsumer(
+    store: counter,//the store to be observed
+    onStateListener: (context, state) => print(state),//called when the state changes
+    onErrorListener: (context, error) => print(error.toString()),//called when the error changes
+    onLoadingListener: (context, isLoading) => print(isLoading),//called when the loading changes
+    onState: (context, state) => Text('${triple.state}'),//called when the state changes
+    onError: (context, error) => Text('${triple.state}',//called when the error changes
+    onLoading: (context, isLoading) => Text('${triple.state}',//called when the loading changes
+),
+```
+
+
+> **NOTE**: On ScopedBuilder the **onLoading** is only called on "true". This means that if the state is modified or an error is added, the widget to be built will be the **onState** or **onError**. However, it is very important to change Loading to "false" when the loading action is completed. **observers** of Triple *DO NOT PROPAGATE REPEATED OBJECTS* (more on this in the section **distinct**). This behavior is exclusive to ScopedBuilder.
+
+
+
+
+
+
+

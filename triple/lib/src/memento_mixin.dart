@@ -4,16 +4,16 @@ import 'dart:math' as math;
 
 import 'package:meta/meta.dart';
 
+import 'base_store.dart';
 import 'models/triple_model.dart';
-import 'store.dart';
 
 class _MutableIndex {
   int value = 0;
 }
 
 @immutable
-mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, State> {
-  final _history = <Triple<Error, State>>[];
+mixin MementoMixin<State> on BaseStore<State> {
+  final _history = <Triple<State>>[];
   final int _historyLimit = 64;
   final _MutableIndex _mutableIndex = _MutableIndex();
   int get _historyIndex => _mutableIndex.value;
@@ -28,7 +28,7 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
   /// Return true if you can redo
   bool canRedo() => (_historyIndex + 1) < _history.length || triple.state != lastState.state;
 
-  void _addHistory(Triple<Error, State> observableCache) {
+  void _addHistory(Triple<State> observableCache) {
     if (_historyIndex == _history.length) {
       _history.add(observableCache);
     } else {
@@ -46,7 +46,7 @@ mixin MementoMixin<State extends Object, Error extends Object> on Store<Error, S
   @override
   void update(newState, {bool force = false}) {
     final _last = lastState;
-    super.update(newState, force: force);
+    super.update(newState);
     if (_last.state != triple.state) {
       _addHistory(_last.copyWith(isLoading: false));
     } else if (_historyIndex + 1 == _history.length) {

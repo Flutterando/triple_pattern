@@ -8,13 +8,12 @@ import 'package:triple_test/src/store_mock.dart';
 import 'package:triple_test/src/store_test.dart';
 import 'package:triple_test/src/store_when.dart';
 
-class TestImplementsMock extends MockStore<MyException, int>
-    implements TestImplements<MyException, int> {}
+class TestImplementsMock extends MockStore<int> implements TestImplements<int> {}
 
 void main() async {
   TestImplementsMock _mountMock() {
     final mock = TestImplementsMock();
-    whenObserve<MyException, int>(
+    whenObserve<int>(
       mock,
       input: mock.testAdd,
       initialState: 0,
@@ -57,12 +56,10 @@ void main() async {
 }
 
 // ignore: must_be_immutable
-class TestImplements<Error extends Object, State extends Object> extends Store<Error, State>
-    with MementoMixin
-    implements Selectors<Stream<Error>, Stream<State>, Stream<bool>> {
+class TestImplements<State> extends BaseStore<State> with MementoMixin implements Selectors<Stream<dynamic>, Stream<State>, Stream<bool>> {
   TestImplements(State initialState) : super(initialState);
 
-  late Triple<Error, State> propagated = triple;
+  late Triple<State> propagated = triple;
 
   void functionVerify() {}
 
@@ -75,14 +72,14 @@ class TestImplements<Error extends Object, State extends Object> extends Store<E
   Disposer observer({
     void Function(State state)? onState,
     void Function(bool loading)? onLoading,
-    void Function(Error error)? onError,
+    void Function(dynamic error)? onError,
   }) {
     return () async {};
   }
 
   @protected
   @override
-  void propagate(Triple<Error, State> triple) {
+  void propagate(Triple<State> triple) {
     super.propagate(triple);
     propagated = triple;
   }

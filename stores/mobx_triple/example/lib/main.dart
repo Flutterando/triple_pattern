@@ -1,9 +1,9 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:flutter/material.dart';
+import 'package:mobx_triple/mobx_triple.dart';
 
 import 'counter.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 
 void main() {
   runApp(MyApp());
@@ -74,9 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 store: counter,
                 onLoading: (_) {
                   return Text(
-                    !counter.isLoading
-                        ? 'You have pushed the button this many times:'
-                        : 'Carregando...',
+                    !counter.isLoading ? 'You have pushed the button this many times:' : 'Carregando...',
                   );
                 }),
             ScopedBuilder(
@@ -84,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onState: (_, int state) {
                 return Text(
                   '$state',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 );
               },
             ),

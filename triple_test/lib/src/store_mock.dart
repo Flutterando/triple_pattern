@@ -4,10 +4,10 @@ import 'package:meta/meta.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:triple/triple.dart';
 
-class MockStore<E extends Object, S extends Object> extends Mock implements Store<E, S> {
-  final _callList = <InvocationPropagation<E, S>>[];
+class MockStore<S> extends Mock implements BaseStore<S> {
+  final _callList = <InvocationPropagation<S>>[];
 
-  void dispatcherTriple(Triple<E, S> triple) {
+  void dispatcherTriple(Triple<S> triple) {
     for (final call in _callList) {
       if (triple.event == TripleEvent.state) {
         call.onState?.call(triple.state);
@@ -15,14 +15,14 @@ class MockStore<E extends Object, S extends Object> extends Mock implements Stor
         call.onLoading?.call(triple.isLoading);
       } else if (triple.event == TripleEvent.error) {
         if (triple.error != null) {
-          call.onError?.call(triple.error!);
+          call.onError?.call(triple.error);
         }
       }
     }
   }
 
   @visibleForTesting
-  void restartInitialTriple(Triple<E, S> triple) {
+  void restartInitialTriple(Triple<S> triple) {
     when(() => state).thenReturn(triple.state);
     when(() => error).thenReturn(triple.error);
     when(() => isLoading).thenReturn(triple.isLoading);
@@ -33,9 +33,9 @@ class MockStore<E extends Object, S extends Object> extends Mock implements Stor
   Disposer observer({
     void Function(S state)? onState,
     void Function(bool isLoading)? onLoading,
-    void Function(E error)? onError,
+    void Function(dynamic error)? onError,
   }) {
-    final call = InvocationPropagation<E, S>();
+    final call = InvocationPropagation<S>();
     call.onState = onState;
     call.onLoading = onLoading;
     call.onError = onError;
@@ -49,8 +49,8 @@ class MockStore<E extends Object, S extends Object> extends Mock implements Stor
   }
 }
 
-class InvocationPropagation<E extends Object?, S extends Object> {
+class InvocationPropagation<S> {
   void Function(S state)? onState;
   void Function(bool isLoading)? onLoading;
-  void Function(E error)? onError;
+  void Function(dynamic error)? onError;
 }

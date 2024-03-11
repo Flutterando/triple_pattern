@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:triple/src/store.dart';
+import 'package:triple/src/base_store.dart';
 
 import 'triple_test.dart';
 

@@ -1,0 +1,136 @@
+---
+sidebar_position: 4
+---
+
+# Testing
+
+For a pattern to be concrete, we must test.
+There is a library with elements that help test a Triple Store.
+
+## Installation {#-installation}
+
+```yaml
+dev_dependencies:
+  triple_test: any
+  mocktail: any
+```
+
+Use [triple_test](https://pub.dev/packages/triple_test) for Unity Test.
+
+## Create a Mock {#-create-a-mock}
+
+```dart
+import 'package:bloc_test/bloc_test.dart';
+
+class MockCounterStore extends MockStore<int> implements CounterStore {}
+...
+
+final mock = MockCounterStore();
+```
+
+Now creates a stud for the method on Triple Store.
+
+```dart
+whenObserve<int>(
+    mock,
+    input: () => mock.testAdd(),
+    initialState: 0,
+    triples: [
+      Triple(state: 1),
+      Triple(isLoading: true, event: TripleEvent.loading, state: 1),
+      Triple(state: 2),
+    ],
+  );
+```
+>NOTE: You can use Triple Matchers: **tripleState**, **tripleLoading** e **tripleError**;
+
+full example to CounterPage:
+
+```dart
+void main() {
+  final mock = MockCounterStore();
+
+  testWidgets('Must update count state', (tester) async {
+    whenObserve<Exception, int>(
+      mock,
+      input: () => mock.incrementCount(),
+      initialState: 0,
+      triples: [
+        Triple(state: 1),
+        Triple(isLoading: true, event: TripleEvent.loading, state: 1),
+        Triple(state: 2),
+      ],
+    );
+
+    Widget testWidget = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+            home: CountPage(
+          store: mock,
+        )));
+
+    await tester.pumpWidget(testWidget);
+
+    final titleFinder = find.text('${mock.state}');
+    expect(titleFinder, findsOneWidget);
+  });
+}
+```
+
+## Testing Stores {#-testing-stores}
+
+The `flutter_test` gives us the [test()](https://api.flutter.dev/flutter/flutter_test/test.html) function to describe what will be tested in a prepared scope. `triple_test` makes it easier to test Triple Stores using [storeTest()](https://pub.dev/documentation/triple_test/latest/triple_test/storeTest.html).
+
+To test this CountStore example
+```dart
+  class CountStore extends StreamStore<Exception, int> {
+  CountStore(this._incrementUsecase) : super(0);
+
+  final IIncrementUsecase _incrementUsecase;
+
+  void incrementCount() {
+    setLoading(true);
+    Future.delayed(const Duration(milliseconds: 100));
+    final result = _incrementUsecase(state);
+    update(result);
+  }
+}
+```
+
+First will you create a Usecases Mock
+
+```dart
+  class MockIncrementUsecase extends Mock implements IIncrementUsecase {}
+```
+
+And use  StoreTest like a this
+```dart
+  
+void main() {
+  late final IIncrementUsecase incrementUsecase;
+
+  setUp(() {
+    incrementUsecase = MockIncrementUsecase();
+  });
+
+  storeTest<CountStore>('Must return loading true and update state at incrementCount',
+      build: () {
+        //Arrange to mock dependencies
+        when(() => incrementUsecase.call(any())).thenReturn(5);
+        return CountStore(incrementUsecase, decrementUsecase);
+      },
+
+      //action to execute method for update state
+      act: (store) => store.incrementCount(),
+
+      // wait a future before finish test
+      wait: const Duration(milliseconds: 600),
+
+      //matcher to verify expected states
+      expect: () => [
+            tripleLoading,
+            tripleState,
+          ]);
+}
+
+```

@@ -1,0 +1,63 @@
+---
+sidebar_position: 6
+---
+
+# Mixins
+
+
+## MementoMixin {#-mementomixin}
+
+You can add, undo or redo a state using the Memento Pattern. 
+This means that you can return to the previous state using the method **undo()** and also advance with the method **redo()**.
+
+```dart
+
+class CounterStore extends StreamStore<Exception, int> with MementoMixin {}
+
+...
+
+store.undo();
+store.redo();
+
+```
+
+## HydratedMixin {#-hydratedmixin}
+
+A mixin which automatically persists and restores store state. 
+
+### Step 1: Use in your store. {#-step-1-use-in-your-store}
+```dart
+class CounterStore extends StreamStore<Exception, CounterState> with HydratedMixin {}
+```
+
+### Step 2: Add a Serializable contract in your State class. {#-step-2-add-a-serializable-contract-in-your-state-class}
+
+> Only necessary if your state is not a primitive type, such as int.
+
+```dart
+class CounterState implements Serializable<CounterState> {
+    final int value;
+    CounterState(this.value);
+
+    @override
+    Map<String, dynamic> toJson() => {'value': value};
+
+    @override
+    CounterState fromJson(Map<String, dynamic> map) =>  CounterState(map['value']);
+} 
+```
+
+### Step 3: Implements a HydratedDelegate or use **hydrated_triple**. {#-step-3-implements-a-hydrateddelegate-or-use-hydrated_triple}
+
+Add the package **hydrated_triple** in pubspec`s project add set delegate:
+
+```dart
+void main() {
+
+    setTripleHydratedDelegate(SharedPreferencesHydratedDelegate());
+
+    runApp(AppWidget());
+}
+```
+
+> **NOTE**: `HydratedMixin.hasInitiated` will be true when it`s ready.

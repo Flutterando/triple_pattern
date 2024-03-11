@@ -1,0 +1,209 @@
+{
+  "Import package:flutter_triple": {
+    "prefix": "impTriple",
+    "body": "import 'package:flutter_triple/flutter_triple.dart';",
+    "description": "import package:flutter_triple/flutter_triple.dart;"
+  },
+  "Triple Stream Store": {
+    "prefix": "tripleStreamstore",
+    "body": [
+      "import 'package:flutter_triple/flutter_triple.dart';",
+      "",
+      "class $1Store extends StreamStore<${2:Error}, ${3:State}> {",
+      "\t$1Store() : super(${4:State});",
+      "",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Create Triple Stream Store"
+  },
+  "Triple Notifier Store": {
+    "prefix": "tripleNotifierstore",
+    "body": [
+      "import 'package:flutter_triple/flutter_triple.dart';",
+      "",
+      "class $1Store extends NotifierStore<${2:Error}, ${3:State}> {",
+      "\t$1Store() : super(${4:State});",
+      "",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Create Triple Stream Store"
+  },
+  "Triple Store Observer": {
+    "prefix": "tripleStoreObserver",
+    "body": [
+      "${1:store}.observer(",
+      "onState: (state) { $4 },",
+      "${2:onError: (error) {\\},}",
+      "${3:onLoading: (loading) {\\},}",
+      ");"
+    ],
+    "description": "Create Triple Store Observer"
+  },
+  "Triple Tracking Observer": {
+    "prefix": "tripleTrackingObserver",
+    "body": [
+      "TripleObserver.addListener((triple){",
+      "\t//TODO: implement listener",
+      "});"
+    ],
+    "description": "Create Triple Observer"
+  },
+  "Triple builder": {
+    "prefix": "tripleBuilder",
+    "body": [
+      "import 'package:flutter_triple/flutter_triple.dart';",
+      "",
+      "TripleBuilder<$1T>(",
+      "    store: store,",
+      "    builder: (context, triple) {",
+      "  \\t//TODO: implement triple builder",
+      "  },",
+      "    ",
+      "  );",
+      ""
+    ],
+    "description": "Create a Triple builder"
+  },
+  "Triple Scoped Builder": {
+    "prefix": "tripleScopedBuilder",
+    "body": [
+      "ScopedBuilder(",
+      "    store: store,",
+      "    onState: (context, state) => Text('$state'),",
+      "    onError: (context, error) => Text(error.toString()),",
+      "    onLoading: (context) => CircularProgressIndicator(),",
+      ");"
+    ],
+    "description": "Create a Triple Scoped Builder"
+  },
+  "Triple Scoped Transition Builder": {
+    "prefix": "tripleTransitionScopedBuilder",
+    "body": [
+      "ScopedBuilder.transition(",
+      "    store: store,",
+      "    transition: (_, child) {",
+      "    return AnimatedSwitcher(",
+      "        duration: Duration(milliseconds: 400),",
+      "        child: child,",
+      "      );",
+      "    },",
+      "    onLoading: (_) => Text('Loading...'),",
+      "    onState: (_, state) => Text('$state'),",
+      "  ),"
+    ],
+    "description": "Create a Triple Transition Scoped Builder"
+  },
+  "Triple Stream Selector": {
+    "prefix": "tripleStreamSelector",
+    "body": [
+      "Stream<State> myState$ = counter.selectState;",
+      "Stream<Exception> myError$ = counter.selectError;",
+      "Stream<bool> myLoading$ = counter.selectLoading;"
+    ],
+    "description": "Create three main Triple Stream Selectors"
+  },
+  "Triple Listenable Selector": {
+    "prefix": "tripleListenableSelector",
+    "body": [
+      "ValueListenable<State> myState$ = counter.selectState;",
+      "ValueListenable<Exception?> myError$ = counter.selectError;",
+      "ValueListenable<bool> myLoading$ = counter.selectLoading;"
+    ],
+    "description": "Create three main Triple Listenable Selector"
+  },
+  "Triple Middleware Interceptor": {
+    "prefix": "tripleMiddlewareInterceptor",
+    "body": [
+      "@override",
+      "  Triple<Exception, $1State> middleware(triple){",
+      "    if(triple.event == TripleEvent.state){",
+      "      return ;",
+      "    }",
+      "",
+      "    return triple;",
+      "  }"
+    ],
+    "description": "Create a Triple Middleware Interceptor"
+  },
+  "Triple Simple Executor": {
+    "prefix": "tripleSimpleExecutor",
+    "body": ["", "   execute(() => repository.fetch());", ""],
+    "description": "Create a Triple Simple Executor"
+  },
+  "Mobx triple class": {
+    "prefix": "mobxStoreClass",
+    "body": [
+      "",
+      "",
+      "class $1StoreName extends MobXStore<${2:Exception}, ${3:State}> {",
+      "",
+      "    Counter() : super(initialState);",
+      "",
+      "    Future<void> funcionName() async {",
+      "        setLoading(true);",
+      "",
+      "        if() {",
+      "            update(value);",
+      "        } else {",
+      "            setError(Exception('Erro text'));",
+      "        }",
+      "        setLoading(false);",
+      "    }",
+      "}"
+    ],
+    "description": "Mobx triple class"
+  },
+  "Triple Listener": {
+    "prefix": "tripleListener",
+    "body": [
+      "TripleListener(",
+      "    store: store,",
+      "    listener: (context, triple) => print(triple.state),",
+      "    child: Container()",
+      ")"
+    ],
+    "description": "Creates a Triple Listener"
+  },
+  "Triple Scoped Listener": {
+    "prefix": "tripleScopedListener",
+    "body": [
+      "ScopedListener(",
+      "    store: store,",
+      "    onState: (context, state) => print(state),",
+      "    onError: (context, error) => print(error.toString()),",
+      "    onLoading: (context, isLoading) => print(isLoading),",
+      "    child: Container()",
+      ")"
+    ],
+    "description": "Triple Scoped Listener"
+  },
+  "Triple Consumer": {
+    "prefix": "tripleConsumer",
+    "body": [
+      "TripleConsumer(",
+      "    store: store,",
+      "    listener: (context, triple) => print(triple.state),",
+      "    builder: (context, triple) => Text('${triple.state}'),",
+      ")"
+    ],
+    "description": "Creates a Triple Consumer"
+  },
+  "Triple Scoped Consumer": {
+    "prefix": "tripleScopedConsumer",
+    "body": [
+      "ScopedConsumer(",
+      "    store: store,",
+      "    onStateListener: (context, state) => print(state),",
+      "    onErrorListener: (context, error) => print(error.toString()),",
+      "    onLoadingListener: (context, isLoading) => print(isLoading),",
+      "    onState: (context, state) => Text('${triple.state}'),",
+      "    onError: (context, error) => Text('${triple.state}',",
+      "    onLoading: (context, isLoading) => Text('${triple.state}',",
+      "",
+      ")"
+    ],
+    "description": "Triple Scoped Consumer"
+  }
+}

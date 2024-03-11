@@ -1,3 +1,100 @@
+  ## [3.0.0] - 2023-08-08
+  - BREAKING CHANGE: Change RxNotifier to ASP Package
+
+  ## [2.2.0] - 2023-07-31
+  - add: Store.selectAll
+
+  ## [2.1.4] - 2023-06-26
+  - fix: Fix state and error.
+  
+  ## [2.1.0] - 2023-06-24
+  - feat: Automatic setLoading after call update or setError method.
+  
+  ## [2.0.0] - 2023-03-16
+
+  - **[BREAKING CHANGES]**: `StreamStore` and `NotifierStore` will now just be called `Store`. 
+  - **[BREAKING CHANGES]**: It is no longer necessary to declare the exception value in `Stores`, this value will be dynamic by default.
+  ```dart
+  // before
+  class MyStore extends NotifierStore<Exception, Data> {}
+
+  // now
+  class MyStore extends Store<Data> {}
+  ```
+  - **[feat]**: All `RxNotifier` features will be available for `Triple`.
+
+  ```dart
+  Widget build(BuildContext context){
+    context.select(() => [store.state, store.error, store.loading]);
+    ...
+  }
+  ```
+  - **[feat]**: New Widgets! (**ScopedConsumer**, **ScopedListener**, **TripleConsumer** and **TripleListener**);
+
+  - **[BREAKING CHANGES]**: `Store.executeEither` removed.
+
+
+## [1.3.0] - 
+
+- Added TripleListener.
+Use TripleListener to listen all segment modifications and reflect them in the listener callback.
+
+exemple:
+```dart
+
+TripleListener(
+    store: counter,
+    listener: (context, triple) => print(triple.state),
+    child: Container()
+),
+```
+
+- Added ScopedListener.
+Use ScopedListener to listen all segment modifications and reflect them in the recpective segment listener callbacks.
+
+exemple:
+```dart
+
+ScopedListener(
+    store: counter,
+    onState: (context, state) => print(state),
+    onError: (context, error) => print(error.toString()),
+    onLoading: (context, isLoading) => print(isLoading),
+    child: Container()
+),
+```
+
+- Added TripleConsumer.
+Use TripleConsumer to listen all segment modifications and reflect them in the Widgets tree and listener callback.
+
+exemple:
+```dart
+
+TripleConsumer(
+    store: counter,
+    listener: (context, triple) => print(triple.state),
+    builder: (context, triple) => Text('${triple.state}'),
+),
+```
+
+- Added ScopedConsumer.
+Use ScopedListener to listen all segment modifications and reflect them in the recpective segment Widgets tree and listener callbacks.
+
+exemple:
+```dart
+
+ScopedConsumer(
+    store: counter,
+    onStateListener: (context, state) => print(state),
+    onErrorListener: (context, error) => print(error.toString()),
+    onLoadingListener: (context, isLoading) => print(isLoading),
+    onState: (context, state) => Text('${triple.state}'),
+    onError: (context, error) => Text('${triple.state}',
+    onLoading: (context, isLoading) => Text('${triple.state}',
+),
+```
+
+
 ## [1.2.8] - 
 
 - fix: Added Mounted

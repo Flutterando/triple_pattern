@@ -17,13 +17,13 @@ void main() {
 }
 
 // ignore: must_be_immutable
-class Counter extends TestImplements<Exception, int> {
+class Counter extends TestImplements<int> {
   Counter(List<bool> list) : super(0, list);
 
   void increment() => update(1);
 
   @override
-  Triple<Exception, int> middleware(Triple<Exception, int> newTriple) {
+  Triple<int> middleware(Triple<int> newTriple) {
     if (newTriple.event == TripleEvent.state) {
       return newTriple.copyWith(state: 3);
     } else {
@@ -33,13 +33,12 @@ class Counter extends TestImplements<Exception, int> {
 }
 
 // ignore: must_be_immutable
-abstract class TestImplements<Error extends Object, State extends Object>
-    extends Store<Error, State> {
+abstract class TestImplements<State> extends BaseStore<State> {
   final List<bool> list;
 
   TestImplements(State initialState, this.list) : super(initialState);
 
-  late Triple<Error, State> propagated = triple;
+  late Triple<State> propagated = triple;
 
   @override
   Future destroy() async {}
@@ -61,7 +60,7 @@ abstract class TestImplements<Error extends Object, State extends Object>
 
   @protected
   @override
-  void propagate(Triple<Error, State> triple) {
+  void propagate(Triple<State> triple) {
     super.propagate(triple);
     propagated = triple;
   }
